@@ -61,10 +61,12 @@ $(info DEBUG: DIRS found: $(DIRS))
 # --- Default Target ---
 .PHONY: all
 
+
+
 all: build
 
 # ---Build  ---
-build: $(DIRS) $(BIN_DIR)/$(TARGET)
+build: clean $(DIRS) $(BIN_DIR)/$(TARGET)
 
 # --- Linker Rule (Build Executable) ---
 $(BIN_DIR)/$(TARGET): $(OBJECTS)
