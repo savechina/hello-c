@@ -59,9 +59,8 @@ $(info DEBUG: DIRS found: $(DIRS))
 -include $(OBJECTS:.o=.d)
 
 # --- Default Target ---
-.PHONY: all
-
-
+default: help
+.default_goal: help
 
 all: build
 
@@ -93,7 +92,6 @@ $(DIRS):
 	@mkdir -p $@
 
 # --- Clean Target ---
-.PHONY: clean
 clean:
 	@echo "Cleaning project..."
 	@rm -rf $(OBJ_DIR) $(BIN_DIR)
@@ -101,6 +99,7 @@ clean:
 
 # --- Help Target ---
 .PHONY: help
+
 help:
 	@echo "Usage: make [target]"
 	@echo ""
