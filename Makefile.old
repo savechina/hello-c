@@ -1,0 +1,72 @@
+
+# --- Project Configuration ---
+TARGET      := hello               # Name of the final executable
+# Directory containing source files (.c)
+SRC_DIR     := src
+# Directory for intermediate object files (.o)
+OBJ_DIR     := build/obj
+# Directory for the final executable
+BIN_DIR     := build/bin
+
+# Define the C source files
+SOURCES     := $(wildcard $(SRC_DIR)/**.c $(SRC_DIR)/**/**.c)
+C_SOURCES =  src/hello.c  # Add all your .c files here
+
+# Define the Assembly source files
+S_SOURCES = h.s     # Add all your .s files here
+
+# Automatically generate the list of object files (.o)
+# from the source files (.c and .s)
+C_OBJECTS = $(C_SOURCES:.c=.o)
+S_OBJECTS = $(S_SOURCES:.s=.o)
+#OBJECTS = $(C_OBJECTS)
+OBJECTS := $(patsubst $SRC_DIR/%.c,$OBJ_DIR/%.o,$(C_SOURCES))
+
+# --- DEBUGGING LINES ---
+$(info DEBUG: SRC_DIR is $(SRC_DIR))
+$(info DEBUG: Wildcard pattern is $(SRC_DIR)/*.c)
+$(info DEBUG: SOURCES found: $(SOURCES))
+# --- END DEBUGGING LINES ---
+
+show:
+	@echo $(C_SOURCES)
+	@echo $(C_OBJECTS)
+	@echo $(SOURCES)
+	@echo $(OBJECTS)
+# Set the default target to build the executable
+.DEFAULT_GOAL := $(TARGET)
+
+# Declare phony targets (targets that don't create files of the same name)
+.PHONY: all clean $(TARGET)
+
+# Define a variable for the SDK path using Make's shell function
+# This is needed for linking on macOS
+SDK_PATH := $(shell xcrun --show-sdk-path)
+
+# Rule to build the final executable from all object files
+$(TARGET): $(OBJECTS)
+	@echo "Linking $< to create $@"
+	# Using clang to link is generally easier than ld directly
+	clang -o $(TARGET) $(OBJECTS)
+
+# Generic rule to compile C source files (.c) into object files (.o)
+# $< is the prerequisite (the .c file)
+# $@ is the target (the .o file)
+%.o: %.c
+	@echo "Compiling $<"
+	clang -c $< -o $@
+
+# Generic rule to assemble Assembly source files (.s) into object files (.o)
+# $< is the prerequisite (the .s file)
+# $@ is the target (the .o file)
+%.o: %.s
+	@echo "Assembling $<"
+	as -o $@ $<
+
+# Rule to clean up generated files
+clean:
+	@echo "Cleaning up build artifacts..."
+	rm -f $(OBJECTS) $(TARGET) h
+
+# 'all' target is often used as a primary target, depending on the default goal
+all: $(TARGET)
