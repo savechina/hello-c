@@ -1,4 +1,4 @@
-#ifndef ADVANCE_HEADER
-#define ADVANCE_HEADER
+#ifndef ADVANCE_H
+#define ADVANCE_H
 int main_advance(void);
 #endif

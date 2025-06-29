@@ -60,11 +60,13 @@ $(info DEBUG: DIRS found: $(DIRS))
 
 # --- Default Target ---
 default: help
-.default_goal: help
+.DEFAULT_GOAL: help
 
+.PHONY: all
 all: build
 
 # ---Build  ---
+.PHONY: build
 build: clean $(DIRS) $(BIN_DIR)/$(TARGET)
 
 # --- Linker Rule (Build Executable) ---
@@ -91,7 +93,15 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 $(DIRS):
 	@mkdir -p $@
 
+# --- Run Target ---
+.PHONY: run
+run: 
+	@echo "Running project..."
+	$(BIN_DIR)/$(TARGET)
+	@echo "Running complete"
+
 # --- Clean Target ---
+.PHONY: clean
 clean:
 	@echo "Cleaning project..."
 	@rm -rf $(OBJ_DIR) $(BIN_DIR)
@@ -99,7 +109,6 @@ clean:
 
 # --- Help Target ---
 .PHONY: help
-
 help:
 	@echo "Usage: make [target]"
 	@echo ""
