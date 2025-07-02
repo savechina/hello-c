@@ -30,7 +30,7 @@ $(info DEBUG: OBJECTS found: $(OBJECTS))
 # --- END DEBUGGING LINES ---
 
 # --- Compiler & Flags ---
-CC          := clang            # C compiler on macOS (default to clang)
+CC          := gcc            # C compiler on macOS (default to clang)
 # CFLAGS: Compiler flags for compilation
 # -Wall: Enable all standard warnings
 # -Wextra: Enable extra warnings

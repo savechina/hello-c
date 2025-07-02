@@ -44,11 +44,12 @@ RUN for file in /etc/apt/sources.list.d/*.sources; do \
     curl \
     kmod \
     cpio\
-    python3 && \
+    python3 \ 
+    rustup && \
     # Install rustup - the Rust toolchain installer
     # Use non-interactive installation by passing '-y' to the rustup-init script
     # curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
-    \
+    \ 
     # Add Rust's cargo bin directory to PATH for subsequent commands in the same RUN layer
     # For global access in future sessions, you'd add this to a profile file (e.g., ~/.bashrc)
     # or ensure CMD or ENTRYPOINT handles it.
