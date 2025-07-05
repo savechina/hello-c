@@ -1,4 +1,4 @@
-FROM docker.m.daocloud.io/ubuntu:24.04
+FROM docker.m.daocloud.io/ubuntu:18.04
 
 # 设置非交互模式，避免在安装过程中出现提示
 ENV DEBIAN_FRONTEND=noninteractive
@@ -19,7 +19,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 #   xz-utils: 用于处理XZ压缩格式的工具，内核通常以XZ压缩
 #   rustup: 用于Rust 编译程序所需的基本工具。
 #   python: 提供Python 开发环境；
-RUN for file in /etc/apt/sources.list.d/*.sources; do \
+RUN for file in /etc/apt/sources.list; do \
     # 备份原始文件（可选）
     # cp "$file" "${file}.bak"; \
     # 使用sed替换 archive.ubuntu.com 和 security.ubuntu.com
@@ -46,13 +46,15 @@ RUN for file in /etc/apt/sources.list.d/*.sources; do \
     kmod \
     cpio\
     python3 \
-    rustup && \
+    && \
     # Install rustup - the Rust toolchain installer
     # Optional: HTTP Proxy setting
     export http_proxy=http://192.168.2.7:1087  && \
     export https_proxy=http://192.168.2.7:1087 && \
+    export RUSTUP_UPDATE_ROOT=https://mirrors.aliyun.com/rustup/rustup && \
+    export RUSTUP_DIST_SERVER=https://mirrors.aliyun.com/rustup && \
     # Use non-interactive installation by passing '-y' to the rustup-init script
-    # curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y && \
+    curl --proto '=https' --tlsv1.2 -sSf https://mirrors.aliyun.com/repo/rust/rustup-init.sh | sh -s -- -y && \
     \
     # Add Rust's cargo bin directory to PATH for subsequent commands in the same RUN layer
     # For global access in future sessions, you'd add this to a profile file (e.g., ~/.bashrc)
