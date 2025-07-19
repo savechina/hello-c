@@ -3,3 +3,7 @@ authors = ["RenYan Wei"]
 language = "en"
 src = "src"
 title = "Hello C"
+
+[output.html]
+git-repository-url = "https://github.com/savechina/hello-c"
+git-repository-icon = "fa-github"
