@@ -19,6 +19,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 #   xz-utils: 用于处理XZ压缩格式的工具，内核通常以XZ压缩
 #   rustup: 用于Rust 编译程序所需的基本工具。
 #   python: 提供Python 开发环境；
+#   protoc: 提供ProtoBuf 编译工具
 RUN for file in /etc/apt/sources.list; do \
     # 备份原始文件（可选）
     # cp "$file" "${file}.bak"; \
@@ -46,6 +47,8 @@ RUN for file in /etc/apt/sources.list; do \
     kmod \
     cpio\
     python3 \
+    zip \
+    unzip \
     && \
     # Install rustup - the Rust toolchain installer
     # Optional: HTTP Proxy setting
@@ -73,6 +76,10 @@ RUN for file in /etc/apt/sources.list; do \
     # Optional: Clean up Rustup's temporary files, if any
     rm -rf /root/.rustup/tmp && \
     \
+    # install protobuf
+    curl -LO https://github.com/protocolbuffers/protobuf/releases/download/v32.0/protoc-32.0-linux-aarch_64.zip && \
+    unzip protoc-32.0-linux-aarch_64.zip -d /usr/local/ && \
+    rm -f protoc-32.0-linux-aarch_64.zip && \
     # 清理APT缓存，减小镜像大小
     apt-get clean && \
     # Create WORKDIR
