@@ -5,7 +5,8 @@
 # ==============================================================================
 
 # --- Project Configuration ---
-TARGET      := hello               # Name of the final executable
+# Name of the final executable
+TARGET      := hello 
 # Directory containing source files (.c)
 SRC_DIR     := src
 # New: Directory for public header files
@@ -30,7 +31,8 @@ $(info DEBUG: OBJECTS found: $(OBJECTS))
 # --- END DEBUGGING LINES ---
 
 # --- Compiler & Flags ---
-CROSS_COMPILE ?= arm-linux-gnueabihf-
+#CROSS_COMPILE ?= arm-linux-gnueabihf-
+CROSS_COMPILE ?= 
 CC          := $(CROSS_COMPILE)gcc            # C compiler on macOS (default to clang)
 # CFLAGS: Compiler flags for compilation
 # -Wall: Enable all standard warnings
@@ -39,7 +41,7 @@ CC          := $(CROSS_COMPILE)gcc            # C compiler on macOS (default to 
 # -O2: Optimization level 2
 # -std=c11: Use C11 standard
 # -MMD: Generate dependency files (.d) automatically
-CFLAGS      := -Wall -Wextra -g -O2 -std=c11 -MMD -I$(INCLUDE_DIR)
+CFLAGS      := -Wall -Wextra -g -O2 -std=c23 -MMD -I$(INCLUDE_DIR)
 
 # Add all source directories (including subdirectories) for header search too
 # This is useful if source files include headers from other source subdirs.
@@ -116,6 +118,7 @@ help:
 	@echo "Targets:"
 	@echo "  all        (default) Builds the final executable '$(TARGET)'."
 	@echo "  build      Builds the final executable '$(TARGET)'."
+	@echo "  run        Run the final executable '$(TARGET)'."
 	@echo "  clean      Removes all compiled objects and the executable."
 	@echo "  help       Displays this help message."
 	@echo ""
