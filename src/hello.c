@@ -1,5 +1,6 @@
 #include <stdio.h>
-
+#include "advance/advance.h"
+#include "basic/basic.h"
 /**
  * factorial
  */
@@ -19,5 +20,8 @@ int main_hello() {
   int num = 60;
   printf("Factorial of %d is %llu\n", num, fibonacci(num));
 
+  main_basic();
+
+  main_advance();
   return 0;
 }
