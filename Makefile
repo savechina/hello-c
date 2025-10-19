@@ -6,7 +6,7 @@
 
 # --- Project Configuration ---
 # Name of the final executable
-TARGET      := hello 
+TARGET      := hello
 # Directory containing source files (.c)
 SRC_DIR     := src
 # New: Directory for public header files
@@ -32,7 +32,7 @@ $(info DEBUG: OBJECTS found: $(OBJECTS))
 
 # --- Compiler & Flags ---
 #CROSS_COMPILE ?= arm-linux-gnueabihf-
-CROSS_COMPILE ?= 
+CROSS_COMPILE ?=
 CC          := $(CROSS_COMPILE)gcc            # C compiler on macOS (default to clang)
 # CFLAGS: Compiler flags for compilation
 # -Wall: Enable all standard warnings
@@ -41,7 +41,7 @@ CC          := $(CROSS_COMPILE)gcc            # C compiler on macOS (default to 
 # -O2: Optimization level 2
 # -std=c11: Use C11 standard
 # -MMD: Generate dependency files (.d) automatically
-CFLAGS      := -Wall -Wextra -g -O2 -std=c23 -MMD -I$(INCLUDE_DIR)
+CFLAGS      := -Wall -Wextra -g -O2 -std=c17 -MMD -I$(INCLUDE_DIR)
 
 # Add all source directories (including subdirectories) for header search too
 # This is useful if source files include headers from other source subdirs.
@@ -98,7 +98,7 @@ $(DIRS):
 
 # --- Run Target ---
 .PHONY: run
-run: 
+run:
 	@echo "Running project..."
 	$(BIN_DIR)/$(TARGET)
 	@echo "Running complete"
