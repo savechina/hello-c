@@ -45,6 +45,8 @@ RUN for file in /etc/apt/sources.list.d/*.sources; do \
     curl \
     kmod \
     cpio\
+    zip\
+    unzip\
     python3 \
     rustup && \
     # Install rustup - the Rust toolchain installer

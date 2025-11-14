@@ -47,6 +47,9 @@ RUN for file in /etc/apt/sources.list.d/*.sources; do \
     curl \
     kmod \
     cpio\
+    zsh\
+    zip\
+    unzip\
     python3 \
     rustup && \
     # Install rustup - the Rust toolchain installer
@@ -74,6 +77,8 @@ RUN for file in /etc/apt/sources.list.d/*.sources; do \
     \
     # Optional: Clean up Rustup's temporary files, if any
     rm -rf /root/.rustup/tmp && \
+    \
+    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
     \
     # 清理APT缓存，减小镜像大小
     apt-get clean && \
