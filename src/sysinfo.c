@@ -3,12 +3,22 @@
 #include <string.h>
 #include <sys/utsname.h>
 #if defined(__APPLE__)
-#include <mach/mach.h>  // macOS 特有的头文件，用于获取系统信息
+#include <mach/mach.h> // macOS 特有的头文件，用于获取系统信息
 #include <sys/sysctl.h> // macOS 和 Linux 都可能有，但具体用法可能不同
 #define OS_NAME "macOS"
 #elif defined(__linux__)
 #include <sys/sysinfo.h> // Linux 特有的头文件，用于获取系统信息
 #define OS_NAME "Linux"
+#elif defined(__sun) && defined(__SRV4)
+#include <sys/sysinfo.h> // Solaris特有的头文件，用于获取系统信息
+#if defined(__illumos__)
+// Specific code for Illumos-based OS (best way to distinguish forks)
+#define OS_ILLUMOS
+#else
+// Assumed to be traditional (Oracle) Solaris or older Illumos/SunOS
+#define OS_SOLARIS
+#endif
+#define OS_NAME "sunOS"
 #else
 #define OS_NAME "Unknown"
 // 对于其他系统，可能需要添加更多宏判断和头文件
@@ -189,6 +199,14 @@ void get_system_info() {
   } else {
     perror("Failed to open /proc/cpuinfo");
   }
+}
+
+// Linux 平台获取系统信息
+#elif defined(__sun) && defined(__SRV4)
+void get_system_info() {
+    printf("\n--- Solaris System Information ---\n");
+    struct sysinfo info;
+  printf("System information retrieval not implemented for this Solaris.\n");
 }
 #else // Unknown OS
 void get_system_info() {
