@@ -35,7 +35,7 @@ void variable_bind() {
   size_t d_len = sizeof(d);
   printf("int64_t length: %zu \n", d_len);
 
-  const int32_t x= 5;
+  const int32_t x = 5;
 
   printf("const int32_t variable: x :%d \n", x);
 
@@ -56,6 +56,10 @@ int main_basic(void) {
   before_declare_func();
 
   string_sample();
+
+  array_sample();
+
+  date_sample();
 
   printf("---Basic...end---\n\n");
   return 0;
