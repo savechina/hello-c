@@ -31,6 +31,9 @@ $(info DEBUG: OBJECTS found: $(OBJECTS))
 # --- END DEBUGGING LINES ---
 
 # --- Compiler & Flags ---
+# Operation System
+UNAME_S := $(shell uname -s)
+
 #CROSS_COMPILE ?= arm-linux-gnueabihf-
 CROSS_COMPILE ?=
 CC          := $(CROSS_COMPILE)gcc            # C compiler on macOS (default to clang)
@@ -42,6 +45,11 @@ CC          := $(CROSS_COMPILE)gcc            # C compiler on macOS (default to 
 # -std=c11: Use C11 standard
 # -MMD: Generate dependency files (.d) automatically
 CFLAGS      := -Wall -Wextra -g -O2 -std=c17 -MMD -I$(INCLUDE_DIR)
+
+ifeq ($(UNAME_S),SunOS)
+    LDLIBS  += -lkstat
+    CFLAGS  += -D__sun__
+endif
 
 # Add all source directories (including subdirectories) for header search too
 # This is useful if source files include headers from other source subdirs.

@@ -3,7 +3,7 @@
 #include <string.h>
 #include <sys/utsname.h>
 #if defined(__APPLE__)
-#include <mach/mach.h> // macOS 特有的头文件，用于获取系统信息
+#include <mach/mach.h>  // macOS 特有的头文件，用于获取系统信息
 #include <sys/sysctl.h> // macOS 和 Linux 都可能有，但具体用法可能不同
 #define OS_NAME "macOS"
 #elif defined(__linux__)
@@ -11,7 +11,12 @@
 #define OS_NAME "Linux"
 #elif defined(__sun__)
 // #elif defined(__illumos__)
+#include <kstat.h>
+#include <stdio.h>
 #include <sys/sysinfo.h> // Solaris特有的头文件，用于获取系统信息
+#include <sys/time.h>
+#include <sys/types.h>
+#include <unistd.h>
 #define OS_NAME "sunOS"
 #if defined(__illumos__)
 // Specific code for Illumos-based OS (best way to distinguish forks)
@@ -205,28 +210,34 @@ void get_system_info() {
 // Solaris 平台获取系统信息
 #elif defined(__sun__)
 void get_system_info() {
-    printf("\n--- Solaris System Information ---\n");
-    struct sysinfo info;
+  printf("\n--- Illumos/Solaris System Information ---\n");
 
-    if (sysinfo(&info) == 0) {
-      // 系统正常运行时间
-      printf("Uptime: %ld seconds\n", info.uptime);
+  struct sysinfo info;
+  // 1. 获取系统运行时间 (Uptime)
+  // gethrtime() 返回自启动以来的纳秒数，除以 10^9 得到秒
+  hrtime_t now = gethrtime();
+  long uptime_sec = now / 1000000000L;
+  printf("Uptime: %ld seconds\n", uptime_sec);
 
-      // 总内存 (转换为 GB)
-      double total_ram_gb =
-          (double)info.totalram * info.mem_unit / (1024 * 1024 * 1024);
-      printf("Total RAM: %.2f GB\n", total_ram_gb);
+  // 2. 获取内存信息
+  // 使用 sysconf 获取页大小和页数量
+  long long page_size = sysconf(_SC_PAGESIZE);
+  long long total_pages = sysconf(_SC_PHYS_PAGES);
+  long long free_pages = sysconf(_SC_AVPHYS_PAGES);
 
-      // 可用内存 (转换为 GB)
-      double free_ram_gb =
-          (double)info.freeram * info.mem_unit / (1024 * 1024 * 1024);
-      printf("Free RAM: %.2f GB\n", free_ram_gb);
+  if (page_size > 0 && total_pages > 0) {
+    // 总内存 (转换为 GB)
+    double total_ram_gb =
+        (double)(total_pages * page_size) / (1024 * 1024 * 1024);
+    printf("Total RAM: %.2f GB\n", total_ram_gb);
 
-      // 进程数量
-      printf("Processes: %u\n", info.procs);
-    } else {
-      perror("Failed to get sysinfo");
-    }
+    // 可用内存 (转换为 GB)
+    double free_ram_gb =
+        (double)(free_pages * page_size) / (1024 * 1024 * 1024);
+    printf("Free RAM: %.2f GB\n", free_ram_gb);
+  } else {
+    perror("Failed to get memory info via sysconf");
+  }
 
   printf("System information retrieval not implemented for this Solaris.\n");
 }
