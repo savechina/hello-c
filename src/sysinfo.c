@@ -11,6 +11,7 @@
 #define OS_NAME "Linux"
 #elif defined(__sun) && defined(__SRV4)
 #include <sys/sysinfo.h> // Solaris特有的头文件，用于获取系统信息
+#define OS_NAME "sunOS"
 #if defined(__illumos__)
 // Specific code for Illumos-based OS (best way to distinguish forks)
 #define OS_ILLUMOS
@@ -18,7 +19,6 @@
 // Assumed to be traditional (Oracle) Solaris or older Illumos/SunOS
 #define OS_SOLARIS
 #endif
-#define OS_NAME "sunOS"
 #else
 #define OS_NAME "Unknown"
 // 对于其他系统，可能需要添加更多宏判断和头文件
