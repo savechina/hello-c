@@ -9,8 +9,8 @@
 #elif defined(__linux__)
 #include <sys/sysinfo.h> // Linux 特有的头文件，用于获取系统信息
 #define OS_NAME "Linux"
-// #elif defined(__sun) && defined(__SRV4)
-#elif defined(__illumos__)
+#elif defined(__sun__)
+// #elif defined(__illumos__)
 #include <sys/sysinfo.h> // Solaris特有的头文件，用于获取系统信息
 #define OS_NAME "sunOS"
 #if defined(__illumos__)
