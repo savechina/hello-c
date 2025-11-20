@@ -253,7 +253,7 @@ void get_system_info() {
 
   // Get operating system type and release
   struct utsname uname_data;
-  if (uname(&uname_data) == 0) {
+  if (uname(&uname_data) >= 0) {
     printf("Operating System Type: %s\n", uname_data.sysname);
     printf("Operating System Release: %s\n", uname_data.release);
     printf("Operating System: %s\n", uname_data.sysname);
