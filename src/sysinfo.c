@@ -269,7 +269,6 @@ void get_system_info() {
     perror("uname failed");
   }
 
-  printf("System information retrieval not implemented for this Solaris.\n");
 }
 #else // Unknown OS
 void get_system_info() {
