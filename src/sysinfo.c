@@ -202,11 +202,32 @@ void get_system_info() {
   }
 }
 
-// Linux 平台获取系统信息
-#elif defined(__sun) && defined(__SRV4)
+// Solaris 平台获取系统信息
+#elif defined(__sun__)
 void get_system_info() {
     printf("\n--- Solaris System Information ---\n");
     struct sysinfo info;
+
+    if (sysinfo(&info) == 0) {
+      // 系统正常运行时间
+      printf("Uptime: %ld seconds\n", info.uptime);
+
+      // 总内存 (转换为 GB)
+      double total_ram_gb =
+          (double)info.totalram * info.mem_unit / (1024 * 1024 * 1024);
+      printf("Total RAM: %.2f GB\n", total_ram_gb);
+
+      // 可用内存 (转换为 GB)
+      double free_ram_gb =
+          (double)info.freeram * info.mem_unit / (1024 * 1024 * 1024);
+      printf("Free RAM: %.2f GB\n", free_ram_gb);
+
+      // 进程数量
+      printf("Processes: %u\n", info.procs);
+    } else {
+      perror("Failed to get sysinfo");
+    }
+
   printf("System information retrieval not implemented for this Solaris.\n");
 }
 #else // Unknown OS
