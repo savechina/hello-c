@@ -259,11 +259,11 @@ void get_system_info() {
     printf("Operating System: %s\n", uname_data.sysname);
     // 1. 内核名称和版本（所有 Illumos 都一样）
     printf("Kernel       : %s %s %s %s %s\n",
-           u.sysname, // 永远是 "SunOS"
-           u.nodename,
-           u.release,  // 例如 5.11
-           u.version,  // 例如 illumos-abc12345 或者 OmniOS-abcdefg
-           u.machine); // i86pc 或 sun4u/sparc
+           uname_data.sysname, // 永远是 "SunOS"
+           uname_data.nodename,
+           uname_data.release,  // 例如 5.11
+           uname_data.version,  // 例如 illumos-abc12345 或者 OmniOS-abcdefg
+           uname_data.machine); // i86pc 或 sun4u/sparc
 
   } else {
     perror("uname failed");
