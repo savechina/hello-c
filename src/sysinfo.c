@@ -212,7 +212,6 @@ void get_system_info() {
 void get_system_info() {
   printf("\n--- Illumos/Solaris System Information ---\n");
 
-  struct sysinfo info;
   // 1. 获取系统运行时间 (Uptime)
   // gethrtime() 返回自启动以来的纳秒数，除以 10^9 得到秒
   hrtime_t now = gethrtime();
@@ -250,6 +249,24 @@ void get_system_info() {
       }
     }
     kstat_close(kc);
+  }
+
+  // Get operating system type and release
+  struct utsname uname_data;
+  if (uname(&uname_data) == 0) {
+    printf("Operating System Type: %s\n", uname_data.sysname);
+    printf("Operating System Release: %s\n", uname_data.release);
+    printf("Operating System: %s\n", uname_data.sysname);
+    // 1. 内核名称和版本（所有 Illumos 都一样）
+    printf("Kernel       : %s %s %s %s %s\n",
+           u.sysname, // 永远是 "SunOS"
+           u.nodename,
+           u.release,  // 例如 5.11
+           u.version,  // 例如 illumos-abc12345 或者 OmniOS-abcdefg
+           u.machine); // i86pc 或 sun4u/sparc
+
+  } else {
+    perror("uname failed");
   }
 
   printf("System information retrieval not implemented for this Solaris.\n");
