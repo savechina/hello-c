@@ -239,6 +239,19 @@ void get_system_info() {
     perror("Failed to get memory info via sysconf");
   }
 
+  // --- Process Count (kstat) ---
+  kstat_ctl_t *kc = kstat_open();
+  if (kc != NULL) {
+    kstat_t *ksp = kstat_lookup(kc, "unix", 0, "system_misc");
+    if (ksp != NULL && kstat_read(kc, ksp, NULL) != -1) {
+      kstat_named_t *kn = (kstat_named_t *)kstat_data_lookup(ksp, "nproc");
+      if (kn != NULL) {
+        printf("Processes: %u\n", kn->value.ui32);
+      }
+    }
+    kstat_close(kc);
+  }
+
   printf("System information retrieval not implemented for this Solaris.\n");
 }
 #else // Unknown OS
