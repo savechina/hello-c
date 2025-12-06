@@ -25,6 +25,9 @@
 // Assumed to be traditional (Oracle) Solaris or older Illumos/SunOS
 #define OS_SOLARIS
 #endif
+#elif defined(__FreeBSD__)
+#include <sys/sysctl.h>
+#define OS_NAME "FreeBSD"
 #else
 #define OS_NAME "Unknown"
 // 对于其他系统，可能需要添加更多宏判断和头文件
@@ -269,6 +272,12 @@ void get_system_info() {
     perror("uname failed");
   }
 
+}
+
+// FreeBSD 平台获取系统信息
+#elif defined(__FreeBSD__)
+void get_system_info() {
+    printf("\n--- FreeBSD System Information ---\n");
 }
 #else // Unknown OS
 void get_system_info() {
