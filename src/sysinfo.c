@@ -278,6 +278,47 @@ void get_system_info() {
 #elif defined(__FreeBSD__)
 void get_system_info() {
     printf("\n--- FreeBSD System Information ---\n");
+
+
+    // 获取系统名称 (例如 "FreeBSD")
+    char os_type[256];
+    size_t os_type_len = sizeof(os_type);
+    if (sysctlbyname("kern.ostype", os_type, &os_type_len, NULL, 0) == 0) {
+      printf("OS Type: %s\n", os_type);
+    } else {
+      perror("Failed to get kern.ostype");
+    }
+
+    // 获取系统版本 (例如 "15")
+    char os_release[256];
+    size_t os_release_len = sizeof(os_release);
+    if (sysctlbyname("kern.osrelease", os_release, &os_release_len, NULL, 0) ==
+        0) {
+      printf("OS Release: %s\n", os_release);
+    } else {
+      perror("Failed to get kern.osrelease");
+    }
+
+    // 获取 CPU 信息 (例如 "arm64", "x86_64")
+    char cpu_type[256];
+    size_t cpu_type_len = sizeof(cpu_type);
+    if (sysctlbyname("machdep.cpu.brand_string", cpu_type, &cpu_type_len, NULL,
+                     0) == 0) {
+      printf("CPU Type: %s\n", cpu_type);
+    } else {
+      //   simpler CPU info
+      int mib[2];
+      mib[0] = CTL_HW;
+      mib[1] = HW_MACHINE;
+      char arch_name[256];
+      size_t arch_name_len = sizeof(arch_name);
+      if (sysctl(mib, 2, arch_name, &arch_name_len, NULL, 0) == 0) {
+        printf("CPU Architecture: %s\n", arch_name);
+      } else {
+        perror("Failed to get CPU type");
+      }
+    }
+
 }
 #else // Unknown OS
 void get_system_info() {
