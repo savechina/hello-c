@@ -14,4 +14,9 @@ int array_sample(void);
  * date and time sampe
  */
 int date_sample(void);
+
+/**
+ * struct sample
+ */
+int struct_sample(void);
 #endif

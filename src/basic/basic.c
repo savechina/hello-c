@@ -61,6 +61,8 @@ int main_basic(void) {
 
   date_sample();
 
+  struct_sample();
+
   printf("---Basic...end---\n\n");
   return 0;
 }
