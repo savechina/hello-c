@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <sys/signal.h>
+#include <sys/time.h>
 #include <time.h>
 #include <wchar.h>
 #ifdef __APPLE__
@@ -130,14 +131,22 @@ void date_sample() {
   // 2. 将 time_t 转换为可读的本地时间字符串
   printf("当前系统时间 (ctime): %s\n", ctime(&current_time));
 
+  //
+  struct timeval tv;
+  gettimeofday(&tv, NULL);
+  long long milliseconds = (long long)tv.tv_sec * 1000 + tv.tv_usec / 1000;
+  printf("当前时间戳（毫秒）：%lld\n", milliseconds);
+
+  // 获取当前时间
   time_t raw_time;
   struct tm *time_info;
   char buffer[80];
 
   time(&raw_time);
-
   // 1. 将 time_t 转换为本地时间结构体 struct tm
   time_info = localtime(&raw_time);
+
+  printf("当前时（分钟）：%i\n", time_info->tm_min);
 
   printf("--- 2. 使用 localtime 和 strftime 格式化时间 ---\n");
 
