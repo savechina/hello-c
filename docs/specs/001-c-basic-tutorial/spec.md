@@ -10,6 +10,7 @@
 ### Session 2026-04-27
 
 - Q: Opening story style — fake personal experience vs real analogy → A: Real everyday analogy stories, matching hello-rust style (e.g., "想象你在整理一个工具箱..."). Small story, big lesson (小故事，大道理). Concise intro to programming concept. NO "我第一次写代码时" personal framing. Replace across all 27 chapters.
+- Q: Advance section scope — what should it cover? → A: Option D — Reference hello-rust advance structure and map to C equivalents. hello-rust advance: async, atomic-types, smart-pointers, iterators, traits, error-handling, database, system, testing, tools, web. C advance should cover equivalent concepts using C paradigms.
 
 ### Session 2026-04-26
 - Q: Writing voice & narrative persona for the tutorial → A: 个人学习经验总结 for explanation sections (first-person), but opening stories MUST use real-world analogies (hello-rust pattern: 小故事，大道理), NOT fake personal experience narratives.

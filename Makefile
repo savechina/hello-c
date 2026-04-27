@@ -43,7 +43,7 @@ CC          := $(CROSS_COMPILE)gcc            # C compiler on macOS (default to 
 # -O2: Optimization level 2
 # -std=c11: Use C11 standard
 # -MMD: Generate dependency files (.d) automatically
-CFLAGS      := -Wall -Wextra -g -O2 -std=c17 -MMD -I$(INCLUDE_DIR)
+CFLAGS      := -Wall -Wextra -Werror -g -O2 -std=c17 -MMD -I$(INCLUDE_DIR)
 
 # Add all source directories (including subdirectories) for header search too
 # This is useful if source files include headers from other source subdirs.
@@ -51,7 +51,7 @@ INC_DIRS    := $(sort $(dir $(SOURCES)))
 CFLAGS      += $(addprefix -I,$(INC_DIRS))
 
 # LDFLAGS: Linker flags for linking (e.g., libraries)
-LDFLAGS     :=
+LDFLAGS     := -lm -pthread
 
 ifeq ($(UNAME_S),SunOS)
     LDFLAGS  += -lkstat

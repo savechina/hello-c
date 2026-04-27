@@ -39,7 +39,23 @@
 - [C 术语表](./basic/basic_glossary.md) 📚
 - [基础阶段复习](./basic/review_basic.md) 📝
 
-# Advance
+# Advance - C 进阶
+
+- [章节概览](./advance/overview.md) 📋
+
+- [错误处理](./advance/error-handling.md) 🟡
+- [原子类型](./advance/atomic-types.md) 🟡
+- [透明指针](./advance/smart-pointers.md) 🔴
+- [异步与线程](./advance/async.md) 🔴
+- [数据结构遍历](./advance/iterators.md) 🔴
+- [高级多态](./advance/advanced_traits.md) 🔴
+- [系统调用](./advance/system.md) 🔴
+- [测试框架](./advance/testing.md) 🟡
+- [工具链](./advance/tools.md) 🟢
+- [数据库](./advance/database.md) 🟡
+- [HTTP 服务器](./advance/web.md) 🔴
+
+- [阶段复习](./advance/review.md) 📝
 
 # Algo
 

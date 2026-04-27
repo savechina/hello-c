@@ -63,6 +63,7 @@ static void conditional_compile_sample(void) {
 
     /* 条件编译: 根据平台选择不同代码路径 */
     int val = 42;
+    (void)val;
 #if defined(__LP64__) || defined(_LP64)
     printf("  指针宽度: 64 位 (LP64)\n");
     printf("  long = %zu 位\n", sizeof(long) * 8);
