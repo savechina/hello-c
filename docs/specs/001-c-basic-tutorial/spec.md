@@ -7,10 +7,12 @@
 
 ## Clarifications
 
-### Session 2026-04-26
+### Session 2026-04-27
 
-- Q: Chapter granularity — how many basic chapters, and how deeply should topics be split? → A: Match hello-rust granularity (~20+ chapters) — split complex topics into sub-chapters (e.g., pointers → pointer basics, pointer arithmetic, function pointers, void pointers)
-- Q: Writing voice & narrative persona for the tutorial → A: 个人学习经验总结 (personal learning diary) — first-person narrative ("我发现", "我的理解"), casual reflective tone with "aha moment" opening stories, matching hello-rust's story/analogy approach
+- Q: Opening story style — fake personal experience vs real analogy → A: Real everyday analogy stories, matching hello-rust style (e.g., "想象你在整理一个工具箱..."). Small story, big lesson (小故事，大道理). Concise intro to programming concept. NO "我第一次写代码时" personal framing. Replace across all 27 chapters.
+
+### Session 2026-04-26
+- Q: Writing voice & narrative persona for the tutorial → A: 个人学习经验总结 for explanation sections (first-person), but opening stories MUST use real-world analogies (hello-rust pattern: 小故事，大道理), NOT fake personal experience narratives.
 - Q: Code example format — standalone files vs integrated module → A: Follow hello-rust pattern — each `_sample.c` is compiled into the single `hello` binary via Makefile glob (no separate `main()`). `make sample CHAPTER=<name>` runs the specific topic. All samples integrate like hello-rust's `mod.rs` pattern.
 - Q: Should basic section include review chapter and glossary like hello-rust → A: Include both — `review-basic.md` (阶段复习: 10+ Qs covering all 20+ topics) AND `basic-glossary.md` (术语表: C-specific terms with Chinese/English definitions)
 - Q: Handling existing `src/basic/` files — preserve, refactor, or replace? → A: Replace entirely — delete basic.c/basic.h/datatype_sample.* and rebuild from scratch for structural coherence with 20+ chapters
@@ -95,7 +97,7 @@ The tutorial demonstrates how to write portable C code using `#if defined(...)` 
 
 - **FR-001**: The Basic section MUST have an overview page (`docs/src/basic/basic-overview.md`) matching the hello-rust structure: chapter table with difficulty ratings, learning objectives, and a visual learning path diagram
 - **FR-002**: Each tutorial chapter MUST be an mdBook markdown file in `docs/src/basic/` following the hello-rust chapter template with error-first learning approach:
-  - Opening story/analogy (开篇故事)
+  - Opening analogy/story (开篇故事) — everyday real-world analogy that maps to the C concept, hello-rust style (小故事，大道理). NO "第一次写代码" personal experience framing.
   - Target audience (本章适合谁)
   - Learning objectives (你会学到什么)
   - Prerequisites (前置要求)
@@ -114,7 +116,7 @@ The tutorial demonstrates how to write portable C code using `#if defined(...)` 
 - **FR-008**: Difficult concepts (pointers, memory management, undefined behavior) MUST include three cognitive aids: (1) ASCII memory layout diagrams showing stack/heap/pointer relationships, (2) three-level interactive exercises — "run this" → "change this" → "break this", (3) comparison tables with Python/JavaScript to connect C concepts to familiar mental models
 - **FR-009**: All dynamic memory examples MUST run cleanly under `valgrind --leak-check=full` with zero leaks and zero errors
 - **FR-010**: Memory allocation examples MUST follow constitution requirements: malloc/free pairing, NULL checks, bounded string operations (`strncpy` over `strcpy`, `snprintf` over `sprintf`)
-- **FR-011**: Documentation MUST use first-person narrative voice ("我发现", "我的理解") as personal C learning experience summary — casual, reflective tone with "aha moment" opening stories. Each chapter MUST follow the hello-rust story/analogy template (e.g., "工具箱" metaphor). English technical terms appear in parentheses after Chinese
+- **FR-011**: Documentation MUST use first-person narrative voice for explanation sections ("我发现", "我的理解") — casual, reflective tone. Opening stories MUST use real everyday analogies (hello-rust style like "想象你在整理一个工具箱..."), NOT fake personal experience ("我第一次写代码时..."). Each chapter MUST follow the hello-rust story/analogy template (e.g., "工具箱" metaphor). English technical terms appear in parentheses after Chinese
 - **FR-012**: The mdBook language setting in `book.toml` MUST be changed from "en" to "zh" to reflect the Chinese-language content
 - **FR-013**: Each chapter MUST ALSO have a `_sample.c` file (e.g., `src/basic/variables_sample.c`) following the hello-rust convention. Sample files are compiled into the single `hello` binary alongside the main module. No separate `main()` — samples share the coordinator pattern with `main_<topic>()` functions
 - **FR-014**: The basic section MUST include `review-basic.md` (阶段复习) — a cumulative chapter with 10+ questions covering all 20+ topics, with multiple difficulty levels (🟢🟡🔴) and collapsible answers
