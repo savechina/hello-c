@@ -97,3 +97,10 @@ make help      # Show usage
 - `Dockerfile` has hardcoded proxy (`192.168.2.7:1087`) and Aliyun mirrors — adjust for your environment
 - `hello.c:17` — `fibonacci(60)` will overflow; the function is actually factorial
 - `src/basic/datatype_sample.c` mixes safe (`strncpy`) and unsafe (`strcpy`, `sprintf`) — pedagogical intent
+
+## Active Technologies
+- C17 (ISO/IEC 9899:2018) | gcc 12+ or clang 15+ + POSIX C standard library, `<stdint.h>`, `<stdio.h>`, `<stdlib.h>`, `<string.h>`, `<ctype.h>`, `<math.h>`, `<limits.h>`, `<time.h>`, `<unistd.h>`, `<errno.h>`, `<stdarg.h>` (001-c-basic-tutorial)
+- N/A — tutorial is stateless code examples (001-c-basic-tutorial)
+
+## Recent Changes
+- 001-c-basic-tutorial: Added C17 (ISO/IEC 9899:2018) | gcc 12+ or clang 15+ + POSIX C standard library, `<stdint.h>`, `<stdio.h>`, `<stdlib.h>`, `<string.h>`, `<ctype.h>`, `<math.h>`, `<limits.h>`, `<time.h>`, `<unistd.h>`, `<errno.h>`, `<stdarg.h>`

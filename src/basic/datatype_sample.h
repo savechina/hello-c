@@ -1,22 +1,9 @@
 #ifndef DATATYPE_SAMPLE_H
 #define DATATYPE_SAMPLE_H
-/**
- * String sample
- */
-int string_sample(void);
 
-/**
- * array sample
- */
-int array_sample(void);
+int main_datatype_sample(void);
+void datatype_int_sample(void);
+void datatype_float_sample(void);
+void datatype_char_sample(void);
 
-/**
- * date and time sampe
- */
-int date_sample(void);
-
-/**
- * struct sample
- */
-int struct_sample(void);
 #endif

@@ -1,6 +1,6 @@
 [book]
 authors = ["RenYan Wei"]
-language = "en"
+language = "zh"
 src = "src"
 title = "Hello C"
 

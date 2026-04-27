@@ -16,7 +16,8 @@ OBJ_DIR     := build/obj
 # Directory for the final executable
 BIN_DIR     := build/bin
 
-# Find all .c source files in SRC_DIR
+# Find all .c source files in SRC_DIR (including _sample.c files)
+# Per hello-rust convention: all samples compiled into single 'hello' binary
 SOURCES     := $(wildcard $(SRC_DIR)/**.c $(SRC_DIR)/**/**.c)
 
 # Generate corresponding .o object files based on sources and OBJ_DIR
@@ -24,8 +25,6 @@ SOURCES     := $(wildcard $(SRC_DIR)/**.c $(SRC_DIR)/**/**.c)
 OBJECTS     := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SOURCES))
 
 # --- DEBUGGING LINES ---
-$(info DEBUG: SRC_DIR is $(SRC_DIR))
-$(info DEBUG: Wildcard pattern is $(SRC_DIR)/**.c $(SRC_DIR)/**/**.c)
 $(info DEBUG: SOURCES found: $(SOURCES))
 $(info DEBUG: OBJECTS found: $(OBJECTS))
 # --- END DEBUGGING LINES ---
@@ -61,7 +60,7 @@ endif
 # --- Directories Setup ---
 # Create output directories if they don't exist
 OBJ_SUBDIRS := $(sort $(dir $(OBJECTS)))
-DIRS        := $(OBJ_SUBDIRS) $(OBJ_DIR) $(BIN_DIR)
+DIRS        := $(OBJ_SUBDIRS) $(BIN_DIR)
 
 $(info DEBUG: DIRS found: $(DIRS))
 
@@ -93,12 +92,6 @@ $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "Compiling $< to $@ ..."
 	$(CC) $(CFLAGS) -c $< -o $@
 
-# --- Include Dependency Files (.d) ---
-# This line tells Make to include the automatically generated .d files.
-# These files contain rules for header file dependencies,
-# so if a header changes, the corresponding .c file will be recompiled.
--include $(OBJECTS:.o=.d)
-
 # --- Directory Creation Rule ---
 $(DIRS):
 	@mkdir -p $@
@@ -109,6 +102,27 @@ run:
 	@echo "Running project..."
 	$(BIN_DIR)/$(TARGET)
 	@echo "Running complete"
+
+# ==============================================================================
+# --- Sample Targets (hello-rust convention) ---
+# ==============================================================================
+# All _sample.c files are compiled into the single 'hello' binary via glob.
+# Usage:
+#   make sample CHAPTER=<name>  # rebuild and run (full binary includes all samples)
+# ==============================================================================
+.PHONY: sample
+sample: build
+	@echo "Running hello (all samples compiled)..."
+	@echo "---"
+	$(BIN_DIR)/$(TARGET)
+	@echo "---"
+
+.PHONY: sample-all
+sample-all: build
+	@echo "Running hello (full tutorial suite)..."
+	@echo "---"
+	$(BIN_DIR)/$(TARGET)
+	@echo "---"
 
 # --- Clean Target ---
 .PHONY: clean
@@ -126,6 +140,8 @@ help:
 	@echo "  all        (default) Builds the final executable '$(TARGET)'."
 	@echo "  build      Builds the final executable '$(TARGET)'."
 	@echo "  run        Run the final executable '$(TARGET)'."
+	@echo "  sample CHAPTER=<name>  Rebuild and run (all _sample.c files included)."
+	@echo "  sample-all             Same as 'run' — full tutorial suite."
 	@echo "  clean      Removes all compiled objects and the executable."
 	@echo "  help       Displays this help message."
 	@echo ""
