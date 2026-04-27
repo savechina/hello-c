@@ -46,15 +46,30 @@
   - [错误处理](./advance/error-handling.md) 🟡
   - [原子类型](./advance/atomic-types.md) 🟡
   - [透明指针](./advance/smart-pointers.md) 🔴
-  - [异步与线程](./advance/async.md) 🔴
-  - [数据结构遍历](./advance/iterators.md) 🔴
+  - [迭代器与遍历](./advance/iterators.md) 🔴
   - [高级多态](./advance/advanced_traits.md) 🔴
-  - [系统调用](./advance/system.md) 🔴
+  - [数据库 (SQLite)](./advance/database.md) 🟡
   - [测试框架](./advance/testing.md) 🟡
   - [工具链](./advance/tools.md) 🟢
-  - [数据库](./advance/database.md) 🟡
-  - [HTTP 服务器](./advance/web.md) 🔴
-  
+
+  - [异步与并发](./advance/async.md) 🔴
+    - [线程创建与生命周期](./advance/async/async_thread.md)
+    - [同步原语 (Mutex/Condvar)](./advance/async/async_sync.md)
+    - [线程池模式](./advance/async/async_pool.md)
+    - [I/O 多路复用 (select/poll)](./advance/async/async_iomux.md)
+
+  - [系统编程](./advance/system.md) 🔴
+    - [文件与目录操作](./advance/system/file.md)
+    - [POSIX 信号处理](./advance/system/signal.md)
+    - [内存映射 I/O (mmap)](./advance/system/mmap.md)
+    - [进程管理 (fork/exec)](./advance/system/process.md)
+    - [管道与 Socket IPC](./advance/system/ipc.md)
+    - [CLI 开发模式](./advance/system/cli.md)
+
+  - [Web 开发](./advance/web.md) 🔴
+    - [原始 Socket + HTTP 解析](./advance/web/socket.md)
+    - [并发服务器模型](./advance/web/concurrent.md)
+
   - [阶段复习](./advance/review.md) 📝
 
 # Algo
