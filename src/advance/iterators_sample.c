@@ -245,7 +245,7 @@ static void demo_dynamic_array(void)
 
     printf("  内容: ");
     for (size_t i = 0; i < arr.size; i++) {
-        printf("%" PRId32 " ", arr.data[i]);
+        printf("%" PRId32 " ", dynarray_get(&arr, i));
     }
     printf("\n");
 

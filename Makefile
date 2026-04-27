@@ -51,7 +51,7 @@ INC_DIRS    := $(sort $(dir $(SOURCES)))
 CFLAGS      += $(addprefix -I,$(INC_DIRS))
 
 # LDFLAGS: Linker flags for linking (e.g., libraries)
-LDFLAGS     := -lm -pthread
+LDFLAGS     := -lm -pthread -lsqlite3
 
 ifeq ($(UNAME_S),SunOS)
     LDFLAGS  += -lkstat
