@@ -1,6 +1,8 @@
 # Summary
 
-- [简介](./README.md)
+- [关于 Hello C](./about-hello.md)
+- [简介](./introduction.md)
+- [快速开始](./getting-started.md)
 
 # 基础部分（Basic）
 
