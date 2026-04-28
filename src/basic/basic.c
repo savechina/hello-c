@@ -27,8 +27,21 @@ int main_basic(void) {
     main_loops_sample();
     printf("\n");
 
-    printf("--- 函数 (Functions) ---\n");
-    main_functions_sample();
+    /* functions: 4 sub-chapters */
+    printf("--- 函数基础 (Function Basics) ---\n");
+    main_functions_basics_sample();
+    printf("\n");
+
+    printf("--- 函数作用域 (Function Scope) ---\n");
+    main_function_scope_sample();
+    printf("\n");
+
+    printf("--- 递归函数 (Recursion) ---\n");
+    main_recursion_sample();
+    printf("\n");
+
+    printf("--- 可变参数函数 (Variadic Functions) ---\n");
+    main_variadic_functions_sample();
     printf("\n");
 
     printf("--- 数组基础 (Arrays) ---\n");
@@ -52,6 +65,10 @@ int main_basic(void) {
     main_strings_sample();
     printf("\n");
 
+    printf("--- 可变参数函数 (Variadic Functions) ---\n");
+    main_variadic_functions_sample();
+    printf("\n");
+
     /* === 数据结构 (Data Structures) === */
     printf("--- 结构体 (Structures) ---\n");
     main_structs_sample();
@@ -67,6 +84,10 @@ int main_basic(void) {
 
     printf("--- 作用域与生命周期 (Scope & Lifetime) ---\n");
     main_scope_sample();
+    printf("\n");
+
+    printf("--- 递归函数 (Recursion) ---\n");
+    main_recursion_sample();
     printf("\n");
 
     /* === 高级模式 (Advanced Patterns) === */

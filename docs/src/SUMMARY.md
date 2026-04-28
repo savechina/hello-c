@@ -15,6 +15,10 @@
   - [控制流](./basic/control_flow.md) 🟢
   - [循环](./basic/loops.md) 🟢
   - [函数](./basic/functions.md) 🟢
+    - [函数基础](./basic/functions_basics.md)
+    - [函数作用域](./basic/function_scope.md)
+    - [递归函数](./basic/recursion.md)
+    - [可变参数函数](./basic/variadic_functions.md)
   - [数组基础](./basic/arrays.md) 🟢
   - [预处理器与宏](./basic/preprocessor.md) 🟢
 
@@ -22,6 +26,7 @@
   - [指针基础](./basic/pointers.md) 🟡
   - [指针运算与数组](./basic/pointer_arith.md) 🟡
   - [字符串深度](./basic/strings.md) 🟡
+  - [可变参数函数](./basic/variadic_functions.md) 🟡
 
   **数据结构**
   - [结构体](./basic/structs.md) 🟡
@@ -42,7 +47,6 @@
   - [条件编译](./basic/conditional_comp.md) 🟢
   - [命令行参数与 I/O 重定向](./basic/cli_args.md) 🟡
   - [标准库精要](./basic/stdlib.md) 🟡
-
   - [C 术语表](./basic/basic_glossary.md) 📚
   - [基础阶段复习](./basic/review_basic.md) 📝
 

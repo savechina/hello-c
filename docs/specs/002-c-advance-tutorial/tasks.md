@@ -230,7 +230,7 @@ Phase 1 (T001-T002) ✅ DONE — Analysis complete
 | ----- | ----- | ------- |
 | Phase 1: Foundational | T001-T002 | ✅ 2 done |
 | Phase 2: US1 (P1) Reorder existing | T003-T010 | ✅ 8 done |
-| Phase 3: US2 (P1) Functions split | T011-T023 | ⏳ 13 pending |
+| Phase 3: US2 (P1) Functions split | T011-T023 | ✅ 13 done |
 | Phase 4: US3 (P2) Strings split | T024-T037 | ⏳ 14 pending |
 | Phase 5: US4 (P1) Pointers split | T038-T053 | ⏳ 16 pending |
 | Phase 6: US5 (P2) Structs split | T054-T065 | ⏳ 12 pending |
