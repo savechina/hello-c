@@ -109,10 +109,10 @@ static double bench_mmap(const char *path, size_t size)
 
 /* ── 1. Memory-Mapped Read ── */
 
-static void demo_mmap_read(void)
+static void system_mmap_read_sample(void)
 {
 #if defined(__APPLE__) || defined(__linux__)
-    printf("=== 1. 内存映射读取 (demo_mmap_read) ===\n");
+    printf("=== 1. 内存映射读取 (system_mmap_read_sample) ===\n");
     printf("  类比: mmap 像给房间开了扇窗 — 不用走门，直接看到内容\n\n");
 
     const char *path = "/tmp/hello_c_mmap_read.txt";
@@ -150,7 +150,7 @@ static void demo_mmap_read(void)
     unlink(path);
     printf("\n");
 #else
-    printf("=== 1. 内存映射读取 (demo_mmap_read) ===\n");
+    printf("=== 1. 内存映射读取 (system_mmap_read_sample) ===\n");
     printf("  [跳过] 当前平台不支持 mmap\n");
     printf("\n");
 #endif
@@ -158,10 +158,10 @@ static void demo_mmap_read(void)
 
 /* ── 2. Memory-Mapped Write ── */
 
-static void demo_mmap_write(void)
+static void system_mmap_write_sample(void)
 {
 #if defined(__APPLE__) || defined(__linux__)
-    printf("=== 2. 内存映射写入 (demo_mmap_write) ===\n");
+    printf("=== 2. 内存映射写入 (system_mmap_write_sample) ===\n");
     printf("  类比: 在墙上开了扇窗，可以直接往房间里放东西\n\n");
 
     const char *path = "/tmp/hello_c_mmap_write.txt";
@@ -210,7 +210,7 @@ static void demo_mmap_write(void)
     unlink(path);
     printf("\n");
 #else
-    printf("=== 2. 内存映射写入 (demo_mmap_write) ===\n");
+    printf("=== 2. 内存映射写入 (system_mmap_write_sample) ===\n");
     printf("  [跳过] 当前平台不支持 mmap\n");
     printf("\n");
 #endif
@@ -218,10 +218,10 @@ static void demo_mmap_write(void)
 
 /* ── 3. Performance Comparison (Conceptual) ── */
 
-static void demo_mmap_compare(void)
+static void system_mmap_compare_sample(void)
 {
 #if defined(__APPLE__) || defined(__linux__)
-    printf("=== 3. 性能对比 (demo_mmap_compare) ===\n");
+    printf("=== 3. 性能对比 (system_mmap_compare_sample) ===\n");
     printf("  类比: read/write 是敲门等管理员开门；mmap 是打通墙壁\n\n");
 
     const char *path_rw = "/tmp/hello_c_mmap_bench_rw.txt";
@@ -255,7 +255,7 @@ static void demo_mmap_compare(void)
     printf("    - 频繁随机访问: mmap 明显更快\n");
     printf("    - 顺序读写: 差距不大\n\n");
 #else
-    printf("=== 3. 性能对比 (demo_mmap_compare) ===\n");
+    printf("=== 3. 性能对比 (system_mmap_compare_sample) ===\n");
     printf("  [跳过] 当前平台不支持 mmap\n");
     printf("\n");
 #endif
@@ -271,9 +271,9 @@ int main_system_mmap_sample(void)
 
     printf("  类比: mmap 像给文件开了扇窗 — 直接看内容，不用走门\n\n");
 
-    demo_mmap_read();
-    demo_mmap_write();
-    demo_mmap_compare();
+    system_mmap_read_sample();
+    system_mmap_write_sample();
+    system_mmap_compare_sample();
 
     printf("内存映射 I/O 演示完毕。\n");
     return 0;

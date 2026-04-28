@@ -41,7 +41,7 @@ static int32_t op_mod(int32_t a, int32_t b)
     return a % b;
 }
 
-static void demo_dispatch_table(void)
+static void advanced_traits_dispatch_table_sample(void)
 {
     printf("=== 1. Function Pointer Dispatch Table ===\n");
 
@@ -245,7 +245,7 @@ __attribute__((unused)) static void shape_destroy(Shape *s)
     s->vtable->destroy(s->data);
 }
 
-static void demo_vtable_polymorphism(void)
+static void advanced_traits_vtable_polymorphism_sample(void)
 {
     printf("=== 2. VTable-like Struct — Runtime Polymorphism ===\n");
 
@@ -344,7 +344,7 @@ static void mul_cleanup(void *data)
     printf("    [Multiply] cleanup\n");
 }
 
-static void demo_interface_pattern(void)
+static void advanced_traits_interface_pattern_sample(void)
 {
     printf("=== 3. Interface Pattern (struct fp + void* data) ===\n");
 
@@ -404,7 +404,7 @@ static int32_t logger_func(const char *label, int32_t value)
     return value;
 }
 
-static void demo_null_guard(void)
+static void advanced_traits_null_guard_sample(void)
 {
     printf("=== 4. Dynamic Dispatch + NULL Error Guard ===\n");
 
@@ -453,7 +453,7 @@ __attribute__((unused)) static ShapeVTable dummy_vtable = {
     .area = NULL, .perimeter = NULL, .destroy = NULL, .print = NULL
 };
 
-static void demo_dynamic_dispatch(void)
+static void advanced_traits_dynamic_dispatch_sample(void)
 {
     printf("=== 5. Dynamic Dispatch — Runtime VTable Swap ===\n");
 
@@ -492,11 +492,11 @@ int main_advanced_traits_sample(void)
     printf("  高级多态 (Advanced Traits / VTable)\n");
     printf("========================================\n\n");
 
-    demo_dispatch_table();
-    demo_vtable_polymorphism();
-    demo_interface_pattern();
-    demo_null_guard();
-    demo_dynamic_dispatch();
+    advanced_traits_dispatch_table_sample();
+    advanced_traits_vtable_polymorphism_sample();
+    advanced_traits_interface_pattern_sample();
+    advanced_traits_null_guard_sample();
+    advanced_traits_dynamic_dispatch_sample();
 
     printf("高级多态演示完毕。\n");
     return 0;

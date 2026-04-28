@@ -37,7 +37,7 @@ static const uint8_t *smartbuffer_data(const SmartBuffer_Int *buf);
    Demo 1: 错误优先 — 原始 malloc/free 导致内存泄漏
    --------------------------------------------------------- */
 
-static void demo_memory_leak(void)
+static void smart_pointers_memory_leak_sample(void)
 {
     printf("=== Demo 1: 原始指针的内存泄漏问题 ===\n");
 
@@ -49,7 +49,7 @@ static void demo_memory_leak(void)
     }
     snprintf(leaky, 128, "I was allocated but never freed!");
     printf("  泄漏指针: leaked buffer = \"%s\"\n", leaky);
-    /* 没有 free(leaky)! 每次调用 demo_memory_leak 都泄漏 128 字节 */
+    /* 没有 free(leaky)! 每次调用 smart_pointers_memory_leak_sample 都泄漏 128 字节 */
 
     printf("  ❌ 问题: malloc 后忘记 free → 内存泄漏\n");
     printf("  ✅ 修复: 每条执行路径都必须配对 free\n\n");
@@ -111,7 +111,7 @@ static const uint8_t *smartbuffer_data(const SmartBuffer_Int *buf)
     return buf->data;
 }
 
-static void demo_factory_pattern(void)
+static void smart_pointers_factory_pattern_sample(void)
 {
     printf("=== Demo 2: 工厂模式 + 不透明指针 ===\n");
 
@@ -152,7 +152,7 @@ static void demo_factory_pattern(void)
          ptr != NULL; \
          (free(ptr), ptr = NULL))
 
-static void demo_raii_macros(void)
+static void smart_pointers_raii_macros_sample(void)
 {
     printf("=== Demo 3: RAII-style 宏 ===\n");
 
@@ -236,7 +236,7 @@ static void generic_array_destroy(GenericArray *arr)
     free(arr);
 }
 
-static void demo_generic_array(void)
+static void smart_pointers_generic_array_sample(void)
 {
     printf("=== Demo 4: void* 通用容器 ===\n");
 
@@ -275,7 +275,7 @@ typedef struct {
 /* 不透明结构体: 在头文件中只有 typedef, 定义在 .c 中 */
 typedef struct SmartBuffer_Internal SmartBuffer_Int;
 
-static void demo_public_vs_opaque(void)
+static void smart_pointers_public_vs_opaque_sample(void)
 {
     printf("=== Demo 5: 公开结构体 vs 不透明结构体 ===\n");
 
@@ -314,7 +314,7 @@ static void demo_public_vs_opaque(void)
    Demo 6: RAII + 错误优先 — 资源安全模式
    --------------------------------------------------------- */
 
-static void demo_raii_safety(void)
+static void smart_pointers_raii_safety_sample(void)
 {
     printf("=== Demo 6: RAII 安全模式 vs 原始模式 ===\n");
 
@@ -354,7 +354,7 @@ static void demo_raii_safety(void)
    Demo 7: 不透明指针的内存布局
    --------------------------------------------------------- */
 
-static void demo_opaque_layout(void)
+static void smart_pointers_opaque_layout_sample(void)
 {
     printf("=== Demo 7: 不透明指针的内存布局 ===\n");
 
@@ -397,13 +397,13 @@ int main_smart_pointers_sample(void)
     printf("  smart-pointers 透明指针 & RAII 模式\n");
     printf("========================================\n\n");
 
-    demo_memory_leak();        /* 错误优先: 展示内存泄漏 */
-    demo_factory_pattern();    /* 工厂模式 + 不透明指针 */
-    demo_raii_macros();        /* RAII-style 宏 */
-    demo_generic_array();      /* void* 通用容器 */
-    demo_public_vs_opaque();   /* 公开 vs 不透明 */
-    demo_raii_safety();        /* RAII 安全对比 */
-    demo_opaque_layout();      /* 内存布局可视化 */
+    smart_pointers_memory_leak_sample();        /* 错误优先: 展示内存泄漏 */
+    smart_pointers_factory_pattern_sample();    /* 工厂模式 + 不透明指针 */
+    smart_pointers_raii_macros_sample();        /* RAII-style 宏 */
+    smart_pointers_generic_array_sample();      /* void* 通用容器 */
+    smart_pointers_public_vs_opaque_sample();   /* 公开 vs 不透明 */
+    smart_pointers_raii_safety_sample();        /* RAII 安全对比 */
+    smart_pointers_opaque_layout_sample();      /* 内存布局可视化 */
 
     printf("smart-pointers 演示完毕.\n");
     return 0;

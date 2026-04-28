@@ -61,7 +61,7 @@ static void handle_client(int client_fd)
     close(client_fd);
 }
 
-static void demo_fork_server(void)
+static void web_concurrent_fork_server_sample(void)
 {
     printf("  [1] Fork 并发服务器 (Fork Per Connection):\n");
     printf("    类比: 每位客人配专属服务员\n\n");
@@ -168,7 +168,7 @@ static void demo_fork_server(void)
 
 #else
 
-static void demo_fork_server(void)
+static void web_concurrent_fork_server_sample(void)
 {
     printf("  [1] 跳过 — 平台不支持 fork\n\n");
 }
@@ -192,7 +192,7 @@ static void *thread_handle_client(void *arg)
     return NULL;
 }
 
-static void demo_thread_per_connection(void)
+static void web_concurrent_thread_per_connection_sample(void)
 {
     printf("  [2] 线程并发服务器 (Thread Per Connection):\n");
     printf("    类比: 每位客人配服务员，共享厨房 (线程共享内存)\n\n");
@@ -281,7 +281,7 @@ static void demo_thread_per_connection(void)
 
 #else
 
-static void demo_thread_per_connection(void)
+static void web_concurrent_thread_per_connection_sample(void)
 {
     printf("  [2] 跳过 — 平台不支持 pthread\n\n");
 }
@@ -294,7 +294,7 @@ static void demo_thread_per_connection(void)
 
 #ifdef POSIX_AVAILABLE
 
-static void demo_iomux_server(void)
+static void web_concurrent_iomux_server_sample(void)
 {
     printf("  [3] I/O 多路复用服务器 (select Multiplexing):\n");
     printf("    类比: 一位服务员但手脚麻利，同时服务所有客人\n\n");
@@ -396,7 +396,7 @@ static void demo_iomux_server(void)
 
 #else
 
-static void demo_iomux_server(void)
+static void web_concurrent_iomux_server_sample(void)
 {
     printf("  [3] 跳过 — 平台不支持 select\n\n");
 }
@@ -418,9 +418,9 @@ int main_web_concurrent_sample(void)
     printf("    Thread   = 每位客人服务员，共享厨房 (轻量但需要同步)\n");
     printf("    I/O 复用 = 一位服务员服务所有客人 (高效但需手脚麻利)\n\n");
 
-    demo_fork_server();
-    demo_thread_per_connection();
-    demo_iomux_server();
+    web_concurrent_fork_server_sample();
+    web_concurrent_thread_per_connection_sample();
+    web_concurrent_iomux_server_sample();
 
     printf("并发服务器模型演示完毕。\n");
     return 0;

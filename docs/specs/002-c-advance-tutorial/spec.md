@@ -28,6 +28,7 @@ Mini-projects combine multiple advance concepts: linked list library, thread poo
 - **FR-004**: `advance.c` coordinator calls all `main_<topic>_sample()` functions
 - **FR-005**: Zero valgrind errors on all advance code
 - **FR-006**: bilingual Chinese + English, first-person voice, real-world analogy openings
+- **FR-007**: All internal (static) demo functions named with `_sample` suffix: `<module>_<feature>_sample`. Entry points are `main_<module>_sample(void)`. No `demo_*` function names allowed.
 
 ## Success Criteria *(mandatory)*
 
@@ -47,3 +48,4 @@ Mini-projects combine multiple advance concepts: linked list library, thread poo
 ### Session 2026-04-27
 
 - Q: Advance scope? → A: Map hello-rust advance (async, atomics, smart-pointers, iterators, traits, error-handling, database, system, testing, tools, web) to C equivalents using C paradigms.
+- Q: Function naming for sample code → A: ALL internal (static) functions use `_sample` suffix pattern: `<module>_<feature>_sample`. No `demo_*` naming convention. Entry points: `main_<module>_sample(void)`. Applied across all 20 advance sample files.

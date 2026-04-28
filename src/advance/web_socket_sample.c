@@ -40,7 +40,7 @@
  * ==================================================================== */
 
 #ifdef POSIX_SOCKETS
-static void demo_socket_basic(void)
+static void web_socket_basic_sample(void)
 {
     printf("  [1] Socket 创建 (Socket Basic):\n");
     printf("    类比: socket() = 买一部手机\n\n");
@@ -72,7 +72,7 @@ static void demo_socket_basic(void)
     printf("    close(fd=%d) — 手机不用了关机\n\n", sock_fd);
 }
 #else
-static void demo_socket_basic(void)
+static void web_socket_basic_sample(void)
 {
     printf("  [1] 跳过 — 平台不支持 POSIX sockets\n\n");
 }
@@ -122,7 +122,7 @@ static int parse_http_request(const char *buf, size_t buf_len,
     return 0;
 }
 
-static void demo_http_parse(void)
+static void web_socket_http_parse_sample(void)
 {
     printf("  [2] HTTP 请求解析 (HTTP Parse):\n");
     printf("    类比: 读电话那头说的话，抓关键词\n\n");
@@ -167,7 +167,7 @@ static void demo_http_parse(void)
  *  Demo 3: HTTP Response — 构造响应 (状态行 + 头部 + 空行 + body)
  * ==================================================================== */
 
-static void demo_http_response(void)
+static void web_socket_http_response_sample(void)
 {
     printf("  [3] HTTP 响应构造 (HTTP Response):\n");
     printf("    类比: 理解了对方的话，给个答复\n\n");
@@ -249,9 +249,9 @@ int main_web_socket_sample(void)
     printf("  Socket 与 HTTP 协议 (Raw Sockets + HTTP)\n");
     printf("========================================\n\n");
 
-    demo_socket_basic();
-    demo_http_parse();
-    demo_http_response();
+    web_socket_basic_sample();
+    web_socket_http_parse_sample();
+    web_socket_http_response_sample();
 
     printf("Socket 与 HTTP 解析演示完毕。\n");
     return 0;

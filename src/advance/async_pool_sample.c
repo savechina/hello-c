@@ -140,7 +140,7 @@ static void pool_shutdown(ThreadPool *pool, int num_workers)
  * Demo 1: 创建线程池 (Pool Creation)
  * ============================================================ */
 
-static void demo_pool_create(void)
+static void async_pool_create_sample(void)
 {
     printf("--- 1. 创建线程池 (ThreadPool Creation) ---\n");
 
@@ -180,7 +180,7 @@ static void task_add_one(void *arg)
     printf("  [task %" PRId32 "] %d + 1 = %d\n", t->id, (int)t->value, (int)t->result);
 }
 
-static void demo_pool_submit(void)
+static void async_pool_submit_sample(void)
 {
     printf("--- 2. 提交任务到线程池 (Task Submission) ---\n");
 
@@ -230,7 +230,7 @@ static void task_labels(void *arg)
     printf("  [task %" PRId32 "] 执行: %s\n", t->id, t->label);
 }
 
-static void demo_pool_shutdown(void)
+static void async_pool_shutdown_sample(void)
 {
     printf("--- 3. 优雅关闭 (Graceful Shutdown) ---\n");
 
@@ -269,9 +269,9 @@ int main_async_pool_sample(void)
     printf("  线程池模式 (Thread Pool Pattern)\n");
     printf("========================================\n\n");
 
-    demo_pool_create();
-    demo_pool_submit();
-    demo_pool_shutdown();
+    async_pool_create_sample();
+    async_pool_submit_sample();
+    async_pool_shutdown_sample();
 
     printf("线程池模式演示完毕。\n");
     return 0;

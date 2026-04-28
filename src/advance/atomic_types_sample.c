@@ -29,7 +29,7 @@ static void *nonatomic_inc_thread(void *arg)
     return NULL;
 }
 
-static void demo_race_condition(void)
+static void atomic_types_race_condition_sample(void)
 {
     printf("=== Demo 1: 竞态条件 (Race Condition) ===\n");
 
@@ -55,7 +55,7 @@ static void demo_race_condition(void)
    Demo 2: atomic_int 基础用法
    --------------------------------------------------------- */
 
-static void demo_atomic_int_basic(void)
+static void atomic_types_atomic_int_basic_sample(void)
 {
     printf("=== Demo 2: atomic_int 基础 ===\n");
 
@@ -99,7 +99,7 @@ static void *atomic_inc_thread(void *arg)
     return NULL;
 }
 
-static void demo_atomic_fix(void)
+static void atomic_types_atomic_fix_sample(void)
 {
     printf("=== Demo 3: atomic_int 修复竞态条件 ===\n");
 
@@ -125,7 +125,7 @@ static void demo_atomic_fix(void)
    Demo 4: atomic_flag — 最简单的原子类型
    --------------------------------------------------------- */
 
-static void demo_atomic_flag(void)
+static void atomic_types_atomic_flag_sample(void)
 {
     printf("=== Demo 4: atomic_flag (自旋锁) ===\n");
 
@@ -164,7 +164,7 @@ static void demo_atomic_flag(void)
    Demo 5: memory_order — 内存顺序模型
    --------------------------------------------------------- */
 
-static void demo_memory_order(void)
+static void atomic_types_memory_order_sample(void)
 {
     printf("=== Demo 5: memory_order (内存顺序) ===\n");
 
@@ -200,7 +200,7 @@ static void demo_memory_order(void)
    Demo 6: volatile vs atomic — 关键区别
    --------------------------------------------------------- */
 
-static void demo_volatile_vs_atomic(void)
+static void atomic_types_volatile_vs_atomic_sample(void)
 {
     printf("=== Demo 6: volatile vs atomic ===\n");
 
@@ -238,7 +238,7 @@ static void demo_volatile_vs_atomic(void)
    Demo 7: CAS (Compare-And-Swap) — 无锁编程核心
    --------------------------------------------------------- */
 
-static void demo_cas(void)
+static void atomic_types_cas_sample(void)
 {
     printf("=== Demo 7: CAS (Compare-And-Swap) ===\n");
 
@@ -279,7 +279,7 @@ static void demo_cas(void)
    Demo 8: 原子操作的内存布局可视化
    --------------------------------------------------------- */
 
-static void demo_memory_layout(void)
+static void atomic_types_memory_layout_sample(void)
 {
     printf("=== Demo 8: 原子操作的内存布局 ===\n");
 
@@ -308,14 +308,14 @@ int main_atomic_types_sample(void)
     printf("  atomic-types 原子类型 (C11 <stdatomic.h>)\n");
     printf("========================================\n\n");
 
-    demo_race_condition();
-    demo_atomic_int_basic();
-    demo_atomic_fix();
-    demo_atomic_flag();
-    demo_memory_order();
-    demo_volatile_vs_atomic();
-    demo_cas();
-    demo_memory_layout();
+    atomic_types_race_condition_sample();
+    atomic_types_atomic_int_basic_sample();
+    atomic_types_atomic_fix_sample();
+    atomic_types_atomic_flag_sample();
+    atomic_types_memory_order_sample();
+    atomic_types_volatile_vs_atomic_sample();
+    atomic_types_cas_sample();
+    atomic_types_memory_layout_sample();
 
     printf("atomic-types 演示完毕.\n");
     return 0;

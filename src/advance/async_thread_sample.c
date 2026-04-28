@@ -22,7 +22,7 @@
  * Demo 1: 基本线程创建 (Basic Thread Creation)
  * ============================================================ */
 
-static void *demo_thread_basic_worker(void *arg)
+static void *async_thread_basic_sample_worker(void *arg)
 {
     int32_t id = *(const int32_t *)arg;
     printf("  [线程 %" PRId32 "] 我开始工作了！(我是厨师 %c)\n",
@@ -32,7 +32,7 @@ static void *demo_thread_basic_worker(void *arg)
     return NULL;
 }
 
-static void demo_thread_basic(void)
+static void async_thread_basic_sample(void)
 {
     printf("--- 1. 基本线程创建 (pthread_create + pthread_join) ---\n");
 
@@ -42,7 +42,7 @@ static void demo_thread_basic(void)
 
     /* 创建线程 — 每个线程拿到不同的 id 指针 */
     for (int32_t i = 0; i < n; i++) {
-        pthread_create(&threads[i], NULL, demo_thread_basic_worker, &ids[i]);
+        pthread_create(&threads[i], NULL, async_thread_basic_sample_worker, &ids[i]);
     }
 
     /* 等待所有线程完成 */
@@ -63,7 +63,7 @@ typedef struct {
     int32_t repeat_count;
 } TaskArgs;
 
-static void *demo_thread_with_data_worker(void *arg)
+static void *async_thread_with_data_sample_worker(void *arg)
 {
     TaskArgs *task = (TaskArgs *)arg;
     printf("  [员工 %" PRId32 "] 开始任务: \"%s\", 重复 %d 次\n",
@@ -75,7 +75,7 @@ static void *demo_thread_with_data_worker(void *arg)
     return NULL;
 }
 
-static void demo_thread_with_data(void)
+static void async_thread_with_data_sample(void)
 {
     printf("--- 2. 向线程传递数据 (struct via void*) ---\n");
 
@@ -96,7 +96,7 @@ static void demo_thread_with_data(void)
     tasks[2].repeat_count = 5;
 
     for (int32_t i = 0; i < 3; i++) {
-        pthread_create(&threads[i], NULL, demo_thread_with_data_worker, &tasks[i]);
+        pthread_create(&threads[i], NULL, async_thread_with_data_sample_worker, &tasks[i]);
     }
     for (int32_t i = 0; i < 3; i++) {
         pthread_join(threads[i], NULL);
@@ -114,7 +114,7 @@ typedef struct {
     int32_t status; /* 0 = success */
 } TaskResult;
 
-static void *demo_thread_return_worker(void *arg)
+static void *async_thread_return_sample_worker(void *arg)
 {
     int32_t n = *(const int32_t *)arg;
     TaskResult *result = malloc(sizeof(TaskResult));
@@ -134,7 +134,7 @@ static void *demo_thread_return_worker(void *arg)
     pthread_exit((void *)result);
 }
 
-static void demo_thread_return(void)
+static void async_thread_return_sample(void)
 {
     printf("--- 3. 线程返回值 (pthread_exit + pthread_join retval) ---\n");
 
@@ -142,7 +142,7 @@ static void demo_thread_return(void)
     int32_t n = 100;
     TaskResult *result = NULL;
 
-    pthread_create(&t, NULL, demo_thread_return_worker, &n);
+    pthread_create(&t, NULL, async_thread_return_sample_worker, &n);
     pthread_join(t, (void **)&result);
 
     if (result != NULL) {
@@ -158,7 +158,7 @@ static void demo_thread_return(void)
  * Demo 4: 分离线程 (Detached Thread — Fire-and-forget)
  * ============================================================ */
 
-static void *demo_thread_detached_worker(void *arg)
+static void *async_thread_detached_sample_worker(void *arg)
 {
     int32_t id = *(const int32_t *)arg;
     printf("  [分离线程 %" PRId32 "] 我在后台安静地工作...\n", id);
@@ -166,14 +166,14 @@ static void *demo_thread_detached_worker(void *arg)
     return NULL;
 }
 
-static void demo_thread_detached(void)
+static void async_thread_detached_sample(void)
 {
     printf("--- 4. 分离线程 (pthread_detach — Fire-and-forget) ---\n");
 
     int32_t id = 42;
     pthread_t t;
 
-    pthread_create(&t, NULL, demo_thread_detached_worker, &id);
+    pthread_create(&t, NULL, async_thread_detached_sample_worker, &id);
     /* 告诉系统：这个线程结束后自动回收，不需要 join */
     pthread_detach(t);
 
@@ -195,10 +195,10 @@ int main_async_thread_sample(void)
     printf("  线程创建与生命周期 (Thread & Lifecycle)\n");
     printf("========================================\n\n");
 
-    demo_thread_basic();
-    demo_thread_with_data();
-    demo_thread_return();
-    demo_thread_detached();
+    async_thread_basic_sample();
+    async_thread_with_data_sample();
+    async_thread_return_sample();
+    async_thread_detached_sample();
 
     printf("线程创建与生命周期演示完毕。\n");
     return 0;

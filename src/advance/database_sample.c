@@ -46,7 +46,7 @@ static sqlite3 *g_db = NULL;
  * 打开一个内存数据库
  * 类比: 图书馆管理员已经帮你把书架布置好，你随时可以查询
  */
-static void demo_open_close(void)
+static void database_open_close_sample(void)
 {
     printf("  [1] 打开内存数据库:\n");
 
@@ -70,7 +70,7 @@ static void demo_open_close(void)
  * 创建表 — DDL (Data Definition Language)
  * 类比: 定义书架的格式——每本书有哪些属性可记录
  */
-static void demo_create_table(void)
+static void database_create_table_sample(void)
 {
     printf("\n  [2] 创建表 (CREATE TABLE):\n");
 
@@ -100,7 +100,7 @@ static void demo_create_table(void)
  * 用原始 SQL 插入数据
  * 类比: 直接把新书放到书架上
  */
-static void demo_insert_raw(void)
+static void database_insert_raw_sample(void)
 {
     printf("\n  [3] 插入数据 (INSERT raw SQL):\n");
 
@@ -148,7 +148,7 @@ static int select_callback(void *arg, int ncols, char **values, char **headers)
 /**
  * 查询所有记录 — sqlite3_exec + 回调
  */
-static void demo_select_all(void)
+static void database_select_all_sample(void)
 {
     printf("\n  [4] 查询全部 (SELECT *):\n");
 
@@ -174,7 +174,7 @@ static void demo_select_all(void)
  *   - sqlite3_column_text / sqlite3_column_int — 提取列值
  *   - sqlite3_finalize — 释放语句对象
  */
-static void demo_prepared_statement(void)
+static void database_prepared_statement_sample(void)
 {
     printf("\n  [5] 预编译语句 (Prepared Statement):\n");
 
@@ -220,7 +220,7 @@ static void demo_prepared_statement(void)
  * 用预编译语句插入 — 防止 SQL 注入
  * 类比: 填写表格而不是口述指令——格式固定，不会出错
  */
-static void demo_prepared_insert(void)
+static void database_prepared_insert_sample(void)
 {
     printf("\n  [6] 预编译插入 (Prepared INSERT):\n");
 
@@ -271,7 +271,7 @@ static void demo_prepared_insert(void)
 /**
  * UPDATE — 更新已有记录
  */
-static void demo_update(void)
+static void database_update_sample(void)
 {
     printf("\n  [7] 更新数据 (UPDATE):\n");
 
@@ -292,7 +292,7 @@ static void demo_update(void)
 /**
  * DELETE — 删除记录
  */
-static void demo_delete(void)
+static void database_delete_sample(void)
 {
     printf("\n  [8] 删除数据 (DELETE):\n");
 
@@ -324,7 +324,7 @@ static void demo_delete(void)
 /**
  * 故意制造错误，展示如何获取错误信息
  */
-static void demo_error_handling(void)
+static void database_error_handling_sample(void)
 {
     printf("\n  [9] 错误处理 (Error Handling):\n");
 
@@ -363,7 +363,7 @@ static void demo_error_handling(void)
  * 事务控制 — 确保数据一致性
  * 类比: 银行转账——扣款和存款要么一起成功，要么一起失败
  */
-static void demo_transaction(void)
+static void database_transaction_sample(void)
 {
     printf("\n  [10] 事务控制 (Transaction):\n");
 
@@ -410,7 +410,7 @@ static void demo_transaction(void)
 /**
  * 细粒度列提取 — sqlite3_column_* 系列
  */
-static void demo_column_extraction(void)
+static void database_column_extraction_sample(void)
 {
     printf("\n  [11] 列值提取 (Column Extraction):\n");
 
@@ -464,7 +464,7 @@ static void demo_column_extraction(void)
  * 关闭数据库 — 必须调用
  * 类比: 图书馆打烊，关灯锁门
  */
-static void demo_cleanup(void)
+static void database_cleanup_sample(void)
 {
     printf("\n  [12] 资源清理 (Cleanup):\n");
 
@@ -498,28 +498,28 @@ int main_database_sample(void)
 #if __has_include(<sqlite3.h>)
 
     /* Phase 1: Open & Schema */
-    demo_open_close();
-    demo_create_table();
+    database_open_close_sample();
+    database_create_table_sample();
 
     /* Phase 2: Insert & Query */
-    demo_insert_raw();
-    demo_select_all();
+    database_insert_raw_sample();
+    database_select_all_sample();
 
     /* Phase 3: Prepared Statements */
-    demo_prepared_statement();
-    demo_prepared_insert();
+    database_prepared_statement_sample();
+    database_prepared_insert_sample();
 
     /* Phase 4: UPDATE, DELETE, Error Handling */
-    demo_update();
-    demo_delete();
-    demo_error_handling();
+    database_update_sample();
+    database_delete_sample();
+    database_error_handling_sample();
 
     /* Phase 5: Transactions & Columns */
-    demo_transaction();
-    demo_column_extraction();
+    database_transaction_sample();
+    database_column_extraction_sample();
 
     /* Phase 6: Cleanup */
-    demo_cleanup();
+    database_cleanup_sample();
 
 #else
 

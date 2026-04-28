@@ -13,9 +13,9 @@
 
 /* ── 1. getopt Option Parsing ── */
 
-static void demo_getopt(void)
+static void system_cli_getopt_sample(void)
 {
-    printf("=== 1. getopt 选项解析 (demo_getopt) ===\n");
+    printf("=== 1. getopt 选项解析 (system_cli_getopt_sample) ===\n");
     printf("  类比: getopt 是自动点单机 — 帮你解析 -v, -o, --version 等\n\n");
 
     printf("  短选项格式 (getopt):\n");
@@ -54,9 +54,9 @@ static void demo_getopt(void)
 
 /* ── 2. Exit Codes ── */
 
-static void demo_exit_codes(void)
+static void system_cli_exit_codes_sample(void)
 {
-    printf("=== 2. 退出码 (demo_exit_codes) ===\n");
+    printf("=== 2. 退出码 (system_cli_exit_codes_sample) ===\n");
     printf("  类比: 退出码像医生的诊断结果 — 0=健康, 非0=不同病症\n\n");
 
     printf("  标准退出码约定:\n");
@@ -99,9 +99,9 @@ static void demo_exit_codes(void)
 
 /* ── 3. Args Validation + Usage ── */
 
-static void demo_args_validation(void)
+static void system_cli_args_validation_sample(void)
 {
-    printf("=== 3. 参数验证 (demo_args_validation) ===\n");
+    printf("=== 3. 参数验证 (system_cli_args_validation_sample) ===\n");
     printf("  类比: 参数验证像服务员检查点单 — 必须有主食，可以加辣\n\n");
 
     printf("  常见 CLI 参数模式:\n");
@@ -159,9 +159,9 @@ int main_system_cli_sample(void)
 
     printf("  类比: CLI 像餐馆点单系统 — argv[1] 是主菜\n\n");
 
-    demo_getopt();
-    demo_exit_codes();
-    demo_args_validation();
+    system_cli_getopt_sample();
+    system_cli_exit_codes_sample();
+    system_cli_args_validation_sample();
 
     printf("CLI 开发模式演示完毕。\n");
     return 0;

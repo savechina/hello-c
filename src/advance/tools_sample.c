@@ -20,7 +20,7 @@
    Section 1: Error-First — "it compiles" != "it is correct"
    ============================================================ */
 
-static void demo_problem(void)
+static void tools_problem_sample(void)
 {
     printf("=== Section 1: 「它编译通过了」的陷阱 ===\n");
 
@@ -155,7 +155,7 @@ static int safe_add(int64_t a, int64_t b, int64_t *result)
    Section 4: 覆盖率分析 — gcov 工作原理
    ============================================================ */
 
-static void demo_gcov(void)
+static void tools_gcov_sample(void)
 {
     printf("\n=== Section 4: gcov 覆盖率分析 ===\n");
 
@@ -193,7 +193,7 @@ static void demo_gcov(void)
    Section 5: lcov — HTML 可视化报告
    ============================================================ */
 
-static void demo_lcov(void)
+static void tools_lcov_sample(void)
 {
     printf("\n=== Section 5: lcov HTML 报告 ===\n");
 
@@ -221,7 +221,7 @@ static void demo_lcov(void)
    Section 6: 静态分析常见问题 — cppcheck 能发现什么
    ============================================================ */
 
-static void demo_static_analysis_problems(void)
+static void tools_static_analysis_problems_sample(void)
 {
     printf("\n=== Section 6: 静态分析问题演示 ===\n");
 
@@ -266,7 +266,7 @@ static void demo_static_analysis_problems(void)
    Section 7: 运行 cppcheck
    ============================================================ */
 
-static void demo_cppcheck_usage(void)
+static void tools_cppcheck_usage_sample(void)
 {
     printf("\n=== Section 7: cppcheck 运行指南 ===\n");
 
@@ -303,7 +303,7 @@ static void demo_cppcheck_usage(void)
    Section 8: 编译器警告即静态分析 — -Wall -Wextra -Werror
    ============================================================ */
 
-static void demo_compiler_warnings(void)
+static void tools_compiler_warnings_sample(void)
 {
     printf("\n=== Section 8: 编译器警告 = 免费静态分析 ===\n");
 
@@ -334,7 +334,7 @@ static void demo_compiler_warnings(void)
    Section 9: 集成覆盖率到 Makefile
    ============================================================ */
 
-static void demo_coverage_makefile(void)
+static void tools_coverage_makefile_sample(void)
 {
     printf("\n=== Section 9: 覆盖率 Makefile 集成 ===\n");
 
@@ -365,7 +365,7 @@ static void demo_coverage_makefile(void)
    Section 10: 集成 cppcheck 到 Makefile
    ============================================================ */
 
-static void demo_cppcheck_makefile(void)
+static void tools_cppcheck_makefile_sample(void)
 {
     printf("\n=== Section 10: cppcheck Makefile 集成 ===\n");
 
@@ -395,7 +395,7 @@ static void demo_cppcheck_makefile(void)
    Section 11: GitHub Actions CI 流水线
    ============================================================ */
 
-static void demo_ci_pipeline(void)
+static void tools_ci_pipeline_sample(void)
 {
     printf("\n=== Section 11: GitHub Actions CI 流水线 ===\n");
 
@@ -447,7 +447,7 @@ static void demo_ci_pipeline(void)
    Section 12: 多平台编译
    ============================================================ */
 
-static void demo_cross_platform(void)
+static void tools_cross_platform_sample(void)
 {
     printf("\n=== Section 12: 多平台编译 ===\n");
 
@@ -472,7 +472,7 @@ static void demo_cross_platform(void)
    Section 13: 发布模式 — Release Builds
    ============================================================ */
 
-static void demo_release_build(void)
+static void tools_release_build_sample(void)
 {
     printf("\n=== Section 13: 发布模式 (Release Builds) ===\n");
 
@@ -500,7 +500,7 @@ static void demo_release_build(void)
    Section 14: 代码质量门禁
    ============================================================ */
 
-static void demo_quality_gates(void)
+static void tools_quality_gates_sample(void)
 {
     printf("\n=== Section 14: 代码质量门禁 ===\n");
 
@@ -524,7 +524,7 @@ static void demo_quality_gates(void)
    Section 15: 工具链总结 — 完整工作流
    ============================================================ */
 
-static void demo_toolchain_summary(void)
+static void tools_toolchain_summary_sample(void)
 {
     printf("\n=== Section 15: 工具链完整工作流 ===\n");
 
@@ -561,20 +561,20 @@ int main_tools_sample(void)
     printf("  工具链 (Toolchain) 🟢\n");
     printf("============================================\n");
 
-    demo_problem();
+    tools_problem_sample();
     print_makefile_structure();
-    demo_gcov();
-    demo_lcov();
-    demo_static_analysis_problems();
-    demo_cppcheck_usage();
-    demo_compiler_warnings();
-    demo_coverage_makefile();
-    demo_cppcheck_makefile();
-    demo_ci_pipeline();
-    demo_cross_platform();
-    demo_release_build();
-    demo_quality_gates();
-    demo_toolchain_summary();
+    tools_gcov_sample();
+    tools_lcov_sample();
+    tools_static_analysis_problems_sample();
+    tools_cppcheck_usage_sample();
+    tools_compiler_warnings_sample();
+    tools_coverage_makefile_sample();
+    tools_cppcheck_makefile_sample();
+    tools_ci_pipeline_sample();
+    tools_cross_platform_sample();
+    tools_release_build_sample();
+    tools_quality_gates_sample();
+    tools_toolchain_summary_sample();
 
     printf("\ntools sample done.\n");
     return 0;

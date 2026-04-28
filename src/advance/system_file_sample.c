@@ -28,7 +28,7 @@
 
 /* ── 1. File Read (文件读取) ── */
 
-static void demo_file_read(void)
+static void system_file_read_sample(void)
 {
 #ifdef __APPLE__
     const char *path = "/etc/hosts";
@@ -38,7 +38,7 @@ static void demo_file_read(void)
     const char *path = "/etc/hosts";
 #endif
 
-    printf("=== 1. 文件读取 (demo_file_read) ===\n");
+    printf("=== 1. 文件读取 (system_file_read_sample) ===\n");
     printf("  类比: open() 拿到钥匙，read() 进入房间读取\n\n");
 
     int fd = open(path, O_RDONLY);
@@ -73,9 +73,9 @@ static void demo_file_read(void)
 
 /* ── 2. File Write (文件写入) ── */
 
-static void demo_file_write(void)
+static void system_file_write_sample(void)
 {
-    printf("=== 2. 文件写入 (demo_file_write) ===\n");
+    printf("=== 2. 文件写入 (system_file_write_sample) ===\n");
     printf("  类比: create 创建空房间，write 放进内容\n\n");
 
     const char *test_file = "/tmp/hello_c_sys_file.txt";
@@ -142,9 +142,9 @@ static const char *mode_to_string(mode_t mode)
     return "other";
 }
 
-static void demo_file_stat(void)
+static void system_file_stat_sample(void)
 {
-    printf("=== 3. 文件元数据 (demo_file_stat) ===\n");
+    printf("=== 3. 文件元数据 (system_file_stat_sample) ===\n");
     printf("  类比: stat 是查房产登记，看文件的大小、权限、时间\n\n");
 
 #ifdef __APPLE__
@@ -194,9 +194,9 @@ static void demo_file_stat(void)
 
 /* ── 4. Directory Scan (目录扫描) ── */
 
-static void demo_dir_scan(void)
+static void system_file_dir_scan_sample(void)
 {
-    printf("=== 4. 目录扫描 (demo_dir_scan) ===\n");
+    printf("=== 4. 目录扫描 (system_file_dir_scan_sample) ===\n");
     printf("  类比: opendir 打开一扇门，readdir 逐一查看每个房间\n\n");
 
 #ifdef __APPLE__
@@ -254,10 +254,10 @@ int main_system_file_sample(void)
     printf("  类比: fd 是房间的钥匙 — open() 拿到钥匙，\n");
     printf("        read/write 进出房间，close() 还钥匙\n\n");
 
-    demo_file_read();
-    demo_file_write();
-    demo_file_stat();
-    demo_dir_scan();
+    system_file_read_sample();
+    system_file_write_sample();
+    system_file_stat_sample();
+    system_file_dir_scan_sample();
 
     printf("文件与目录操作演示完毕。\n");
     return 0;

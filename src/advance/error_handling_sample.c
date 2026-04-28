@@ -27,7 +27,7 @@
  * errno 是线程局部变量，库函数出错时自动设置。
  * 使用前必须清零——否则无法区分旧错误和新错误。
  */
-static void demo_errno(void)
+static void error_handling_errno_sample(void)
 {
     printf("  [errno] 演示 errno 模式:\n");
 
@@ -96,13 +96,13 @@ static int parse_config(const char *path, int *value)
  * 这就是「沉默失败」——parse_config 内部打开了文件失败，但我们不知情，
  * 继续用未初始化的 val →  undefined behavior。
  *
- * 正确的写法见 demo_error_first 函数。
+ * 正确的写法见 error_handling_error_first_sample 函数。
  */
 
 /**
  * 错误优先 (Error-first): 先检查返回值，再使用结果
  */
-static void demo_error_first(void)
+static void error_handling_error_first_sample(void)
 {
     printf("\n  [error-first] 错误优先模式:\n");
 
@@ -126,7 +126,7 @@ static void demo_error_first(void)
  * perror: 自动拼接前缀字符串 + errno 对应的英文错误文本
  * strerror: 返回错误码对应的字符串（可用于自定义日志）
  */
-static void demo_perror_strerror(void)
+static void error_handling_perror_strerror_sample(void)
 {
     printf("\n  [error-msg] perror vs strerror:\n");
 
@@ -184,7 +184,7 @@ static void deep_function_a(void)
     /* 这行代码不会被执行 */
 }
 
-static void demo_setjmp_longjmp(void)
+static void error_handling_setjmp_longjmp_sample(void)
 {
     printf("\n  [setjmp] 基础 setjmp / longjmp:\n");
 
@@ -229,7 +229,7 @@ static void layer_a(void)
     layer_b();
 }
 
-static void demo_setjmp_multilayer(void)
+static void error_handling_setjmp_multilayer_sample(void)
 {
     printf("\n  [setjmp2] 多层 longjmp 传递:\n");
 
@@ -368,7 +368,7 @@ static void critical_callback(int error_code, const char *message, void *user_da
     printf("  [callback|CRITICAL] 错误码 < 100, 允许继续\n");
 }
 
-static void demo_callback_chain(void)
+static void error_handling_callback_chain_sample(void)
 {
     printf("\n  [callback] === 错误回调链演示 ===\n");
 
@@ -400,23 +400,23 @@ int main_error_handling_sample(void)
 
     /* Section 1: errno */
     printf("--- errno 模式 ---\n");
-    demo_errno();
+    error_handling_errno_sample();
 
     /* Section 1b: Error-first */
     printf("\n--- 错误优先 (Error-first) ---\n");
-    demo_error_first();
+    error_handling_error_first_sample();
 
     /* Section 2: perror / strerror */
     printf("\n--- perror / strerror ---\n");
-    demo_perror_strerror();
+    error_handling_perror_strerror_sample();
 
     /* Section 3: setjmp/longjmp */
     printf("\n--- setjmp / longjmp ---\n");
-    demo_setjmp_longjmp();
-    demo_setjmp_multilayer();
+    error_handling_setjmp_longjmp_sample();
+    error_handling_setjmp_multilayer_sample();
 
     /* Section 4: Callback chains */
-    demo_callback_chain();
+    error_handling_callback_chain_sample();
 
     printf("\nerror handling sample done.\n");
     return 0;

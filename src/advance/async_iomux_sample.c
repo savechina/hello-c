@@ -26,7 +26,7 @@
  * Demo 1: select() 监控多个文件描述符
  * ============================================================ */
 
-static void demo_select(void)
+static void async_iomux_select_sample(void)
 {
     printf("--- 1. select() 监控多文件描述符 ---\n");
 
@@ -89,7 +89,7 @@ static void demo_select(void)
  * Demo 2: Pipe 多路复用 (Pipe Multiplexing)
  * ============================================================ */
 
-static void demo_pipe_multiplex(void)
+static void async_iomux_pipe_multiplex_sample(void)
 {
     printf("--- 2. Pipe 多路复用 — 检测哪个管道有数据 ---\n");
 
@@ -157,7 +157,7 @@ static void demo_pipe_multiplex(void)
  * Demo 3: epoll (Linux 专用)
  * ============================================================ */
 
-static void demo_epoll(void)
+static void async_iomux_epoll_sample(void)
 {
     printf("--- 3. epoll (Linux 专用 I/O 多路复用) ---\n");
 
@@ -232,9 +232,9 @@ int main_async_iomux_sample(void)
     printf("  I/O 多路复用 (select · poll · epoll)\n");
     printf("========================================\n\n");
 
-    demo_select();
-    demo_pipe_multiplex();
-    demo_epoll();
+    async_iomux_select_sample();
+    async_iomux_pipe_multiplex_sample();
+    async_iomux_epoll_sample();
 
     printf("I/O 多路复用演示完毕。\n");
     return 0;

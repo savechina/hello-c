@@ -36,10 +36,10 @@ static void user_handler(int signum)
 
 /* ── 1. Signal Handler with sigaction ── */
 
-static void demo_signal_handler(void)
+static void system_signal_handler_sample(void)
 {
 #if defined(__APPLE__) || defined(__linux__)
-    printf("=== 1. 信号处理 (demo_signal_handler) ===\n");
+    printf("=== 1. 信号处理 (system_signal_handler_sample) ===\n");
     printf("  类比: 用 sigaction 安装一个门铃 — 按下 Ctrl+C 或发信号触发\n\n");
 
     struct sigaction sa;
@@ -64,7 +64,7 @@ static void demo_signal_handler(void)
     printf("    有 SA_RESTART:   系统调用自动重启，不返回 EINTR\n");
     printf("    ✅ 生产代码建议始终使用 sigaction 而非 signal()\n\n");
 #else
-    printf("=== 1. 信号处理 (demo_signal_handler) ===\n");
+    printf("=== 1. 信号处理 (system_signal_handler_sample) ===\n");
     printf("  [跳过] 当前平台不支持 POSIX 信号\n");
     printf("\n");
 #endif
@@ -72,10 +72,10 @@ static void demo_signal_handler(void)
 
 /* ── 2. Signal Block/Unblock ── */
 
-static void demo_signal_block(void)
+static void system_signal_block_sample(void)
 {
 #if defined(__APPLE__) || defined(__linux__)
-    printf("=== 2. 信号阻塞 (demo_signal_block) ===\n");
+    printf("=== 2. 信号阻塞 (system_signal_block_sample) ===\n");
     printf("  类比: 挂一个「请勿打扰」牌子 — 门铃按了也不响\n\n");
 
     sigset_t block_set, old_set;
@@ -120,7 +120,7 @@ static void demo_signal_block(void)
     printf("    SIG_SETMASK — 替换整个阻塞集合\n");
     printf("\n");
 #else
-    printf("=== 2. 信号阻塞 (demo_signal_block) ===\n");
+    printf("=== 2. 信号阻塞 (system_signal_block_sample) ===\n");
     printf("  [跳过] 当前平台不支持 POSIX 信号\n");
     printf("\n");
 #endif
@@ -128,10 +128,10 @@ static void demo_signal_block(void)
 
 /* ── 3. SA_RESTART Flag ── */
 
-static void demo_sigaction(void)
+static void system_signal_sigaction_sample(void)
 {
 #if defined(__APPLE__) || defined(__linux__)
-    printf("=== 3. SA_RESTART 标志 (demo_sigaction) ===\n");
+    printf("=== 3. SA_RESTART 标志 (system_signal_sigaction_sample) ===\n");
     printf("  类比: SA_RESTART 像「自动重拨」——被挂断的电话自动再拨一次\n\n");
 
     struct sigaction sa_restart, sa_no_restart;
@@ -189,7 +189,7 @@ static void demo_sigaction(void)
         printf("  SIGUSR2 已递送, g_user_signal = %d\n\n", (int)g_user_signal);
     }
 #else
-    printf("=== 3. SA_RESTART 标志 (demo_sigaction) ===\n");
+    printf("=== 3. SA_RESTART 标志 (system_signal_sigaction_sample) ===\n");
     printf("  [跳过] 当前平台不支持 POSIX 信号\n");
     printf("\n");
 #endif
@@ -205,9 +205,9 @@ int main_system_signal_sample(void)
 
     printf("  类比: 信号像门铃 — 你正在做事，门铃响了去处理\n\n");
 
-    demo_signal_handler();
-    demo_signal_block();
-    demo_sigaction();
+    system_signal_handler_sample();
+    system_signal_block_sample();
+    system_signal_sigaction_sample();
 
     printf("POSIX 信号处理演示完毕。\n");
     return 0;

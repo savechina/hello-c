@@ -17,10 +17,10 @@
 
 /* ── 1. Basic fork ── */
 
-static void demo_fork(void)
+static void system_process_fork_sample(void)
 {
 #if defined(__APPLE__) || defined(__linux__)
-    printf("=== 1. fork 创建子进程 (demo_fork) ===\n");
+    printf("=== 1. fork 创建子进程 (system_process_fork_sample) ===\n");
     printf("  类比: 克隆一个自己去干活\n\n");
 
     printf("  [父进程] 准备 fork, PID=%d, PPID=%d\n", (int)getpid(), (int)getppid());
@@ -66,7 +66,7 @@ static void demo_fork(void)
     printf("    - 子进程用 _exit() 不要 exit()\n");
     printf("    - 父子进程执行顺序不确定 (依赖调度器)\n\n");
 #else
-    printf("=== 1. fork 创建子进程 (demo_fork) ===\n");
+    printf("=== 1. fork 创建子进程 (system_process_fork_sample) ===\n");
     printf("  [跳过] 当前平台不支持 fork\n");
     printf("\n");
 #endif
@@ -74,10 +74,10 @@ static void demo_fork(void)
 
 /* ── 2. exec (replace process image) ── */
 
-static void demo_exec(void)
+static void system_process_exec_sample(void)
 {
 #if defined(__APPLE__) || defined(__linux__)
-    printf("=== 2. exec 替换进程 (demo_exec) ===\n");
+    printf("=== 2. exec 替换进程 (system_process_exec_sample) ===\n");
     printf("  类比: 子进程吃下「变身药」，变成另一个程序\n\n");
 
     printf("  [父进程] 准备 fork + exec...\n");
@@ -120,7 +120,7 @@ static void demo_exec(void)
         printf("    execve(path, argv[], envp)             — 系统调用\n\n");
     }
 #else
-    printf("=== 2. exec 替换进程 (demo_exec) ===\n");
+    printf("=== 2. exec 替换进程 (system_process_exec_sample) ===\n");
     printf("  [跳过] 当前平台不支持 fork/exec\n");
     printf("\n");
 #endif
@@ -128,10 +128,10 @@ static void demo_exec(void)
 
 /* ── 3. wait / waitpid ── */
 
-static void demo_wait(void)
+static void system_process_wait_sample(void)
 {
 #if defined(__APPLE__) || defined(__linux__)
-    printf("=== 3. 等待子进程 (demo_wait) ===\n");
+    printf("=== 3. 等待子进程 (system_process_wait_sample) ===\n");
     printf("  类比: 父进程等分身干完活再收工\n\n");
 
     /* 创建 3 个子进程 */
@@ -175,7 +175,7 @@ static void demo_wait(void)
     printf("    waitpid(-1, &status, 0) — 同 wait()\n");
     printf("    waitpid(pid, &status, WNOHANG) — 非阻塞等待\n\n");
 #else
-    printf("=== 3. 等待子进程 (demo_wait) ===\n");
+    printf("=== 3. 等待子进程 (system_process_wait_sample) ===\n");
     printf("  [跳过] 当前平台不支持 fork/wait\n");
     printf("\n");
 #endif
@@ -183,10 +183,10 @@ static void demo_wait(void)
 
 /* ── 4. Zombie process concept ── */
 
-static void demo_zombie(void)
+static void system_process_zombie_sample(void)
 {
 #if defined(__APPLE__) || defined(__linux__)
-    printf("=== 4. 僵尸进程 (demo_zombie) ===\n");
+    printf("=== 4. 僵尸进程 (system_process_zombie_sample) ===\n");
     printf("  类比: 分身干完活了但父进程不确认 → 变成幽灵状态\n\n");
 
     pid_t pid = fork();
@@ -223,7 +223,7 @@ static void demo_zombie(void)
     printf("    - 系统进程数有限 (PID_MAX)，泄漏过多导致无法创建进程\n");
     printf("    - 父进程退出后 → 僵尸被 init (PID 1) 收养并回收\n\n");
 #else
-    printf("=== 4. 僵尸进程 (demo_zombie) ===\n");
+    printf("=== 4. 僵尸进程 (system_process_zombie_sample) ===\n");
     printf("  [跳过] 当前平台不支持 fork\n");
     printf("\n");
 #endif
@@ -239,10 +239,10 @@ int main_system_process_sample(void)
 
     printf("  类比: fork 像细胞分裂 — 一个进程分裂成两个独立进程\n\n");
 
-    demo_fork();
-    demo_exec();
-    demo_wait();
-    demo_zombie();
+    system_process_fork_sample();
+    system_process_exec_sample();
+    system_process_wait_sample();
+    system_process_zombie_sample();
 
     printf("进程管理演示完毕。\n");
     return 0;

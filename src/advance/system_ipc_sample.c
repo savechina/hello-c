@@ -22,10 +22,10 @@
 
 /* ── 1. Basic Pipe (单向) ── */
 
-static void demo_pipe_basic(void)
+static void system_ipc_pipe_basic_sample(void)
 {
 #if defined(__APPLE__) || defined(__linux__)
-    printf("=== 1. 单向管道 (demo_pipe_basic) ===\n");
+    printf("=== 1. 单向管道 (system_ipc_pipe_basic_sample) ===\n");
     printf("  类比: 一根单向管子 — 一头写，一头读\n\n");
 
     int pipefd[2];
@@ -87,7 +87,7 @@ static void demo_pipe_basic(void)
         printf("    - 管道有缓冲区 (通常 64KB)，写满后 write 阻塞\n\n");
     }
 #else
-    printf("=== 1. 单向管道 (demo_pipe_basic) ===\n");
+    printf("=== 1. 单向管道 (system_ipc_pipe_basic_sample) ===\n");
     printf("  [跳过] 当前平台不支持 pipe\n");
     printf("\n");
 #endif
@@ -95,10 +95,10 @@ static void demo_pipe_basic(void)
 
 /* ── 2. Bidirectional Pipe (双向) ── */
 
-static void demo_pipe_bidirectional(void)
+static void system_ipc_pipe_bidirectional_sample(void)
 {
 #if defined(__APPLE__) || defined(__linux__)
-    printf("=== 2. 双向管道 (demo_pipe_bidirectional) ===\n");
+    printf("=== 2. 双向管道 (system_ipc_pipe_bidirectional_sample) ===\n");
     printf("  类比: 两根管子 — 一个方向传话，一个方向回话\n\n");
 
     int p1[2]; /* 父 → 子 */
@@ -170,7 +170,7 @@ static void demo_pipe_bidirectional(void)
         printf("    - fork 后正确关闭不需要的端防止死锁\n\n");
     }
 #else
-    printf("=== 2. 双向管道 (demo_pipe_bidirectional) ===\n");
+    printf("=== 2. 双向管道 (system_ipc_pipe_bidirectional_sample) ===\n");
     printf("  [跳过] 当前平台不支持 pipe\n");
     printf("\n");
 #endif
@@ -178,10 +178,10 @@ static void demo_pipe_bidirectional(void)
 
 /* ── 3. Unix Domain Socket (socketpair) ── */
 
-static void demo_socketpair(void)
+static void system_ipc_socketpair_sample(void)
 {
 #if defined(__APPLE__) || defined(__linux__)
-    printf("=== 3. Unix Domain Socket (demo_socketpair) ===\n");
+    printf("=== 3. Unix Domain Socket (system_ipc_socketpair_sample) ===\n");
     printf("  类比: Unix socket 像两个房间之间的专用电话 — 全双工\n\n");
 
     int sv[2];
@@ -243,7 +243,7 @@ static void demo_socketpair(void)
         printf("    AF_UNIX socket: 全双工, 可通过文件系统路径通信\n\n");
     }
 #else
-    printf("=== 3. Unix Domain Socket (demo_socketpair) ===\n");
+    printf("=== 3. Unix Domain Socket (system_ipc_socketpair_sample) ===\n");
     printf("  [跳过] 当前平台不支持 socketpair\n");
     printf("\n");
 #endif
@@ -259,9 +259,9 @@ int main_system_ipc_sample(void)
 
     printf("  类比: 管道像传声筒, Unix socket 像专用电话\n\n");
 
-    demo_pipe_basic();
-    demo_pipe_bidirectional();
-    demo_socketpair();
+    system_ipc_pipe_basic_sample();
+    system_ipc_pipe_bidirectional_sample();
+    system_ipc_socketpair_sample();
 
     printf("IPC 演示完毕。\n");
     return 0;

@@ -63,7 +63,7 @@ static void slist_free_all(SNode *head)
     }
 }
 
-static void demo_singly_linked_list(void)
+static void iterators_singly_linked_list_sample(void)
 {
     printf("=== 1. 单向链表 (Singly Linked List) ===\n");
 
@@ -138,7 +138,7 @@ static DNode *dnode_new(int32_t value)
     return n;
 }
 
-static void demo_doubly_linked_list(void)
+static void iterators_doubly_linked_list_sample(void)
 {
     printf("=== 2. 双向链表 (Doubly Linked List) ===\n");
 
@@ -224,7 +224,7 @@ static int32_t dynarray_get(const DynArray *arr, size_t index)
     return arr->data[index];
 }
 
-static void demo_dynamic_array(void)
+static void iterators_dynamic_array_sample(void)
 {
     printf("=== 3. 动态数组 (Dynamic Array) ===\n");
 
@@ -317,7 +317,7 @@ static void postorder_print(TreeNode *node)
     printf("%" PRId32 " ", node->data);
 }
 
-static void demo_binary_tree(void)
+static void iterators_binary_tree_sample(void)
 {
     printf("=== 4. 二叉树遍历 (Binary Tree Traversal) ===\n");
 
@@ -381,7 +381,7 @@ static int32_t iter_next(ArrayIterator *iter)
     return iter->arr->data[iter->index++];
 }
 
-static void demo_iterator_pattern(void)
+static void iterators_iterator_pattern_sample(void)
 {
     printf("=== 5. 迭代器模式 (Iterator Pattern) ===\n");
 
@@ -427,11 +427,11 @@ int main_iterators_sample(void)
     printf("  数据结构遍历 (Data Structure Traversal)\n");
     printf("========================================\n\n");
 
-    demo_singly_linked_list();
-    demo_doubly_linked_list();
-    demo_dynamic_array();
-    demo_binary_tree();
-    demo_iterator_pattern();
+    iterators_singly_linked_list_sample();
+    iterators_doubly_linked_list_sample();
+    iterators_dynamic_array_sample();
+    iterators_binary_tree_sample();
+    iterators_iterator_pattern_sample();
 
     printf("数据结构遍历演示完毕。\n");
     return 0;

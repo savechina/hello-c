@@ -34,7 +34,7 @@ static void *race_increment(void *arg)
     return NULL;
 }
 
-static void demo_race_condition(void)
+static void async_sync_race_condition_sample(void)
 {
     printf("--- 1. 竞态条件 (Race Condition) — 错误演示 ---\n");
 
@@ -73,7 +73,7 @@ static void *safe_increment(void *arg)
     return NULL;
 }
 
-static void demo_mutex_fix(void)
+static void async_sync_mutex_fix_sample(void)
 {
     printf("--- 2. Mutex 修复 (Mutex Fix) — 保护临界区 ---\n");
 
@@ -145,7 +145,7 @@ static void *cv_consumer(void *arg)
     return NULL;
 }
 
-static void demo_condvar(void)
+static void async_sync_condvar_sample(void)
 {
     printf("--- 3. 条件变量 (Condition Variable) — 生产者/消费者 ---\n");
 
@@ -178,7 +178,7 @@ static void *atomic_increment(void *arg)
     return NULL;
 }
 
-static void demo_atomic_compare(void)
+static void async_sync_atomic_compare_sample(void)
 {
     printf("--- 4. C11 Atomic vs Mutex 性能对比 ---\n");
 
@@ -227,10 +227,10 @@ int main_async_sync_sample(void)
     printf("  同步原语 (Mutex · Condvar · Atomic)\n");
     printf("========================================\n\n");
 
-    demo_race_condition();
-    demo_mutex_fix();
-    demo_condvar();
-    demo_atomic_compare();
+    async_sync_race_condition_sample();
+    async_sync_mutex_fix_sample();
+    async_sync_condvar_sample();
+    async_sync_atomic_compare_sample();
 
     printf("同步原语演示完毕。\n");
     return 0;

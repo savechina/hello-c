@@ -27,7 +27,7 @@
  * 没有任何文件/行号/期望值/实际值信息。
  * 读者：「哪里失败了？为什么失败？我该怎么修？」
  */
-static void demo_naive_assert(void)
+static void testing_naive_assert_sample(void)
 {
     printf("=== Section 1: 反面教材 — 无上下文断言 ===\n");
 
@@ -81,7 +81,7 @@ static void demo_naive_assert(void)
 /**
  * 演示 V1 断言的效果
  */
-static void demo_assert_v1(void)
+static void testing_assert_v1_sample(void)
 {
     printf("\n=== Section 2: 自定义 ASSERT 宏 (包含行号) ===\n");
 
@@ -122,7 +122,7 @@ static void demo_assert_v1(void)
 /**
  * 演示 V2 效果
  */
-static void demo_assert_v2(void)
+static void testing_assert_v2_sample(void)
 {
     printf("\n=== Section 3: 增强 ASSERT (彩色 + 消息) ===\n");
 
@@ -297,7 +297,7 @@ static void test_calc_valid_range(void)
 /**
  * 演示 Section 4 + 5 + 7 的集成效果
  */
-static void demo_test_runner(void)
+static void testing_test_runner_sample(void)
 {
     printf("\n=== Section 4-7: 测试框架集成演示 ===\n");
 
@@ -435,7 +435,7 @@ static void test_mock_low_temp(void)
     ASSERT_EQ_RUN(mock_write_actuator_last_value, 0);
 }
 
-static void demo_mock_injection(void)
+static void testing_mock_injection_sample(void)
 {
     printf("\n=== Section 8-9: Mock 函数注入演示 ===\n");
 
@@ -509,7 +509,7 @@ static void test_fixture_resource(void)
     fixture_teardown();
 }
 
-static void demo_test_fixtures(void)
+static void testing_test_fixtures_sample(void)
 {
     printf("\n=== Section 10: 测试夹具 (setup/teardown) ===\n");
 
@@ -536,7 +536,7 @@ typedef struct {
     void (*run_tests)(void);
 } TestGroup;
 
-static void demo_test_groups(void)
+static void testing_test_groups_sample(void)
 {
     printf("\n=== Section 11: 测试分组 ===\n");
 
@@ -565,7 +565,7 @@ static void demo_test_groups(void)
    Section 12: 性能测试 — 计时基础
    ============================================================ */
 
-static void demo_timing_test(void)
+static void testing_timing_test_sample(void)
 {
     printf("\n=== Section 12: 性能测试 (计时) ===\n");
 
@@ -595,7 +595,7 @@ typedef struct {
     int expected;
 } AddCase;
 
-static void demo_parameterized_test(void)
+static void testing_parameterized_test_sample(void)
 {
     printf("\n=== Section 13: 参数化测试 ===\n");
 
@@ -634,7 +634,7 @@ static void demo_parameterized_test(void)
    Section 14: 跳过条件 — 平台/配置相关的测试
    ============================================================ */
 
-static void demo_conditional_skip(void)
+static void testing_conditional_skip_sample(void)
 {
     printf("\n=== Section 14: 条件跳过测试 ===\n");
 
@@ -656,7 +656,7 @@ static void demo_conditional_skip(void)
    Section 15: 测试报告 — 结构化输出
    ============================================================ */
 
-static void demo_test_reporting(void)
+static void testing_test_reporting_sample(void)
 {
     printf("\n=== Section 15: 结构化测试报告 ===\n");
 
@@ -682,17 +682,17 @@ int main_testing_sample(void)
     printf("  测试框架 (Testing Framework) 🟡\n");
     printf("============================================\n");
 
-    demo_naive_assert();
-    demo_assert_v1();
-    demo_assert_v2();
-    demo_test_runner();
-    demo_mock_injection();
-    demo_test_fixtures();
-    demo_test_groups();
-    demo_timing_test();
-    demo_parameterized_test();
-    demo_conditional_skip();
-    demo_test_reporting();
+    testing_naive_assert_sample();
+    testing_assert_v1_sample();
+    testing_assert_v2_sample();
+    testing_test_runner_sample();
+    testing_mock_injection_sample();
+    testing_test_fixtures_sample();
+    testing_test_groups_sample();
+    testing_timing_test_sample();
+    testing_parameterized_test_sample();
+    testing_conditional_skip_sample();
+    testing_test_reporting_sample();
 
     system_restore_real();
     printf("\ntesting sample done.\n");
