@@ -49,3 +49,9 @@ Mini-projects combine multiple advance concepts: linked list library, thread poo
 
 - Q: Advance scope? → A: Map hello-rust advance (async, atomics, smart-pointers, iterators, traits, error-handling, database, system, testing, tools, web) to C equivalents using C paradigms.
 - Q: Function naming for sample code → A: ALL internal (static) functions use `_sample` suffix pattern: `<module>_<feature>_sample`. No `demo_*` naming convention. Entry points: `main_<module>_sample(void)`. Applied across all 20 advance sample files.
+- Q: Basic section learning progression restructure → A: Option A (Full Restructure) — Reorder ALL basic chapters to correct C learning progression + split functions/strings/pointers/structs into sub-chapters. Results in ~38 basic files instead of 27. Updates coordinator, SUMMARY.md, basic_overview.md, and all cross-references. New correct order:
+  Core: variables → datatype → operators → control_flow → loops → functions → arrays → preprocessor
+  Memory: pointers → pointer_arith → pointers_functions → void_pointers → const_correctness
+  Data: strings (basics, ops, safe, processing) → structs (basics, nested, functions, memory layout) → unions_enums → typedef
+  Advanced: memory_mgmt → file_io → function_pointers → callbacks → headers → debugging → conditional_comp → bit_ops → cli_args → stdlib
+  Each split topic gets its own `_sample.c/.h` files following the advance sub-chapter pattern.

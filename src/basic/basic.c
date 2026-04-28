@@ -6,6 +6,7 @@ int main_basic(void) {
     printf("  C 基础入门教程 (Basic C Tutorial)\n");
     printf("========================================\n\n");
 
+    /* === 核心概念 (Core Concepts) === */
     printf("--- 变量与表达式 (Variables & Expressions) ---\n");
     main_variables_sample();
     printf("\n");
@@ -14,16 +15,8 @@ int main_basic(void) {
     main_datatype_sample();
     printf("\n");
 
-    printf("--- 函数 (Functions) ---\n");
-    main_functions_sample();
-    printf("\n");
-
     printf("--- 运算符与表达式 (Operators & Expressions) ---\n");
     main_operators_sample();
-    printf("\n");
-
-    printf("--- 数组基础 (Arrays) ---\n");
-    main_arrays_sample();
     printf("\n");
 
     printf("--- 控制流 (Control Flow) ---\n");
@@ -34,10 +27,19 @@ int main_basic(void) {
     main_loops_sample();
     printf("\n");
 
+    printf("--- 函数 (Functions) ---\n");
+    main_functions_sample();
+    printf("\n");
+
+    printf("--- 数组基础 (Arrays) ---\n");
+    main_arrays_sample();
+    printf("\n");
+
     printf("--- 预处理器与宏 (Preprocessor & Macros) ---\n");
     main_preprocessor_sample();
     printf("\n");
 
+    /* === 内存与指针 (Memory & Pointers) === */
     printf("--- 指针基础 (Pointer Basics) ---\n");
     main_pointers_sample();
     printf("\n");
@@ -50,6 +52,7 @@ int main_basic(void) {
     main_strings_sample();
     printf("\n");
 
+    /* === 数据结构 (Data Structures) === */
     printf("--- 结构体 (Structures) ---\n");
     main_structs_sample();
     printf("\n");
@@ -66,6 +69,7 @@ int main_basic(void) {
     main_scope_sample();
     printf("\n");
 
+    /* === 高级模式 (Advanced Patterns) === */
     printf("--- 内存管理 (Memory Management) ---\n");
     main_memory_mgmt_sample();
     printf("\n");
@@ -86,10 +90,6 @@ int main_basic(void) {
     main_file_io_sample();
     printf("\n");
 
-    printf("--- 命令行参数与 I/O 重定向 (CLI Args & I/O Redirect) ---\n");
-    main_cli_args_sample();
-    printf("\n");
-
     printf("--- 函数指针 (Function Pointers) ---\n");
     main_function_pointers_sample();
     printf("\n");
@@ -98,7 +98,7 @@ int main_basic(void) {
     main_callbacks_sample();
     printf("\n");
 
-    printf("--- void* 泛型编程 ===\n");
+    printf("--- void* 泛型编程 (Generic Programming) ---\n");
     main_void_generic_sample();
     printf("\n");
 
@@ -106,8 +106,16 @@ int main_basic(void) {
     main_bit_ops_sample();
     printf("\n");
 
-    printf("--- 回调函数与多态 (Callbacks & Polymorphism) ---\n");
-    main_callbacks_sample();
+    printf("--- 条件编译 (Conditional Compilation) ---\n");
+    main_conditional_comp_sample();
+    printf("\n");
+
+    printf("--- 命令行参数与 I/O 重定向 (CLI Args) ---\n");
+    main_cli_args_sample();
+    printf("\n");
+
+    printf("--- 标准库精要 (Standard Library) ---\n");
+    main_stdlib_sample();
     printf("\n");
 
     printf("基本教程完毕。\n");
