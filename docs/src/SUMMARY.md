@@ -23,15 +23,28 @@
   - [预处理器与宏](./basic/preprocessor.md) 🟢
 
   **内存与指针**
-  - [指针基础](./basic/pointers.md) 🟡
-  - [指针运算与数组](./basic/pointer_arith.md) 🟡
-  - [字符串深度](./basic/strings.md) 🟡
-  - [可变参数函数](./basic/variadic_functions.md) 🟡
+  - [指针](./basic/pointers.md) 🟡
+    - [指针基础](./basic/pointer_basics.md)
+    - [指针运算](./basic/pointer_arith.md)
+    - [指针与数组](./basic/pointers_and_arrays.md)
+    - [指针与函数](./basic/pointers_and_functions.md)
+    - [void* 类型擦除](./basic/void_pointers.md)
+    - [const 正确性](./basic/const_correctness.md)
+  - [字符串](./basic/strings.md) 🟡
+    - [字符串基础](./basic/string_basics.md)
+    - [字符串操作](./basic/string_operations.md)
+    - [安全字符串](./basic/safe_strings.md)
+    - [字符串处理](./basic/string_processing.md)
 
   **数据结构**
   - [结构体](./basic/structs.md) 🟡
-  - [结构体字段与内存布局](./basic/struct_fields.md) 🟡
-  - [枚举与联合体](./basic/enums.md) 🟡
+    - [结构体基础](./basic/struct_basics.md)
+    - [嵌套结构体](./basic/nested_structs.md)
+    - [结构体与函数](./basic/struct_functions.md)
+    - [结构体内存布局](./basic/struct_memory_layout.md)
+  - [联合体](./basic/unions.md) 🟡
+  - [类型别名](./basic/typedef.md) 🟡
+  - [枚举](./basic/enums.md) 🟡
   - [作用域与生命周期](./basic/scope.md) 🟡
 
   **高级模式**

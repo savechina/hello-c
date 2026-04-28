@@ -33,38 +33,76 @@ C 语言诞生于 1972 年，是世界上最古老但仍广泛使用的编程语
 | [运算符与表达式](./operators.md) | 算术、关系、逻辑、位运算符 | 🟢 简单 | 25 分钟 |
 | [控制流](./control_flow.md) | `if/else`、`switch/case`、条件表达式 | 🟢 简单 | 20 分钟 |
 | [循环](./loops.md) | `for`、`while`、`do-while`、`break`/`continue` | 🟢 简单 | 25 分钟 |
-| [函数](./functions.md) | 函数声明、定义、参数传递、返回值 | 🟢 简单 | 25 分钟 |
+| [函数](./functions.md) | 🔗 [4 个子章节](#函数子章节) | 🟢 简单 | 2 小时 |
 | [数组基础](./arrays.md) | 数组声明、初始化、遍历、多维数组 | 🟢 简单 | 25 分钟 |
 | [预处理器与宏](./preprocessor.md) | `#include`、`#define`、条件编译基础 | 🟢 简单 | 30 分钟 |
+
+#### 函数子章节
+
+| 章节 | 说明 | 难度 |
+|------|------|------|
+| [函数基础](./functions_basics.md) | 声明、定义、返回类型、参数 | 🟢 |
+| [函数作用域](./function_scope.md) | 局部/全局变量、static、extern | 🟢 |
+| [递归函数](./recursion.md) | 基线条件、阶乘、fibonacci | 🟡 |
+| [可变参数函数](./variadic_functions.md) | va_list、printf 内部原理 | 🟡 |
 
 ### US2：中级概念 (Intermediate Concepts) — 进阶阶段 🟡
 
 | 章节 | 说明 | 难度 | 预计时间 |
 |------|------|------|---------|
-| [指针](./pointers.md) | 指针声明、解引用、空指针、指针 vs 数组 | 🟡 中等 | 40 分钟 |
-| [指针运算](./pointer_arith.md) | 指针加减、指针比较、数组下标本质 | 🟡 中等 | 40 分钟 |
-| [字符串深度](./strings.md) | 字符数组、字符串函数、格式化 | 🟡 中等 | 40 分钟 |
-| [结构体](./structs.md) | `struct` 定义、初始化、访问成员 | 🟡 中等 | 40 分钟 |
-| [结构体字段](./struct_fields.md) | 字段对齐、嵌套结构体、柔性数组 | 🟡 中等 | 45 分钟 |
-| [枚举](./enums.md) | `enum` 定义、枚举常量、类型安全 | 🟡 中等 | 30 分钟 |
-| [作用域与生命周期](./scope.md) | 块级/文件级/程序级作用域、`static`/`extern` | 🟡 中等 | 35 分钟 |
+| [指针](./pointers.md) | 🔗 [6 个子章节](#指针子章节) | 🟡 中等 | 3.5 小时 |
+| [字符串](./strings.md) | 🔗 [4 个子章节](#字符串子章节) | 🟡 中等 | 2.5 小时 |
+| [结构体](./structs.md) | 🔗 [4 个子章节](#结构体子章节) | 🟡 中等 | 2.5 小时 |
+| [联合体](./unions.md) | union 基础、tagged union | 🟡 中等 | 30 分钟 |
+| [类型别名](./typedef.md) | type aliases、函数指针 typedef | 🟢 简单 | 20 分钟 |
+| [枚举](./enums.md) | enum 定义、枚举常量 | 🟡 中等 | 30 分钟 |
+| [作用域与生命周期](./scope.md) | 块级/文件级/程序级作用域 | 🟡 中等 | 35 分钟 |
+
+#### 指针子章节
+
+| 章节 | 说明 | 难度 |
+|------|------|------|
+| [指针基础](./pointer_basics.md) | `&`、`*`、NULL、初始化 | 🟡 |
+| [指针运算](./pointer_arith.md) | 指针加减、数组等价 | 🟡 |
+| [指针与数组](./pointers_and_arrays.md) | 多维数组、数组下标本质 | 🟡 |
+| [指针与函数](./pointers_and_functions.md) | 指针参数、返回指针 | 🟡 |
+| [void* 类型擦除](./void_pointers.md) | 泛型函数、type erasure | 🔴 |
+| [const 正确性](./const_correctness.md) | const 指针、指针到 const | 🟡 |
+
+#### 字符串子章节
+
+| 章节 | 说明 | 难度 |
+|------|------|------|
+| [字符串基础](./string_basics.md) | 字符数组、null terminator | 🟡 |
+| [字符串操作](./string_operations.md) | strlen、strcpy、strcat、strcmp | 🟡 |
+| [安全字符串](./safe_strings.md) | strncpy、snprintf、bounds checking | 🟡 |
+| [字符串处理](./string_processing.md) | strtok、strstr、strchr | 🟡 |
+
+#### 结构体子章节
+
+| 章节 | 说明 | 难度 |
+|------|------|------|
+| [结构体基础](./struct_basics.md) | 定义、初始化、成员访问 | 🟡 |
+| [嵌套结构体](./nested_structs.md) | struct within struct | 🟡 |
+| [结构体与函数](./struct_functions.md) | 传递给函数、struct 指针 | 🟡 |
+| [结构体内存布局](./struct_memory_layout.md) | padding、alignment、sizeof | 🔴 |
 
 ### US3：高级概念 (Advanced Concepts) — 熟练阶段 🔴/🟡/🟢
 
 | 章节 | 说明 | 难度 | 预计时间 |
 |------|------|------|---------|
-| [内存管理](./memory_mgmt.md) | `malloc`/`calloc`/`realloc`/`free`、内存泄漏检测 | 🔴 困难 | 50 分钟 |
-| [头文件与模块系统](./headers.md) | 头文件守卫、多文件编译、接口与实现分离 | 🟡 中等 | 30 分钟 |
-| [日志与格式化输出](./logging.md) | `printf` 家族、日志级别、格式化技巧 | 🟢 简单 | 25 分钟 |
-| [调试与错误处理](./debugging.md) | `gdb` 调试、`assert`、错误码与 `errno` | 🟡 中等 | 35 分钟 |
-| [文件 I/O](./file_io.md) | `fopen`/`fclose`、读写模式、文本 vs 二进制 | 🟡 中等 | 40 分钟 |
+| [内存管理](./memory_mgmt.md) | `malloc`/`calloc`/`realloc`/`free` | 🔴 困难 | 50 分钟 |
+| [头文件与模块系统](./headers.md) | 头文件守卫、多文件编译 | 🟡 中等 | 30 分钟 |
+| [日志与格式化输出](./logging.md) | `printf` 家族、日志级别 | 🟢 简单 | 25 分钟 |
+| [调试与错误处理](./debugging.md) | `gdb`、`assert`、errno | 🟡 中等 | 35 分钟 |
+| [文件 I/O](./file_io.md) | `fopen`/`fclose`、读写模式 | 🟡 中等 | 40 分钟 |
 | [函数指针](./function_pointers.md) | 函数指针声明、赋值、调用 | 🔴 困难 | 50 分钟 |
-| [回调函数与多态](./callbacks.md) | 回调模式、`qsort` 比较器、事件驱动 | 🔴 困难 | 50 分钟 |
-| [void* 泛型编程](./void_generic.md) | `void*` 通用指针、类型擦除、泛型数据结构 | 🔴 困难 | 45 分钟 |
-| [位运算与内存操作](./bit_ops.md) | 位运算符、位掩码、`memset`/`memcpy` | 🟡 中等 | 35 分钟 |
-| [条件编译](./conditional_comp.md) | `#ifdef`/`#ifndef`、平台检测、特性开关 | 🟢 简单 | 25 分钟 |
-| [命令行参数](./cli_args.md) | `argc`/`argv`、参数解析、标准 I/O 重定向 | 🟡 中等 | 30 分钟 |
-| [标准库](./stdlib.md) | 常用标准函数、随机数、时间与日期 | 🟡 中等 | 30 分钟 |
+| [回调函数与多态](./callbacks.md) | 回调模式、qsort 比较器 | 🔴 困难 | 50 分钟 |
+| [void* 泛型编程](./void_generic.md) | 类型擦除、泛型数据结构 | 🔴 困难 | 45 分钟 |
+| [位运算与内存操作](./bit_ops.md) | 位运算符、位掩码 | 🟡 中等 | 35 分钟 |
+| [条件编译](./conditional_comp.md) | `#ifdef`、平台检测 | 🟢 简单 | 25 分钟 |
+| [命令行参数](./cli_args.md) | `argc`/`argv`、标准 I/O | 🟡 中等 | 30 分钟 |
+| [标准库](./stdlib.md) | 常用标准函数 | 🟡 中等 | 30 分钟 |
 
 ---
 
@@ -202,11 +240,11 @@ C 语言诞生于 1972 年，是世界上最古老但仍广泛使用的编程语
 
 | 指标 | 数值 |
 |------|------|
-| **总章节数** | 27 章 |
-| **US1（入门）** | 8 章，约 3.5 小时 |
-| **US2（进阶）** | 7 章，约 4.5 小时 |
+| **总章节数** | 45 章 (含子章节) |
+| **US1（入门）** | 8 章 + 4 函数子章节，约 4 小时 |
+| **US2（进阶）** | 4 组子章节（指针×6、字符串×4、结构体×4）+ 3 flat，约 8 小时 |
 | **US3（高级）** | 12 章，约 6.5 小时 |
-| **总学习时间** | 约 14.5 小时 |
+| **总学习时间** | 约 18.5 小时 |
 
 ---
 

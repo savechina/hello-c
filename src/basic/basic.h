@@ -24,13 +24,24 @@ void main_arrays_sample(void);
 void main_preprocessor_sample(void);
 
 /* Memory & Pointers */
-int main_pointers_sample(void);
+int main_pointer_basics_sample(void);
 int main_pointer_arith_sample(void);
-int main_strings_sample(void);
+int main_pointers_and_arrays_sample(void);
+int main_pointers_and_functions_sample(void);
+int main_void_pointers_sample(void);
+int main_const_correctness_sample(void);
+int main_string_basics_sample(void);
+int main_string_operations_sample(void);
+int main_safe_strings_sample(void);
+int main_string_processing_sample(void);
 
 /* Data Structures */
-int main_structs_sample(void);
-int main_struct_fields_sample(void);
+int main_struct_basics_sample(void);
+int main_nested_structs_sample(void);
+int main_struct_functions_sample(void);
+int main_struct_memory_layout_sample(void);
+int main_unions_sample(void);
+int main_typedef_sample(void);
 int main_enums_sample(void);
 int main_scope_sample(void);
 

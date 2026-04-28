@@ -54,40 +54,76 @@ int main_basic(void) {
 
     /* === 内存与指针 (Memory & Pointers) === */
     printf("--- 指针基础 (Pointer Basics) ---\n");
-    main_pointers_sample();
+    main_pointer_basics_sample();
     printf("\n");
 
     printf("--- 指针运算 (Pointer Arithmetic) ---\n");
     main_pointer_arith_sample();
     printf("\n");
 
-    printf("--- 字符串深度 (Strings) ---\n");
-    main_strings_sample();
+    printf("--- 指针与数组 (Pointers & Arrays) ---\n");
+    main_pointers_and_arrays_sample();
     printf("\n");
 
-    printf("--- 可变参数函数 (Variadic Functions) ---\n");
-    main_variadic_functions_sample();
+    printf("--- 指针与函数 (Pointers & Functions) ---\n");
+    main_pointers_and_functions_sample();
+    printf("\n");
+
+    printf("--- void* 类型擦除 (Void Pointers) ---\n");
+    main_void_pointers_sample();
+    printf("\n");
+
+    printf("--- const 正确性 (Const Correctness) ---\n");
+    main_const_correctness_sample();
+    printf("\n");
+
+    printf("--- 字符串基础 (String Basics) ---\n");
+    main_string_basics_sample();
+    printf("\n");
+
+    printf("--- 字符串操作 (String Operations) ---\n");
+    main_string_operations_sample();
+    printf("\n");
+
+    printf("--- 安全字符串 (Safe Strings) ---\n");
+    main_safe_strings_sample();
+    printf("\n");
+
+    printf("--- 字符串处理 (String Processing) ---\n");
+    main_string_processing_sample();
     printf("\n");
 
     /* === 数据结构 (Data Structures) === */
-    printf("--- 结构体 (Structures) ---\n");
-    main_structs_sample();
+    printf("--- 结构体基础 (Struct Basics) ---\n");
+    main_struct_basics_sample();
     printf("\n");
 
-    printf("--- 结构体字段与内存布局 (Struct Fields & Memory Layout) ---\n");
-    main_struct_fields_sample();
+    printf("--- 嵌套结构体 (Nested Structs) ---\n");
+    main_nested_structs_sample();
     printf("\n");
 
-    printf("--- 枚举与联合体 (Enums & Unions) ---\n");
+    printf("--- 结构体与函数 (Struct Functions) ---\n");
+    main_struct_functions_sample();
+    printf("\n");
+
+    printf("--- 结构体内存布局 (Struct Memory Layout) ---\n");
+    main_struct_memory_layout_sample();
+    printf("\n");
+
+    printf("--- 联合体 (Unions) ---\n");
+    main_unions_sample();
+    printf("\n");
+
+    printf("--- 类型别名 (Typedef) ---\n");
+    main_typedef_sample();
+    printf("\n");
+
+    printf("--- 枚举与联合体 (Enums) ---\n");
     main_enums_sample();
     printf("\n");
 
     printf("--- 作用域与生命周期 (Scope & Lifetime) ---\n");
     main_scope_sample();
-    printf("\n");
-
-    printf("--- 递归函数 (Recursion) ---\n");
-    main_recursion_sample();
     printf("\n");
 
     /* === 高级模式 (Advanced Patterns) === */
