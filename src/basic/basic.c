@@ -52,6 +52,11 @@ int main_basic(void) {
     main_preprocessor_sample();
     printf("\n");
 
+    /* [M2 Moved] Conditional compilation is a core preprocessor topic */
+    printf("--- 条件编译 (Conditional Compilation) ---\n");
+    main_conditional_comp_sample();
+    printf("\n");
+
     /* === 内存与指针 (Memory & Pointers) === */
     printf("--- 指针基础 (Pointer Basics) ---\n");
     main_pointer_basics_sample();
@@ -67,10 +72,6 @@ int main_basic(void) {
 
     printf("--- 指针与函数 (Pointers & Functions) ---\n");
     main_pointers_and_functions_sample();
-    printf("\n");
-
-    printf("--- void* 类型擦除 (Void Pointers) ---\n");
-    main_void_pointers_sample();
     printf("\n");
 
     printf("--- const 正确性 (Const Correctness) ---\n");
@@ -91,6 +92,11 @@ int main_basic(void) {
 
     printf("--- 字符串处理 (String Processing) ---\n");
     main_string_processing_sample();
+    printf("\n");
+
+    /* [M1 Moved] void* type erasure requires knowledge of strings/arrays first */
+    printf("--- void* 类型擦除 (Void Pointers) ---\n");
+    main_void_pointers_sample();
     printf("\n");
 
     /* === 数据结构 (Data Structures) === */
@@ -161,10 +167,6 @@ int main_basic(void) {
 
     printf("--- 位运算与内存操作 (Bit Operations) ---\n");
     main_bit_ops_sample();
-    printf("\n");
-
-    printf("--- 条件编译 (Conditional Compilation) ---\n");
-    main_conditional_comp_sample();
     printf("\n");
 
     printf("--- 命令行参数与 I/O 重定向 (CLI Args) ---\n");

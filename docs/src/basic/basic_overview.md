@@ -36,6 +36,7 @@ C 语言诞生于 1972 年，是世界上最古老但仍广泛使用的编程语
 | [函数](./functions.md) | 🔗 [4 个子章节](#函数子章节) | 🟢 简单 | 2 小时 |
 | [数组基础](./arrays.md) | 数组声明、初始化、遍历、多维数组 | 🟢 简单 | 25 分钟 |
 | [预处理器与宏](./preprocessor.md) | `#include`、`#define`、条件编译基础 | 🟢 简单 | 30 分钟 |
+| [条件编译](./conditional_comp.md) | `#ifdef`、平台检测、宏组合 | 🟢 简单 | 25 分钟 |
 
 #### 函数子章节
 
@@ -66,7 +67,6 @@ C 语言诞生于 1972 年，是世界上最古老但仍广泛使用的编程语
 | [指针运算](./pointer_arith.md) | 指针加减、数组等价 | 🟡 |
 | [指针与数组](./pointers_and_arrays.md) | 多维数组、数组下标本质 | 🟡 |
 | [指针与函数](./pointers_and_functions.md) | 指针参数、返回指针 | 🟡 |
-| [void* 类型擦除](./void_pointers.md) | 泛型函数、type erasure | 🔴 |
 | [const 正确性](./const_correctness.md) | const 指针、指针到 const | 🟡 |
 
 #### 字符串子章节
@@ -77,6 +77,7 @@ C 语言诞生于 1972 年，是世界上最古老但仍广泛使用的编程语
 | [字符串操作](./string_operations.md) | strlen、strcpy、strcat、strcmp | 🟡 |
 | [安全字符串](./safe_strings.md) | strncpy、snprintf、bounds checking | 🟡 |
 | [字符串处理](./string_processing.md) | strtok、strstr、strchr | 🟡 |
+| [void* 类型擦除](./void_pointers.md) | 泛型函数、type erasure | 🔴 |
 
 #### 结构体子章节
 
@@ -100,7 +101,6 @@ C 语言诞生于 1972 年，是世界上最古老但仍广泛使用的编程语
 | [回调函数与多态](./callbacks.md) | 回调模式、qsort 比较器 | 🔴 困难 | 50 分钟 |
 | [void* 泛型编程](./void_generic.md) | 类型擦除、泛型数据结构 | 🔴 困难 | 45 分钟 |
 | [位运算与内存操作](./bit_ops.md) | 位运算符、位掩码 | 🟡 中等 | 35 分钟 |
-| [条件编译](./conditional_comp.md) | `#ifdef`、平台检测 | 🟢 简单 | 25 分钟 |
 | [命令行参数](./cli_args.md) | `argc`/`argv`、标准 I/O | 🟡 中等 | 30 分钟 |
 | [标准库](./stdlib.md) | 常用标准函数 | 🟡 中等 | 30 分钟 |
 

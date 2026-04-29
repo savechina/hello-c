@@ -21,6 +21,7 @@
     - [可变参数函数](./basic/variadic_functions.md)
   - [数组基础](./basic/arrays.md) 🟢
   - [预处理器与宏](./basic/preprocessor.md) 🟢
+  - [条件编译](./basic/conditional_comp.md) 🟢
 
   **内存与指针**
   - [指针](./basic/pointers.md) 🟡
@@ -28,13 +29,13 @@
     - [指针运算](./basic/pointer_arith.md)
     - [指针与数组](./basic/pointers_and_arrays.md)
     - [指针与函数](./basic/pointers_and_functions.md)
-    - [void* 类型擦除](./basic/void_pointers.md)
-    - [const 正确性](./basic/const_correctness.md)
+    - [const 正确性](./basic/const_correctness.md) 🟡
   - [字符串](./basic/strings.md) 🟡
     - [字符串基础](./basic/string_basics.md)
     - [字符串操作](./basic/string_operations.md)
     - [安全字符串](./basic/safe_strings.md)
     - [字符串处理](./basic/string_processing.md)
+  - [void* 类型擦除](./basic/void_pointers.md) 🔴
 
   **数据结构**
   - [结构体](./basic/structs.md) 🟡
@@ -57,7 +58,6 @@
   - [回调函数与多态](./basic/callbacks.md) 🔴
   - [void* 泛型编程](./basic/void_generic.md) 🔴
   - [位运算与内存操作](./basic/bit_ops.md) 🟡
-  - [条件编译](./basic/conditional_comp.md) 🟢
   - [命令行参数与 I/O 重定向](./basic/cli_args.md) 🟡
   - [标准库精要](./basic/stdlib.md) 🟡
   - [C 术语表](./basic/basic_glossary.md) 📚
