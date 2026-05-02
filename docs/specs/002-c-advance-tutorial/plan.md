@@ -1,89 +1,110 @@
-# Implementation Plan: C Advance Tutorial
+# Implementation Plan: Add Unity & CMock for Test Sample
 
-**Branch**: `002-c-advance-tutorial` | **Date**: 2026-04-27 | **Spec**: spec.md
+**Branch**: `002-c-advance-tutorial` | **Date**: 2026-05-02 | **Spec**: `/docs/specs/002-c-advance-tutorial/spec.md`
+**Input**: Feature specification from `/docs/specs/002-c-advance-tutorial/spec.md`
+
+**Note**: This template is filled in by the `/speckit.plan` command. See `.specify/templates/plan-template.md` for the execution workflow.
+
+**Status**: Phase0 (Research) ✅ COMPLETE | Phase1 (Design) ✅ COMPLETE | Ready for `/speckit.tasks`
 
 ## Summary
 
-Build 12 advance C tutorial chapters mirroring hello-rust's advance structure, with mdBook docs and runnable `_sample.c`/`_sample.h` source files in `src/advance/`.
+Add Unity test framework and CMock to the hello-c tutorial project. Keep the existing custom testing framework in `src/advance/testing_sample.c` for educational purposes, and create a new `test/` directory with a Unity-based sample test case for `calc_add()` from `testing_sample.c`. Also add CMock source to the repo for future mocking examples. Update the Makefile with a `make test` target.
 
 ## Technical Context
 
-**Language/Version**: C17, gcc 12+ or clang 15+
-**Primary Dependencies**: POSIX C (pthread, signal), C11 stdatomic.h, SQLite3 (database chapter)
-**Storage**: N/A — tutorial code examples (SQLite demo uses temp files)
-**Testing**: `make advance` runs coordinator, individual `make sample CHAPTER=<name>`, valgrind clean required
-**Target Platform**: macOS (pthread available), Linux (full POSIX)
-**Constraints**: `-Wall -Wextra -Werror -std=c17`, zero memory leaks, bounded string ops only
-**Scale/Scope**: 12 chapters → 24 source files + 14 mdBook docs + coordinator
+**Language/Version**: C17 (ISO/IEC 9899:2018) | gcc 12+ or clang 15+
+**Primary Dependencies**: POSIX C standard library, `<stdint.h>`, `<stdio.h>`, Unity (v2.6.1), CMock
+**Storage**: N/A (test framework, no persistence)
+**Testing**: Unity test framework (unit tests), CMock (mocking for future chapters), `valgrind`, `cppcheck`
+**Target Platform**: macOS, Linux, Solaris/Illumos, FreeBSD
+**Project Type**: CLI/tutorial
+**Performance Goals**: Test execution <1s for sample test case
+**Constraints**: Zero compiler warnings (`-Wall -Wextra -Werror`), no memory leaks in test code, header-only Unity integration (copy source files)
+**Scale/Scope**: 3 Unity source files, 1 CMock directory, 1 sample test file, Makefile updates
 
 ## Constitution Check
 
-- [ ] **I. Memory Safety**: All advance samples must valgrind-clean, RAII-style macros for resource cleanup
-- [ ] **II. Code Quality**: C17 standard, zero warnings, include guards, Doxygen on coordinator
-- [ ] **III. Modular Architecture**: Each chapter is single-responsibility module, coordinator in `advance.c`
-- [ ] **IV. Multi-Platform Portability**: `#ifdef` for thread APIs (pthread on POSIX), fallback for platforms without stdatomic.h
-- [ ] **V. SDD Workflow**: Spec ✓, plan ✓, tasks TBD
+*GATE: Must pass before Phase0 research. Re-check after Phase1 design.*
+
+Verify all 5 Hello-C Constitution principles:
+
+- [x] **I. Memory Safety**: Unity/CMock are well-established C frameworks with proper memory management. Test code will use bounded operations. No `malloc` without `free` in test cases.
+- [x] **II. Code Quality**: C17 standard, `-Wall -Wextra -Werror` clean for all test code. Unity headers use proper include guards. Test files will have Doxygen comments.
+- [x] **III. Modular Architecture**: `test/` directory separate from `src/`. Unity/CMock in `test/vendor/` or `third_party/`. No circular dependencies. `main.c` unchanged.
+- [x] **IV. Multi-Platform Portability**: Unity supports macOS, Linux, Solaris, FreeBSD. Platform-specific code (if any) behind `#ifdef`. No hardcoded paths.
+- [x] **V. SDD Workflow**: Spec created (`/speckit.specify`), clarifications done (`/speckit.clarify`), plan reviewed (this document), manual commit policy acknowledged.
+
+**GATE STATUS: PASS** — All 5 principles satisfied. Proceeding to Phase0.
+
+---
+
+## Phase0: Research ✅ COMPLETE
+
+**Artifacts generated**:
+- `research.md` — Unity v2.6.1 (3 files), CMock v2.6.0 (Ruby), directory structure `test/vendor/`, Makefile `test` target patterns, sample test case design for `calc_add()`
+
+**Key decisions**:
+- Unity v2.6.1 (header-only, 3 files) — beginner-friendly, zero deps
+- CMock v2.6.0 added to repo for educational completeness
+- `test/vendor/unity/` and `test/vendor/cmock/` directory structure
+- `make test` target with `build/test/` for binaries
+- Sample test: `test/test_calc_add.c` testing `calc_add()`
+
+---
+
+## Phase1: Design ✅ COMPLETE
+
+**Artifacts generated**:
+- `data-model.md` — Added entities: TestFile, TestVendor, CalcModule
+- `quickstart.md` — Added "Add Test with Unity" section
+- Agent context updated via `.specify/scripts/bash/update-agent-context.sh opencode`
+
+**Constitution Check (Post-Design)**:
+- [x] **I. Memory Safety**: Test code uses Unity (established framework), no unbounded ops
+- [x] **II. Code Quality**: All test code will follow C17, `-Wall -Wextra -Werror`
+- [x] **III. Modular Architecture**: `test/` separate from `src/`, vendor files isolated
+- [x] **IV. Multi-Platform**: Unity supports all target platforms
+- [x] **V. SDD Workflow**: Spec ✅, Clarify ✅, Plan ✅, ready for `/speckit.tasks`
+
+**GATE STATUS: PASS** — Post-design review complete. Ready for Phase2 (task decomposition via `/speckit.tasks`).
 
 ## Project Structure
 
-```
-src/advance/
-├── advance.c                 # Coordinator: calls all main_*_sample()
-├── advance.h
-├── error_handling_sample.{c,h}
-├── atomic_types_sample.{c,h}
-├── smart_pointers_sample.{c,h}
-├── async_sample.{c,h}
-├── iterators_sample.{c,h}
-├── advanced_traits_sample.{c,h}
-├── system_sample.{c,h}
-├── testing_sample.{c,h}
-├── tools_sample.{c,h}
-├── database_sample.{c,h}
-├── web_sample.{c,h}
-docs/src/advance/
-├── advance-overview.md
-├── error-handling.md
-├── atomic-types.md
-├── smart-pointers.md
-├── async.md
-├── iterators.md
-├── advanced-traits.md
-├── system.md
-├── testing.md
-├── tools.md
-├── database.md
-├── web.md
-└── review-advance.md
+### Documentation (this feature)
+
+```text
+docs/specs/002-c-advance-tutorial/
+├── spec.md              # Feature specification (input)
+├── plan.md              # This file (Phase0/1 output)
+├── research.md          # Phase0 research findings
+├── data-model.md        # Phase1 output (N/A for test framework addition)
+└── tasks.md             # Phase2 output (/speckit.tasks command)
 ```
 
-## Phase 0: Research — hello-rust Advance Mapping
+### Source Code (repository root)
 
-Need to map each hello-rust advance topic to C equivalent:
-1. `smart-pointers` → Opaque pointers + RAII macros
-2. `atomic-types` → C11 `<stdatomic.h>` + volatile
-3. `async/` → POSIX threads (pthread), select/poll
-4. `iterators` → Linked lists, dynamic arrays, trees in C
-5. `advanced-traits` → Function pointer tables, vtable pattern
-6. `error-handling` → errno, setjmp/longjmp, error callbacks
-7. `system/` → POSIX syscalls: signals, mmap, process mgmt
-8. `testing/` → Custom ASSERT framework
-9. `database/` → SQLite3 C API basics
-10. `web/` → Bare-bones HTTP server with sockets
-11. `tools/` → Build system patterns, code coverage
-12. `review-advance` → Comprehensive review chapter
+```text
+hello-c/
+├── src/
+│   ├── advance/
+│   │   ├── testing_sample.c     # Existing custom framework (KEEP)
+│   │   └── testing_sample.h
+│   └── ... (other modules)
+├── test/                        # NEW: Test directory
+│   ├── vendor/                  # Unity + CMock source files
+│   │   ├── unity/              # Unity (unity.c, unity.h, unity_internals.h)
+│   │   └── cmock/              # CMock source
+│   ├── test_calc_add.c          # Sample Unity test for calc_add()
+│   └── Makefile.test           # (optional) Separate test Makefile
+├── Makefile                     # MODIFY: Add `make test` target
+└── include/                     # (optional) Shared test headers
+```
 
-## Phase 1: Design
+**Structure Decision**: Use `test/vendor/` for Unity/CMock sources (self-contained, no external deps). Sample test in `test/test_calc_add.c`.
 
-**Coordinator**: `advance.c` follows same pattern as `basic.c` — declares and calls all `main_<topic>_sample()` functions sequentially.
-**Makefile**: Update `SOURCES` glob to pick up `src/advance/**.c` (already does via `**/**.c` pattern — `advance/` is already included).
-**Makefile**: Add `make advance` target (same as `make sample` but for advance section).
+## Complexity Tracking
 
-## Phase 2: Implementation Phases
+> **Fill ONLY if Constitution Check has violations that must be justified**
 
-### Phase N: Polish & Cross-Cutting Concerns
-
-1. Update `docs/src/SUMMARY.md` — add Advance section hierarchy
-2. Update `README.md` — mention advance tutorial section
-3. Update `src/hello.c` — ensure `main_advance()` calls coordinator properly
-4. Full build + valgrind verification
+No violations — all 5 principles pass cleanly.

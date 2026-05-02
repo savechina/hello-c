@@ -1,263 +1,263 @@
-# Tasks: Basic Chapter Restructure & Learning Progression Fix
+# Tasks: Add Unity & CMock for Test Sample
 
-**Input**: User decision: Option A (Full Restructure) — reorder all basic chapters to correct C learning progression + split functions/strings/pointers/structs into sub-chapters.
+**Input**: Design documents from `/docs/specs/002-c-advance-tutorial/`
+**Feature**: Add Unity v2.6.1 and CMock v2.6.0, implement one Unity sample test case for `calc_add()`
 
-**Target**: ~38 basic files instead of current 27. Updates coordinator, SUMMARY.md, basic_overview.md, all cross-references.
-
-**Convention**: `<module>_sample.c` + `<module>_sample.h` naming, `main_<module>_sample()` entry points.
-
-## Phase 1: Foundational — Analysis & Planning ✅
-
-- [x] T001 [P] Identify current learning order issues (completed via `/speckit.clarify`)
-- [x] T002 [P] Define new chapter order with sub-chapter splits (completed via `/speckit.clarify`)
+**Tests**: Tests are included (Unity test cases) as explicitly requested.
 
 ---
 
-## Phase 2: US1 — Reorder Existing Chapters (P1) ✅
+## Phase 1: Setup (Shared Infrastructure)
 
-**Goal**: Move chapters to correct learning progression. Fixed: operators moved from #4 to #3, control_flow from #6 to #4, loops from #7 to #5, functions from #3 to #6, arrays from #5 to #7. Added stdlib_sample call, removed duplicate callbacks call.
+**Purpose**: Download external dependencies and create directory structure.
 
-- [x] T003 [P] [US1] Updated ordering in `src/basic/basic.c` with section group comments
-- [x] T004 [P] [US1] Updated chapter order in `docs/src/SUMMARY.md` with grouped sections
-- [x] T005 [P] [US1] Updated chapter table in `docs/src/basic/basic_overview.md` (correct order)
-- [x] T006 [P] [US1] Update `basic.c` section group comments (Core/Memory/Data Structures/Advanced)
-- [x] T007 [US1] Update `docs/src/basic/basic_overview.md` with new group headers
-- [x] T008 [US1] Update `docs/src/SUMMARY.md` with grouped hierarchy (already done)
+- [x] T001 [P] Create `test/` directory structure: `test/vendor/unity/`, `test/vendor/cmock/lib/`, `test/mocks/`
+- [x] T002 [P] Download Unity v2.6.1 sources to `test/vendor/unity/`:
+  - `curl -L -o /tmp/unity.zip https://github.com/ThrowTheSwitch/Unity/archive/refs/tags/v2.6.1.zip`
+  - Extract `unity.c`, `unity.h`, `unity_internals.h` to `test/vendor/unity/`
+- [x] T003 [P] Download CMock v2.6.0 sources to `test/vendor/cmock/`:
+  - `curl -L -o /tmp/cmock.zip https://github.com/ThrowTheSwitch/CMock/archive/refs/tags/v2.6.0.zip`
+  - Extract `lib/` directory (all `.rb` files) to `test/vendor/cmock/`
+- [x] T004 [P] Update `.gitignore` to include `test/mocks/` (generated mocks should be gitignored)
 
-**Quality gate**:
-- [x] T009 [US1] `make build` zero warnings ✅
-- [x] T010 [US1] `make run` executes chapters in correct order ✅
-
----
-
-## Phase 3: US2 — Split Functions into Sub-Chapter (P1)
-
-**Goal**: Replace single `functions.md` + `functions_sample.{c,h}` with 4 sub-chapters + overview.
-
-New structure (functions → 4 sub-chapters):
-- `functions_basics.md` + `functions_basics_sample.{c,h}` — definition, declaration, return types, parameters
-- `function_scope.md` + `function_scope_sample.{c,h}` — local/global, static functions, extern, forward declarations
-- `recursion.md` + `recursion_sample.{c,h}` — recursive functions, base case, practical examples (factorial, fibonacci)
-- `variadic_functions.md` + `variadic_functions_sample.{c,h}` — va_list, printf-style functions
-
-**Pattern**: Same as advance sub-chapter — `src/basic/<topic>_sample.{c,h}`, `docs/src/basic/<topic>.md`
-
-- [x] T011 [P] [US2] Create `docs/src/basic/functions_basics.md` (15 sections, first-person, real-world analogy)
-- [x] T012 [P] [US2] Create `src/basic/functions_basics_sample.{c,h}` (main_functions_basics_sample + demos)
-- [x] T013 [P] [US2] Create `docs/src/basic/function_scope.md`
-- [x] T014 [P] [US2] Create `src/basic/function_scope_sample.{c,h}`
-- [x] T015 [P] [US2] Create `docs/src/basic/recursion.md`
-- [x] T016 [P] [US2] Create `src/basic/recursion_sample.{c,h}`
-- [x] T017 [P] [US2] Create `docs/src/basic/variadic_functions.md`
-- [x] T018 [P] [US2] Create `src/basic/variadic_functions_sample.{c,h}`
-- [x] T019 [US2] Create `docs/src/basic/functions.md` as overview (intro + table of 4 sub-chapters + links)
-- [x] T020 [US2] Delete old `docs/src/basic/functions.md` (will be replaced by overview)
-
-**Coordinator updates**:
-- [x] T021 [US2] Update `basic.h`: add 4 `main_*_sample()` declarations for functions sub-chapters
-- [x] T022 [US2] Update `basic.c`: add 4 function calls + group under "Functions" section
-
-**Quality gate**:
-- [x] T023 [US2] Verify `make build` zero warnings on all 4 new functions files
+**Checkpoint**: Unity/CMock sources available in `test/vendor/`, directory structure ready.
 
 ---
 
-## Phase 4: US3 — Split Strings into Sub-Chapter (P2)
+## Phase 2: Foundational (Blocking Prerequisites)
 
-**Goal**: Replace single `strings.md` with 4 sub-chapters.
+**Purpose**: Extract testable functions from `testing_sample.c` so they can be tested with Unity.
 
-New structure (strings → 4 sub-chapters):
-- `string_basics.md` + `string_basics_sample.{c,h}` — char arrays, null terminator, string literals
-- `string_operations.md` + `string_operations_sample.{c,h}` — `<string.h>` functions: strlen, strcpy, strcat, strcmp
-- `safe_strings.md` + `safe_strings_sample.{c,h}` — strncpy, snprintf, bounds checking, overflow prevention (Constitution: no strcpy/sprintf)
-- `string_processing.md` + `string_processing_sample.{c,h}` — parsing, tokenizing (strtok), searching (strstr, strchr)
+**⚠️ CRITICAL**: Must complete before User Story 1 — `calc_add()` is `static` in `testing_sample.c` and cannot be directly tested.
 
-- [x] T024 [P] [US3] Create `docs/src/basic/string_basics.md` (15 sections, analogy: "C string is like a train where the last car is always '\0'")
-- [x] T025 [P] [US3] Create `src/basic/string_basics_sample.{c,h}`
-- [x] T026 [P] [US3] Create `docs/src/basic/string_operations.md`
-- [x] T027 [P] [US3] Create `src/basic/string_operations_sample.{c,h}`
-- [x] T028 [P] [US3] Create `docs/src/basic/safe_strings.md`
-- [x] T029 [P] [US3] Create `src/basic/safe_strings_sample.{c,h}`
-- [x] T030 [P] [US3] Create `docs/src/basic/string_processing.md`
-- [x] T031 [P] [US3] Create `src/basic/string_processing_sample.{c,h}`
-- [x] T032 [US3] Create `docs/src/basic/strings.md` as overview
-- [x] T033 [US3] Delete old `strings_sample.{c,h}` and `strings.md`
+- [x] T005 Create `src/advance/calc.c` with non-static functions: `calc_add()`, `calc_multiply()`, `calc_is_valid()` (extracted from `testing_sample.c` lines 253-269)
+- [x] T006 Create `src/advance/calc.h` declaring: `int calc_add(int a, int b)`, `int calc_multiply(int a, int b)`, `int calc_is_valid(int result)`
+- [x] T007 Update `src/advance/testing_sample.c`:
+  - Add `#include "advance/calc.h"`
+  - Replace inline `calc_add()`, `calc_multiply()`, `calc_is_valid()` implementations with calls to the new `calc_*` functions (or remove duplicates and use the new functions directly)
+  - Ensure `testing_sample.c` still compiles and runs correctly
+- [x] T008 [P] Update `src/advance/advance.h` — add `#include "advance/calc.h"` if needed for coordination
 
-**Coordinator updates**:
-- [x] T034 [US3] Update `basic.h`: add 4 string sub-chapter declarations
-- [x] T035 [US3] Update `basic.c`: add 4 string calls
-
-**Quality gate**:
-- [x] T036 [US3] Verify `make build` zero warnings
-- [x] T037 [US3] Verify safe_strings uses ONLY bounded ops (strncpy, snprintf) — Constitution check
+**Quality Gate**:
+- [x] T009 `make build` — zero warnings with new `calc.c/calc.h` files
+- [x] T010 `make run` — `testing_sample` chapter still works correctly
 
 ---
 
-## Phase 5: US4 — Split Pointers into Sub-Chapter (P1)
+## Phase 3: User Story 1 — Unity Sample Test Case (P1) 🎯 MVP
 
-**Goal**: Replace 2 flat pointer chapters with 6 focused sub-chapters.
+**Goal**: Add Unity test framework and implement one sample test case for `calc_add()` in `test/test_calc_add.c`.
 
-Current: `pointers.md` + `pointer_arith.md` (2 files)
-New: 5 sub-chapters + overview:
-- `pointer_basics.md` + `pointer_basics_sample.{c,h}` — &, *, NULL, pointer initialization, "pointers are like GPS coordinates"
-- `pointer_arith.md` + `pointer_arith_sample.{c,h}` — existing content, keep as-is
-- `pointers_and_arrays.md` + `pointers_and_arrays_sample.{c,h}` — array-pointer equivalence, multidimensional arrays
-- `pointers_and_functions.md` + `pointers_and_functions_sample.{c,h}` — pointers as parameters, returning pointers, pass-by-reference
-- `void_pointers.md` + `void_pointers_sample.{c,h}` — type erasure, generic functions (moved from existing `void_generic.md`)
-- `const_correctness.md` + `const_correctness_sample.{c,h}` — const pointers, pointer to const, const vs non-const
+**Independent Test**: `make test` compiles and runs `test_calc_add` with all tests passing (green output).
 
-- [x] T038 [P] [US4] Create `docs/src/basic/pointer_basics.md`
-- [x] T039 [P] [US4] Create `src/basic/pointer_basics_sample.{c,h}`
-- [x] T040 [P] [US4] Rename `docs/src/basic/pointer_arith.md` — update content to include array-pointer section
-- [x] T041 [P] [US4] Create `docs/src/basic/pointers_and_arrays.md`
-- [x] T042 [P] [US4] Create `src/basic/pointers_and_arrays_sample.{c,h}`
-- [x] T043 [P] [US4] Create `docs/src/basic/pointers_and_functions.md`
-- [x] T044 [P] [US4] Create `src/basic/pointers_and_functions_sample.{c,h}`
-- [x] T045 [P] [US4] Move `void_generic.md` → `void_pointers.md` (rename + update content)
-- [x] T046 [P] [US4] Create `docs/src/basic/const_correctness.md`
-- [x] T047 [P] [US4] Create `src/basic/const_correctness_sample.{c,h}`
-- [x] T048 [US4] Create `docs/src/basic/pointers.md` as overview
-- [x] T049 [US4] Delete old `pointers_sample.{c,h}` (merged into sub-chapters)
+### Tests for User Story 1 ⚠️
 
-**Coordinator updates**:
-- [x] T050 [US4] Update `basic.h`: add 5 pointer sub-chapter declarations
-- [x] T051 [US4] Update `basic.c`: add 5 pointer calls
+> **NOTE: Write these tests FIRST, ensure they FAIL before implementation**
 
-**Quality gate**:
-- [x] T052 [US4] Verify `make build` zero warnings
-- [x] T053 [US4] Verify valgrind on pointer sub-chapters — no invalid reads/writes
+- [x] T011 [P] [US1] Create `test/advance/test_calc_add.c` with Unity test framework (moved from `test/` root):
+  - Include `unity.h` and `advance/calc.h`
+  - Implement `setUp()` and `tearDown()` (can be empty for this test)
+  - Write `test_calc_add_basic()`: `TEST_ASSERT_EQUAL_INT(5, calc_add(2, 3))`, `TEST_ASSERT_EQUAL_INT(0, calc_add(0, 0))`, `TEST_ASSERT_EQUAL_INT(0, calc_add(-1, 1))`
+  - Write `test_calc_add_negative()`: `TEST_ASSERT_EQUAL_INT(-1, calc_add(-2, 1))`, `TEST_ASSERT_EQUAL_INT(-5, calc_add(-2, -3))`
+  - Implement `main()` with `UNITY_BEGIN()` → `RUN_TEST()` → `UNITY_END()`
+  - **Verify**: Compilation fails or tests fail before Makefile integration (manual compile test)
 
----
+### Implementation for User Story 1
 
-## Phase 6: US5 — Split Structs into Sub-Chapter (P2)
+- [x] T012 [US1] Update `Makefile` — add test configuration section:
+  - `TEST_DIR := test`
+  - `UNITY_DIR := $(TEST_DIR)/vendor/unity`
+  - `UNITY_OBJ := $(BUILD_DIR)/unity.o`
+  - `TEST_CFLAGS := $(CFLAGS) -I$(UNITY_DIR) -DUNITY_OUTPUT_COLOR -DUNITY_SUPPORT_VARIADIC_MACROS`
+  - `TEST_SOURCES := $(wildcard $(TEST_DIR)/*.c)`
+  - `TEST_BINS := $(patsubst $(TEST_DIR)/%.c, $(BUILD_DIR)/test/%, $(TEST_SOURCES))`
 
-**Goal**: Replace 2 flat struct chapters with 5 focused sub-chapters.
+- [x] T013 [US1] Update `Makefile` — add Unity compilation rule:
+  - `$(UNITY_OBJ): $(UNITY_DIR)/unity.c | $(BUILD_DIR)` — compile unity.c once
+  - `$(BUILD_DIR)/test/%: $(TEST_DIR)/%.c $(UNITY_OBJ) | $(BUILD_DIR)/test` — compile and link each test
 
-Current: `structs.md` + `struct_fields.md` (2 files)
-New: 4 sub-chapters + overview:
-- `struct_basics.md` + `struct_basics_sample.{c,h}` — definition, initialization, member access — analogy: "struct is like a business card"
-- `nested_structs.md` + `nested_structs_sample.{c,h}` — struct within struct, complex data types
-- `struct_functions.md` + `struct_functions_sample.{c,h}` — passing struct to/returning from functions, struct pointers
-- `struct_memory_layout.md` + `struct_memory_layout_sample.{c,h}` — padding, alignment, sizeof, `#pragma pack`
-- `unions_and_enums.md` + `unions_and_enums_sample.{c,h}` — union basics, enum patterns, tagged unions with enum discriminant — merges `enums.md` with NEW unions section
+- [x] T014 [US1] Update `Makefile` — add `test` target:
+  ```makefile
+  .PHONY: test
+  test: $(TEST_BINS)
+  	@failed=0; \
+  	for t in $(TEST_BINS); do \
+  		./$$t || { failed=1; }; \
+  	done; \
+  	[ $$failed -eq 0 ]
+  ```
 
-- [x] T054 [P] [US5] Create `docs/src/basic/struct_basics.md`
-- [x] T055 [P] [US5] Create `src/basic/struct_basics_sample.{c,h}`
-- [x] T056 [P] [US5] Create `docs/src/basic/nested_structs.md`
-- [x] T057 [P] [US5] Create `src/basic/nested_structs_sample.{c,h}`
-- [x] T058 [P] [US5] Create `docs/src/basic/struct_functions.md`
-- [x] T059 [P] [US5] Create `src/basic/struct_functions_sample.{c,h}`
-- [x] T060 [P] [US5] Create `docs/src/basic/struct_memory_layout.md`
-- [x] T061 [P] [US5] Create `src/basic/struct_memory_layout_sample.{c,h}`
-- [x] T062 [US5] Create `docs/src/basic/structs.md` as overview
+- [x] T015 [US1] Update `Makefile` — add `$(BUILD_DIR)/test` directory creation rule (order-only prerequisite)
 
-**Coordinator updates**:
-- [x] T063 [US5] Update `basic.h`: add 4 struct sub-chapter declarations
-- [x] T064 [US5] Update `basic.c`: add 4 struct calls
+- [x] T016 [US1] Update `Makefile` — add test artifacts to `clean` target: `rm -rf $(BUILD_DIR)/unity.o $(BUILD_DIR)/test/`
 
-**Quality gate**:
-- [x] T065 [US5] Verify `make build` zero warnings
+**Quality Gate**:
+- [x] T017 [US1] `make test` — runs `test_calc_add` and outputs colored PASS/FAIL
+- [x] T018 [US1] `make build` — still compiles all `src/` files with zero warnings (Unity not linked to main binary)
+- [x] T019 [US1] Verify test output shows `test_calc_add_basic` and `test_calc_add_negative` with PASS
 
 ---
 
-## Phase 7: US6 — Add Missing Chapters and Reorder Remaining (P2)
+## Phase 4: User Story 2 — CMock Education (P2)
 
-**Goal**: Add typedef, unions, and reorder remaining chapters into correct groups.
+**Goal**: Demonstrate CMock usage in the tutorial (separate from sample test case).
 
-New chapters to create:
-- `typedef.md` + `typedef_sample.{c,h}` — type aliases, function pointer typedefs
-- `unions.md` merged with enums in US5 above
+**Independent Test**: `test/mocks/mock_sensor.h` generated successfully from a header file.
 
-Remaining flat chapters that stay as-is (just reposition):
-21. logging (stays)
-22. debugging (stays)
-23. headers (stays)
-24. conditional_comp (stays)
-25. cli_args (stays)
-26. stdlib (stays)
-27. review_basic (stays)
+- [ ] T020 [P] [US2] Create `docs/src/advance/testing.md` section on CMock:
+  - Explain CMock is a Ruby-based mock generator
+  - Show command: `ruby test/vendor/cmock/lib/cmock.rb -otest/mocks src/advance/sensor.h`
+  - Explain difference between Unity (test runner) and CMock (mock generator)
 
-Position changes:
-- typedef → position after pointer sub-chapters (around ~17)
-- logging → position after file_io (~22)
-- conditional_comp → position after debugging (~24)
+- [ ] T021 [US2] Update `testing_sample.c` — add comment in Section 8 (Mock functions):
+  - Reference that CMock can generate mocks automatically for headers like `sensor.h`
+  - Keep existing manual function pointer mocking as educational contrast
 
-- [x] T066 [P] [US6] Create `docs/src/basic/typedef.md` (15 sections, first-person, analogy)
-- [x] T067 [P] [US6] Create `src/basic/typedef_sample.{c,h}`
-- [x] T068 [US6] Reorder remaining flat chapters in `basic.c` to match learning progression
-- [x] T069 [US6] Update `basic.h` with typedef declaration
-
-**Quality gate**:
-- [x] T070 [US6] Verify all chapter calls in `basic.c` match `basic.h` declarations
+**Quality Gate**:
+- [ ] T022 [US2] `make build` — zero warnings (CMock is Ruby, not compiled)
+- [ ] T023 [US2] Verify `ruby test/vendor/cmock/lib/cmock.rb --help` runs (if Ruby available)
 
 ---
 
-## Phase N: Polish & Integration
+## Phase N: Polish & Cross-Cutting Concerns
 
-- [x] T071 [P] Update `docs/src/basic/basic_overview.md` — new chapter table (~38 entries with nested sub-chapter links)
-- [x] T072 [P] Update `docs/src/SUMMARY.md` — nested hierarchy for Functions, Strings, Pointers, Structs groups
-- [x] T073 [P] Update cross-references in all affected docs (continue learning links point to new chapter names)
-- [x] T074 [P] Full build: `make clean && make build` — zero warnings across ALL source files
-- [x] T075 [P] Full run: `make run` — all chapters execute in correct learning order
-- [x] T076 [P] Update README.md — mention new chapter count and structure
-- [x] T077 [P] Update AGENTS.md — new basic chapter structure documented
+**Purpose**: Documentation updates and final integration.
+
+- [ ] T024 [P] Update `docs/src/advance/testing.md` — add Unity section:
+  - Explain Unity vs custom `ASSERT_EQ_RUN()` (side-by-side comparison)
+  - Show `test/test_calc_add.c` as the Unity example
+  - Explain `make test` target for running tests
+
+- [ ] T025 [P] Update `README.md` — add `make test` to Quick Start section
+
+- [ ] T026 [P] Update `AGENTS.md` — add Unity/CMock to Active Technologies section
+
+- [ ] T027 [P] Update `docs/specs/002-c-advance-tutorial/quickstart.md` — verify "Add Test with Unity" section matches implementation
+
+- [ ] T028 Create `test/README.md` — document:
+  - How to add new test files (create `test/test_*.c`, it auto-discovers via Makefile wildcard)
+  - Unity flags used (`-DUNITY_OUTPUT_COLOR`, etc.)
+  - How to generate mocks with CMock
+
+**Final Quality Gate**:
+- [ ] T029 `make build` — zero warnings across ALL source files
+- [ ] T030 `make test` — all Unity tests PASS
+- [ ] T031 `make run` — all advance chapters (including testing_sample) work correctly
+- [ ] T032 `make clean && make build` — clean build succeeds
 
 ---
 
-## Dependencies
+## Dependencies & Execution Order
 
-```
-Phase 1 (T001-T002) ✅ DONE — Analysis complete
-     │
-     └──→ Phase 2 (T003-T010): Reorder existing 8 chapters ← MVP
-              │
-              ├──→ Phase 3 (T011-T023): Split functions (4 sub-chapters)
-              │
-              ├──→ Phase 4 (T024-T037): Split strings (4 sub-chapters)
-              │
-              ├──→ Phase 5 (T038-T053): Split pointers (5 sub-chapters)
-              │
-              ├──→ Phase 6 (T054-T065): Split structs (4 sub-chapters)
-              │
-              └──→ Phase 7 (T066-T070): Add typedef + reorder remaining
-                      │
-                      └──→ Phase N (T071-T077): Polish + Integration
+### Phase Dependencies
+
+- **Phase 1 (Setup)**: No dependencies — can start immediately ✅
+- **Phase 2 (Foundational)**: Depends on Phase 1 — **BLOCKS all user stories**
+- **Phase 3 (US1)**: Depends on Phase 2 completion — **MVP**, can run independently after Phase 2
+- **Phase 4 (US2)**: Depends on Phase 2 completion — can run in parallel with US1 (different files)
+- **Phase N (Polish)**: Depends on US1 + US2 completion
+
+### User Story Dependencies
+
+- **User Story 1 (P1)**: Can start after Phase 2 — No dependencies on US2
+- **User Story 2 (P2)**: Can start after Phase 2 — No dependencies on US1
+
+### Within Each User Story
+
+- Tests (T011) → Implementation (T012-T016) → Quality Gate (T017-T019)
+- Models before integration
+
+### Parallel Opportunities
+
+- Phase 1: T001, T002, T003, T004 can ALL run in parallel (different files, no deps)
+- Phase 2: T005, T006 can run in parallel; T007 depends on T005+T006; T008 depends on T005
+- Phase 3: T012, T013, T014, T015 can run in parallel (all Makefile edits, different rule additions)
+- Phase 4: T020, T021 can run in parallel
+- Phase N: T024, T025, T026, T027, T028 can ALL run in parallel
+
+---
+
+## Parallel Execution Examples
+
+### Phase 1: Setup (All Parallel)
+
+```bash
+# Launch all Setup tasks together
+Task: "Create test/ directory structure"  (T001)
+Task: "Download Unity v2.6.1"  (T002)
+Task: "Download CMock v2.6.0"  (T003)
+Task: "Update .gitignore"  (T004)
 ```
 
-## Task Summary
+### Phase 3: User Story 1 (Mostly Parallel)
 
-| Phase | Tasks | Status  |
-| ----- | ----- | ------- |
-| Phase 1: Foundational | T001-T002 | ✅ 2 done |
-| Phase 2: US1 (P1) Reorder existing | T003-T010 | ✅ 8 done |
-| Phase 3: US2 (P1) Functions split | T011-T023 | ✅ 13 done |
-| Phase 4: US3 (P2) Strings split | T024-T037 | ✅ 14 done |
-| Phase 5: US4 (P1) Pointers split | T038-T053 | ✅ 16 done |
-| Phase 6: US5 (P2) Structs split | T054-T065 | ✅ 12 done |
-| Phase 7: US6 (P2) Missing chapters | T066-T070 | ✅ 5 done |
-| Phase N: Polish | T071-T077 | ✅ 7 done |
-| **Total** | | **✅ 77/77 ALL COMPLETE** |
+```bash
+# Launch all Makefile tasks in parallel (T012-T015)
+Task: "Add test config variables to Makefile"  (T012)
+Task: "Add Unity compilation rule"  (T013)
+Task: "Add test target"  (T014)
+Task: "Add test directory rule"  (T015)
 
-**MVP scope**: Phases 1-2 (reorder existing 8 chapters, minimal file moves) = 10 tasks
-**Full scope**: All 77 tasks = ~38 basic files with sub-chapters
+# Then after Makefile is complete:
+Task: "Verify make test runs"  (T017)
+```
+
+---
 
 ## Implementation Strategy
 
-### MVP First (Reorder Only)
-1. Complete Phase 2: Move 5 chapters to correct positions (T003-T010)
-2. **STOP AND VALIDATE**: `make build && make run` — chapters in correct order
-3. Demo: Learner experiences correct C learning progression
+### MVP First (User Story 1 Only)
+
+1. Complete Phase 1: Download Unity/CMock ✅
+2. Complete Phase 2: Extract `calc.c/calc.h` ✅
+3. Complete Phase 3: Unity sample test + `make test` ✅
+4. **STOP AND VALIDATE**: `make test` shows green, `make build` zero warnings
+5. Demo: Show learner the Unity test vs custom framework comparison
 
 ### Incremental Delivery
-1. MVP: Reorder existing 8 chapters
-2. Functions split (4 sub-chapters)
-3. Strings split (4 sub-chapters)
-4. Pointers split (5 sub-chapters)
-5. Structs split (4 sub-chapters)
-6. Missing chapters + polish
 
-### Parallel Execution Strategy
-- T011-T018 (Functions sub-chapters docs+source) → 4 parallel agents
-- T024-T031 (Strings sub-chapters docs+source) → 4 parallel agents
-- T038-T047 (Pointers sub-chapters docs+source) → 5 parallel agents
-- T054-T061 (Structs sub-chapters docs+source) → 4 parallel agents
+1. MVP: Phase 1 + 2 + Phase 3 (Unity test case) = **19 tasks (T001-T019)**
+2. Add CMock education: Phase 4 = **4 tasks (T020-T023)**
+3. Polish: Phase N = **9 tasks (T024-T032)**
+4. Each phase adds value without breaking previous phases
+
+### Parallel Team Strategy
+
+With multiple developers:
+1. Team completes Phase 1 + Phase 2 together
+2. Once Phase 2 is done:
+   - Developer A: Phase 3 (US1 — Unity test)
+   - Developer B: Phase 4 (US2 — CMock education)
+3. Both stories complete independently, then Phase N (Polish) together
+
+---
+
+## Task Summary
+
+| Phase | Tasks | Status | Description |
+| ----- | ----- | ------ | ----------- |
+| Phase 1: Setup | T001-T004 | ✅ COMPLETE | Download Unity/CMock, create directories |
+| Phase 2: Foundational | T005-T010 | ✅ COMPLETE | Extract `calc.c/calc.h` for testability |
+| Phase 3: US1 (P1) MVP | T011-T019 | ✅ COMPLETE | Unity sample test + `make test` |
+| Phase 4: US2 (P2) | T020-T023 | Pending | CMock education in tutorial |
+| Phase N: Polish | T024-T032 | Pending | Documentation updates |
+
+**Total Tasks**: 32
+**Completed**: 19 (T001-T019)
+**MVP Scope**: ✅ Phase 1 + 2 + 3 = 19 tasks COMPLETE
+
+**MVP Scope**: Phase 1 + Phase 2 + Phase 3 = **19 tasks** (T001-T019)
+
+**Full Scope**: All 32 tasks = Complete Unity + CMock integration with documentation
+
+---
+
+## Notes
+
+- [P] tasks = different files, no dependencies on incomplete tasks — can run in parallel
+- [US1] / [US2] labels map tasks to user stories for traceability
+- Each user story is independently completable and testable
+- Verify tests fail before implementing (T011 → T012+)
+- Commit after each task or logical group
+- Stop at any checkpoint to validate story independently
+- Avoid: vague tasks, same-file conflicts, cross-story dependencies that break independence

@@ -55,3 +55,11 @@ Mini-projects combine multiple advance concepts: linked list library, thread poo
   Data: strings (basics, ops, safe, processing) → structs (basics, nested, functions, memory layout) → unions_enums → typedef
   Advanced: memory_mgmt → file_io → function_pointers → callbacks → headers → debugging → conditional_comp → bit_ops → cli_args → stdlib
   Each split topic gets its own `_sample.c/.h` files following the advance sub-chapter pattern.
+
+### Session 2026-05-02
+
+- Q: How to integrate Unity/CMock? → A: Copy Unity (3 source files) + CMock source into repo (Option A). Suggested directory: `include/` or `third_party/`.
+- Q: Replace or coexist with custom testing framework? → A: Option B — Keep custom framework as-is for educational value; add separate `test/` directory with Unity sample test.
+- Q: What should the Unity sample test case test? → A: Option A — Test `calc_add()` from `testing_sample.c`, showing migration from custom `ASSERT_EQ_RUN()` to Unity `TEST_ASSERT_EQUAL_INT()`.
+- Q: CMock usage in sample? → A: Option B — Unity-only for the sample test case; CMock source added to repo for educational completeness, demonstrated separately.
+- Q: Makefile integration (`make test` target)? → A: Option A — Add `make test` target that compiles and runs Unity test(s) from `test/`.

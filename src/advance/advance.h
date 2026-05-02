@@ -2,6 +2,7 @@
 #define ADVANCE_H
 
 /**
+
  * @brief Advance C tutorial coordinator
  *
  * Declares all main_<topic>_sample() functions for the advance tutorial section.
@@ -9,6 +10,8 @@
  *
  * Called from hello.c (main_hello) after main_basic().
  */
+
+#include "advance/calc.h"
 
 int main_error_handling_sample(void);
 int main_atomic_types_sample(void);

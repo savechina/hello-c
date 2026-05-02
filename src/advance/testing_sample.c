@@ -17,6 +17,7 @@
 #include <time.h>
 #include <time.h>
 #include "advance/testing_sample.h"
+#include "advance/calc.h"
 
 /* ============================================================
    Section 1: Error-First — "test failed" without context
@@ -248,25 +249,8 @@ static void runner_run_all(void)
    ============================================================ */
 
 /**
- * 一个简单的计算器函数——待测试的代码
+ * calc_add/calc_multiply/calc_is_valid now in calc.c (non-static for Unity testing)
  */
-static int calc_add(int a, int b)
-{
-    return a + b;
-}
-
-static int calc_multiply(int a, int b)
-{
-    return a * b;
-}
-
-/**
- * 边界检查: 返回值必须在 [0, 10000] 之间（简化验证）
- */
-static int calc_is_valid(int result)
-{
-    return (result >= 0 && result <= 10000) ? 1 : 0;
-}
 
 /* ============================================================
    Section 7: 编写测试用例
@@ -320,6 +304,9 @@ static void testing_test_runner_sample(void)
  *
  * 工厂类比: 生产线上的传感器（真实函数）坏了，质检员用
  * 「模拟传感器」(mock) 提供标准信号，继续测试后续流程。
+ *
+ * 注：也可以使用 CMock 工具（位于 test/vendor/cmock/）自动生成 Mock 函数，无需手写函数指针。
+ * 对比：手写 Mock 适合理解原理，CMock 适合快速开发（需 Ruby 环境）。
  */
 
 /* --- 被模拟的函数签名 --- */

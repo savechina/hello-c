@@ -9,6 +9,7 @@ Hello C, This is a concise tutorial for learning C, a beginner's guide to C prog
 
 ```bash
 make build   # Compile all source files
+make test    # Compile and run Unity tests
 make run     # Build + run all tutorial chapters sequentially
 make clean   # Clean build artifacts
 make help    # Show all available targets

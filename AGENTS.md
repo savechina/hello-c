@@ -30,6 +30,11 @@ hello-c/
 │   ├── algo/             # ORPHAN header only (no impl)
 │   ├── module1/          # Example: print_hello
 │   └── module2/          # Example: print_util
+├── test/                 # Unity/CMock tests, mirrors src/ layout
+│   ├── vendor/          # Unity v2.6.1, CMock v2.6.0
+│   ├── advance/         # Tests for advance/ modules (e.g., test_calc_add.c)
+│   ├── basic/           # Tests for basic/ modules
+│   └── mocks/          # Generated CMock mocks (gitignored)
 ├── docs/                 # mdBook (book.toml → GitHub Pages)
 └── build/                # Generated files (gitignored)
 ```
@@ -54,6 +59,9 @@ hello-c/
 | `main_advance()` | function | src/advance/advance.c:4 | Stub |
 | `get_system_info()` | function | src/sysinfo.c:55+ | Platform-specific, #ifdef-gated |
 | `create_person()` | function | src/basic/datatype_sample.c:183 | Heap allocation demo |
+| `calc_add()` | function | src/advance/calc.c:13 | Non-static addition for Unity testing |
+| `calc_multiply()` | function | src/advance/calc.c:24 | Non-static multiplication |
+| `calc_is_valid()` | function | src/advance/calc.c:34 | Result range validation (0-10000) |
 
 ## CONVENTIONS
 
@@ -85,6 +93,7 @@ hello-c/
 
 ```bash
 make build     # Compile all src/**/*.c → build/bin/hello
+make test      # Compile and run Unity tests
 make run       # Build + execute
 make clean     # Remove build/
 make help      # Show usage
@@ -103,6 +112,9 @@ make help      # Show usage
 - N/A — tutorial is stateless code examples (001-c-basic-tutorial)
 - C17, gcc 12+ or clang 15+ + POSIX C (pthread, signal), C11 stdatomic.h, SQLite3 (database chapter) (002-c-advance-tutorial)
 - N/A — tutorial code examples (SQLite demo uses temp files) (002-c-advance-tutorial)
+- C17 (ISO/IEC 9899:2018) | gcc 12+ or clang 15+ + POSIX C standard library, `<stdint.h>`, `<stdio.h>`, Unity v2.6.1 (test framework), CMock v2.6.0 (mock generator) (002-c-advance-tutorial)
+- Unity v2.6.1: Lightweight C test framework (3 source files: unity.c, unity.h, unity_internals.h), zero dependencies, header-only integration (002-c-advance-tutorial)
+- CMock v2.6.0: Ruby-based mock generator, automatically creates mock functions from C headers (test/vendor/cmock/) (002-c-advance-tutorial)
 
 ## Recent Changes
 - 001-c-basic-tutorial: Added C17 (ISO/IEC 9899:2018) | gcc 12+ or clang 15+ + POSIX C standard library, `<stdint.h>`, `<stdio.h>`, `<stdlib.h>`, `<string.h>`, `<ctype.h>`, `<math.h>`, `<limits.h>`, `<time.h>`, `<unistd.h>`, `<errno.h>`, `<stdarg.h>`
