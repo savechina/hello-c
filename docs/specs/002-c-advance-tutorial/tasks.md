@@ -104,18 +104,18 @@
 
 **Independent Test**: `test/mocks/mock_sensor.h` generated successfully from a header file.
 
-- [ ] T020 [P] [US2] Create `docs/src/advance/testing.md` section on CMock:
+- [X] T020 T020 [P] [US2] Create `docs/src/advance/testing.md` section on CMock:
   - Explain CMock is a Ruby-based mock generator
   - Show command: `ruby test/vendor/cmock/lib/cmock.rb -otest/mocks src/advance/sensor.h`
   - Explain difference between Unity (test runner) and CMock (mock generator)
 
-- [ ] T021 [US2] Update `testing_sample.c` — add comment in Section 8 (Mock functions):
+- [X] T020 T021 [US2] Update `testing_sample.c` — add comment in Section 8 (Mock functions):
   - Reference that CMock can generate mocks automatically for headers like `sensor.h`
   - Keep existing manual function pointer mocking as educational contrast
 
 **Quality Gate**:
-- [ ] T022 [US2] `make build` — zero warnings (CMock is Ruby, not compiled)
-- [ ] T023 [US2] Verify `ruby test/vendor/cmock/lib/cmock.rb --help` runs (if Ruby available)
+- [X] T020 T022 [US2] `make build` — zero warnings (CMock is Ruby, not compiled)
+- [X] T020 T023 [US2] Verify `ruby test/vendor/cmock/lib/cmock.rb --help` runs (if Ruby available)
 
 ---
 
@@ -123,27 +123,27 @@
 
 **Purpose**: Documentation updates and final integration.
 
-- [ ] T024 [P] Update `docs/src/advance/testing.md` — add Unity section:
+- [X] T020 T024 [P] Update `docs/src/advance/testing.md` — add Unity section:
   - Explain Unity vs custom `ASSERT_EQ_RUN()` (side-by-side comparison)
   - Show `test/test_calc_add.c` as the Unity example
   - Explain `make test` target for running tests
 
-- [ ] T025 [P] Update `README.md` — add `make test` to Quick Start section
+- [X] T020 T025 [P] Update `README.md` — add `make test` to Quick Start section
 
-- [ ] T026 [P] Update `AGENTS.md` — add Unity/CMock to Active Technologies section
+- [X] T020 T026 [P] Update `AGENTS.md` — add Unity/CMock to Active Technologies section
 
-- [ ] T027 [P] Update `docs/specs/002-c-advance-tutorial/quickstart.md` — verify "Add Test with Unity" section matches implementation
+- [X] T027 [P] Update `docs/specs/002-c-advance-tutorial/quickstart.md` — verify "Add Test with Unity" section matches implementation
 
-- [ ] T028 Create `test/README.md` — document:
+- [X] T020 T028 Create `test/README.md` — document:
   - How to add new test files (create `test/test_*.c`, it auto-discovers via Makefile wildcard)
   - Unity flags used (`-DUNITY_OUTPUT_COLOR`, etc.)
   - How to generate mocks with CMock
 
 **Final Quality Gate**:
-- [ ] T029 `make build` — zero warnings across ALL source files
-- [ ] T030 `make test` — all Unity tests PASS
-- [ ] T031 `make run` — all advance chapters (including testing_sample) work correctly
-- [ ] T032 `make clean && make build` — clean build succeeds
+- [X] T020 T029 `make build` — zero warnings across ALL source files
+- [X] T020 T030 `make test` — all Unity tests PASS
+- [X] T020 T031 `make run` — all advance chapters (including testing_sample) work correctly
+- [X] T020 T032 `make clean && make build` — clean build succeeds
 
 ---
 

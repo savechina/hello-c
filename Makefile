@@ -89,7 +89,7 @@ $(BUILD_DIR)/test:
 # --- Directories Setup ---
 # Create output directories if they don't exist
 OBJ_SUBDIRS := $(sort $(dir $(OBJECTS)))
-DIRS        := $(OBJ_SUBDIRS) $(BIN_DIR) $(BUILD_DIR) $(BUILD_DIR)/vendor $(BUILD_DIR)/test-vendor
+DIRS        := $(OBJ_SUBDIRS) $(BIN_DIR)
 
 $(info DEBUG: DIRS found: $(DIRS))
 
@@ -105,7 +105,7 @@ all: build
 
 # ---Build  ---
 .PHONY: build
-build: clean $(DIRS) $(BIN_DIR)/$(TARGET)
+build: $(DIRS) $(BIN_DIR)/$(TARGET)
 
 # --- Project Vendor Compilation Rule ---
 $(BUILD_DIR)/vendor/%.o: $(VENDOR_DIR)/%.c | $(BUILD_DIR)

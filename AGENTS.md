@@ -80,8 +80,9 @@ hello-c/
 - **Orphan code**: `src/h.c` (`main_h()`) — never called anywhere
 - **Orphan header**: `src/algo/algo.h` — declares `main_algo()`, no `.c` implementation
 - **Dead `#include`**: `src/main.c:6` — `// #include "global.h"` leftover from refactoring
-- **Makefile duplicate**: `-include $(OBJECTS:.o=.d)` appears twice (lines 69 & 100)
+- **Makefile duplicate**: `-include $(OBJECTS:.o=.d)` appears twice (lines 69 & 100) ✅ FIXED
 - **Makefile globstar**: `**.c` non-portable (works on macOS, not all Make versions)
+- **Makefile circular**: `build <- build` dependency dropped ✅ FIXED (removed `build/` from `DIRS`, removed `clean` from `build` target)
 
 ## UNIQUE STYLES
 

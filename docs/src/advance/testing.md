@@ -193,40 +193,139 @@ runner_run_all();
 ## Unity 测试框架 (Unity Testing Framework) 🟢
 
 ### 什么是 Unity？
-Unity 是轻量级的 C 语言测试框架，同样是 ThrowTheSwitch 生态的核心工具。它只有 3 个源文件（`unity.c`、`unity.h`、`unity_internals.h`），零依赖，非常适合嵌入式和初学者项目。
 
-### 和自定义测试框架的对比
-我们之前从零搭建了自定义 Test Runner 和 `ASSERT_EQ_RUN` 宏，Unity 提供了更标准化的实现：
+Unity 是轻量级的 C 语言测试框架，和 CMock 同属 ThrowTheSwitch 生态。它只有 3 个源文件（`unity.c`、`unity.h`、`unity_internals.h`），零外部依赖。我选择它作为项目的测试框架，因为它：
+- **极简** —— 三个文件就能跑，不需要安装任何额外工具
+- **够用** —— 覆盖了我日常需要的所有断言类型
+- **可集成** —— 配合 Makefile 自动发现测试文件，零配置运行
 
-| 特性 | 自定义框架 | Unity |
-|------|------------|-------|
-| 断言宏 | 手写 `ASSERT_EQ_RUN` | 内置 `TEST_ASSERT_*` 系列 |
-| 测试结构 | 手动注册 TestCase | `RUN_TEST()` 宏自动管理 |
-| 输出 | 自定义彩色输出 | 支持彩色、TAP 等多种格式 |
-| 维护成本 | 需手动维护 | 社区维护，覆盖更多场景 |
+### 和自定义 ASSERT_EQ_RUN 的对比
 
-### 示例：用 Unity 测试 calc_add
-我们的项目在 `test/advance/test_calc_add.c` 中提供了 Unity 测试示例：
+我在前面搭建了自定义 Test Runner + `ASSERT_EQ_RUN` 宏。那套方案帮我理解了测试框架的底层原理，但 Unity 是生产级方案。看同一组加法测试，两种写法的区别：
+
+| 维度 | 自定义 `ASSERT_EQ_RUN` | Unity `TEST_ASSERT_EQUAL_INT` |
+|------|------------------------|-------------------------------|
+| 调用方式 | `ASSERT_EQ_RUN(calc_add(2, 3), 5)` | `TEST_ASSERT_EQUAL_INT(5, calc_add(2, 3))` |
+| 参数顺序 | (actual, expected) | (expected, actual) |
+| 失败输出 | 手动格式化的 `printf` | 内置标准格式，含表达式、文件、行号 |
+| 失败后行为 | 设置 `g_current_case_failed = 1` 继续跑 | 默认继续（可配置 `abort`） |
+| runner 集成 | 需手写 `runner_add()`/`runner_run_all()` | `UNITY_BEGIN()`/`RUN_TEST()`/`UNITY_END()` 三件套 |
+
+**代码对比** —— 同样测试 `calc_add`，自定义版 vs Unity 版：
 
 ```c
+/* ── 自定义框架版 ── */
+#include "framework.h"  /* 包含 ASSERT_EQ_RUN、runner 相关 */
+
+static void test_calc_add_basic(void)
+{
+    ASSERT_EQ_RUN(calc_add(2, 3), 5);    /* (actual, expected) */
+    ASSERT_EQ_RUN(calc_add(0, 0), 0);
+    ASSERT_EQ_RUN(calc_add(-1, 1), 0);
+}
+
+/* main 中手动注册 */
+int main(void) {
+    runner_add("加法基础", test_calc_add_basic);
+    runner_run_all();
+    return g_runner.failed > 0 ? 1 : 0;
+}
+```
+
+```c
+/* ── Unity 版 ── */
 #include "unity.h"
 #include "advance/calc.h"
 
-void setUp(void) {}  // 每个测试前运行（可选）
-void tearDown(void) {} // 每个测试后运行（可选）
+void setUp(void) {}    /* 每个测试前执行（可选）*/
+void tearDown(void) {} /* 每个测试后执行（可选）*/
 
-void test_calc_add_basic(void) {
+static void test_calc_add_basic(void)
+{
+    TEST_ASSERT_EQUAL_INT(5, calc_add(2, 3));    /* (expected, actual) */
+    TEST_ASSERT_EQUAL_INT(0, calc_add(0, 0));
+    TEST_ASSERT_EQUAL_INT(0, calc_add(-1, 1));
+}
+
+int main(void) {
+    UNITY_BEGIN();
+    RUN_TEST(test_calc_add_basic);
+    return UNITY_END();
+}
+```
+
+我自己的感悟：**自定义框架教了我原理，Unity 让我专注写测试**。从 `ASSERT_EQ_RUN` 切换到 Unity 后，最大的感受是不用再手写 Runner 的注册和计数逻辑了——`UNITY_BEGIN()`/`RUN_TEST()`/`UNITY_END()` 三行就把框架搭好了。
+
+### 示例：test/advance/test_calc_add.c
+
+项目中实际的 Unity 测试文件在 `test/advance/test_calc_add.c`，它是和 `src/` 目录结构一一镜像的。来读一下完整代码：
+
+```c
+/**
+ * @file test_calc_add.c
+ * @brief Unit tests for calc_add() function using Unity test framework.
+ *
+ * Tests basic addition, edge cases (zero), and negative number scenarios.
+ */
+
+#include "unity.h"
+#include "advance/calc.h"
+
+/**
+ * @brief Setup function called before each test.
+ *
+ * Currently unused — no test-specific setup required.
+ */
+void setUp(void)
+{
+}
+
+/**
+ * @brief Teardown function called after each test.
+ *
+ * Currently unused — no cleanup required.
+ */
+void tearDown(void)
+{
+}
+
+/**
+ * @brief Test basic calc_add functionality.
+ *
+ * Verifies:
+ * - Positive addition: calc_add(2, 3) == 5
+ * - Zero addition:  calc_add(0, 0) == 0
+ * - Sign neutralization: calc_add(-1, 1) == 0
+ */
+void test_calc_add_basic(void)
+{
     TEST_ASSERT_EQUAL_INT(5, calc_add(2, 3));
     TEST_ASSERT_EQUAL_INT(0, calc_add(0, 0));
     TEST_ASSERT_EQUAL_INT(0, calc_add(-1, 1));
 }
 
-void test_calc_add_negative(void) {
+/**
+ * @brief Test calc_add with negative numbers.
+ *
+ * Verifies:
+ * - Mixed sign: calc_add(-2, 1) == -1
+ * - Both negative: calc_add(-2, -3) == -5
+ */
+void test_calc_add_negative(void)
+{
     TEST_ASSERT_EQUAL_INT(-1, calc_add(-2, 1));
     TEST_ASSERT_EQUAL_INT(-5, calc_add(-2, -3));
 }
 
-int main(void) {
+/**
+ * @brief Main entry point for the test runner.
+ *
+ * Initializes Unity, registers all test cases, and returns the result.
+ *
+ * @return int Unity test result (0 = all passed, non-zero = failures)
+ */
+int main(void)
+{
     UNITY_BEGIN();
     RUN_TEST(test_calc_add_basic);
     RUN_TEST(test_calc_add_negative);
@@ -234,18 +333,37 @@ int main(void) {
 }
 ```
 
-### 运行 Unity 测试
-项目 Makefile 已集成 `make test` 目标，自动编译所有 `test/` 目录下的测试用例并运行：
+**关键结构**：
+1. **`setUp()` / `tearDown()`** —— Unity 要求这两个函数必须存在。即使为空也得写上（可以暂时不实现，留空编译通过）。
+2. **`TEST_ASSERT_EQUAL_INT(expected, actual)`** —— 注意参数顺序：**期望值在前，实际值在后**。我自定义的 `ASSERT_EQ_RUN` 用的是 (actual, expected) 顺序，方向相反。这是我刚切换时最常写反的地方。
+3. **`UNITY_BEGIN()` / `RUN_TEST()` / `UNITY_END()`** —— 固定三部曲：初始化 → 逐个注册并运行 → 结束并返回结果。
+
+### 运行 Unity 测试 —— make test
+
+项目的 `Makefile` 已经集成了完整的测试构建和运行流程。`make test` 的工作原理：
+
+1. **自动发现** —— `wildcard` 捕获 `test/**/*.c`（排除 `vendor/`）
+2. **编译每个测试** —— 每个 `test_*.c` 编译为独立的测试二进制
+3. **带 Unity 编译 flags** —— `-DUNITY_OUTPUT_COLOR`（彩色输出）+ `-DUNITY_SUPPORT_VARIADIC_MACROS`
+4. **链接被测代码** —— 测试二进制链接对应的 `.o`（如 `build/obj/advance/calc.o`）
+5. **顺序执行** —— 遍历所有二进制，逐个运行
+
 ```bash
-make test  # 编译并运行所有 Unity 测试
+# 一键运行所有测试
+make test
 ```
 
-输出示例：
+如果添加新的测试文件（比如 `test/advance/test_calc_multiply.c`），不需要修改 Makefile——`wildcard` 自动捕获。保持目录镜像结构（`test/advance/` 对应 `src/advance/`）就行。
+
+**执行流程示意**：
 ```
-Running test/advance/test_calc_add.c...
-✅ PASS test_calc_add_basic
-✅ PASS test_calc_add_negative
-2 tests, 0 failures
+make test
+  → 发现 test/advance/test_calc_add.c, test/advance/test_calc_multiply.c, ...
+  → 编译 test/advance/test_calc_add.c → build/test/advance/test_calc_add
+  → 编译 test/advance/test_calc_multiply.c → build/test/advance/test_calc_multiply
+  → 运行 build/test/advance/test_calc_add
+  → 运行 build/test/advance/test_calc_multiply
+  → 全部通过 → exit code 0
 ```
 
 ## Mock 函数 — 函数指针注入

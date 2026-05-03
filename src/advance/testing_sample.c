@@ -306,6 +306,7 @@ static void testing_test_runner_sample(void)
  * 「模拟传感器」(mock) 提供标准信号，继续测试后续流程。
  *
  * 注：也可以使用 CMock 工具（位于 test/vendor/cmock/）自动生成 Mock 函数，无需手写函数指针。
+ * 例如 CMock 可以读取 sensor.h 等头文件，自动为其声明的函数生成 Mock 实现（mock_sensor.h / mock_sensor.c）。
  * 对比：手写 Mock 适合理解原理，CMock 适合快速开发（需 Ruby 环境）。
  */
 
