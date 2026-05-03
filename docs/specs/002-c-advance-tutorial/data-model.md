@@ -1,51 +1,56 @@
-# Data Model: C Advance Tutorial
+# Data Model: C Advance Tutorial Subcommands
 
-**Feature**: 002-c-advance-tutorial
+## Entities & Relationships
 
-## Entity: AdvanceChapter
+### Entity: CLI Subcommand
 
-mdBook file in `docs/src/advance/` teaching advanced C concepts.
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| name | string | Subcommand name: `basic`, `advance`, `list`, `all`, `help` |
+| handler | function pointer | `void (*handler)(void)` — points to coordinator function |
+| description_cn | string | Chinese description for `list` output |
+| description_en | string | English technical description (bilingual) |
 
-**Attributes**: Same as TutorialChapter — title, difficulty (🟡/🔴), sections, voice, bilingual.
+### Entity: Topic Chapter
 
-## Entity: AdvanceSource
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| name | string | Topic directory name: `advance/error_handling_sample` |
+| module | string | Parent module: `advance`, `basic`, `module1`, `module2` |
+| entry_point | string | `main_<module>_sample(void)` function name |
+| has_subcommands | bool | Whether parent module has subcommand support |
 
-`_sample.c` + `_sample.h` pair in `src/advance/`.
+## Relationships
 
-**Attributes**: type (integrated/sample), chapter_ref, c/h/sample files, entry function `main_<topic>_sample()`, valgrind_clean=true.
+```
+[main.c] --dispatches--> [CLI Subcommand]
+[CLI Subcommand] --calls--> [Coordinator Function]
+[Coordinator Function] --calls--> [Topic Chapter Entry Points]
+[Topic Chapter] --exists in--> [src/ directories]
+```
 
-## Entity: AdvanceCoordinator
+## State Transitions
 
-`advance.c` + `advance.h` — coordinator calling all advance samples.
+**CLI Dispatch Flow**:
+```
+[Start] → Parse argv[1]
+  ├── "basic" → main_basic_sample() → all basic _sample() functions
+  ├── "advance" → main_advance_sample() → all advance _sample() functions
+  ├── "list" → print available topics (basic + advance + modules)
+  ├── "all" / no args → main_hello() → ALL chapters (current behavior)
+  └── "help" / unknown → print usage + exit
+```
 
-**Attributes**: calls main_*_sample() sequentially, exposed via main_advance() from hello.c.
+## Data Volume / Scale
 
-## Entity: AdvanceOverview
+- **Subcommands**: 4 (basic, advance, list, all/help)
+- **Basic chapters**: ~38 files (after restructure) in `src/basic/`
+- **Advance chapters**: 12 files in `src/advance/`
+- **Modules**: 2 example modules (`module1/`, `module2/`)
 
-`advance-overview.md` — landing page with chapter table + learning path.
+## Validation Rules
 
-## Entity: AdvanceReview
-
-`review-advance.md` — comprehensive review chapter.
-
-## Entity: TestFile
-
-Unity test file in `test/` directory.
-
-**Attributes**: path (`test/test_*.c`), framework (Unity), tested_module (reference to `src/advance/*.c`), test_cases (list of `test_*()` functions), setup_teardown (optional setUp/tearDown).
-
-## Entity: TestVendor
-
-External test framework source files in `test/vendor/`.
-
-**Attributes**: name (unity/cmock), version, source_files (list), config_flags (compiler defines).
-
-**Relationships**: TestFile depends on TestVendor (Unity).
-
-## Entity: CalcModule (NEW for testability)
-
-`src/advance/calc.c` + `src/advance/calc.h` — extract testable functions from `testing_sample.c`.
-
-**Attributes**: functions (`calc_add`, `calc_multiply`, `calc_is_valid`), visibility (non-static for testing), header (`calc.h`).
-
-**Relationships**: TestFile tests CalcModule.
+- All subcommand handlers MUST be `void func(void)` signature
+- `list` output MUST be bilingual (Chinese + English terms)
+- Unknown subcommand MUST print usage and return 1
+- `argv[1]` NULL check: treat as "all" (backward compatible)

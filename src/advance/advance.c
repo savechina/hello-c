@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "advance/advance.h"
 
-int main_advance(void) {
+int main_advance_sample(void) {
     printf("========================================\n");
     printf("  C 进阶教程 (Advance C Tutorial)\n");
     printf("========================================\n\n");

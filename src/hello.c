@@ -14,14 +14,14 @@ unsigned long long fibonacci(int n) {
  * hello main
  */
 int main_hello() {
-  int x = 100020;
-  printf("Hello, x = %d\n", x);
+    int x = 100020;
+    printf("Hello, x = %d\n", x);
 
-  int num = 60;
-  printf("Factorial of %d is %llu\n", num, fibonacci(num));
+    int num = 60;
+    printf("Factorial of %d is %llu\n", num, fibonacci(num));
 
-  main_basic();
+    main_basic_sample();
 
-  main_advance();
-  return 0;
+    main_advance_sample();
+    return 0;
 }

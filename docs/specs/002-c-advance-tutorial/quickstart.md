@@ -1,69 +1,60 @@
-# Quickstart: C Advance Tutorial Development
+# Quickstart: C Advance Tutorial — Subcommand Support#
 
-**Feature**: 002-c-advance-tutorial
+## Prerequisites#
 
-## Prerequisites
+- Completed: All 27 basic C chapters
+- Build tools: `gcc` (macOS) or `clang` (Linux)
+- Makefile: `make build`, `make test`, `make run` already working
 
-- GCC 12+ or Clang 15+
-- POSIX pthreads (macOS/Linux)
-- `make`, `mdbook`, `valgrind`, `cppcheck`
+## New Feature: Subcommand Support#
 
-## Build Advance Tutorial
+The `hello` binary now accepts topic-level subcommands, matching `../hello-rust` behavior.
 
-```bash
-# Build everything (basic + advance)
-make build
-
-# Run advance section only
-make advance
-
-# Run single advance chapter
-make sample CHAPTER=error_handling
-```
-
-## Add New Advance Chapter
-
-1. Create mdBook doc: `docs/src/advance/<topic>.md`
-2. Create source: `src/advance/<topic>_sample.{c,h}`
-3. Add `main_<topic>_sample()` to `advance.h`
-4. Add call to `advance.c`
-5. Update `SUMMARY.md`: add to Advance section
-6. Verify: `make build` and `make sample CHAPTER=<topic>`
-
-## Add Test with Unity & CMock
-
-1. Download Unity v2.6.1 to `test/vendor/unity/` (3 files: unity.c, unity.h, unity_internals.h)
-2. Download CMock v2.6.0 to `test/vendor/cmock/` (Ruby-based mock generator)
-3. Create `src/advance/calc.c` + `calc.h` with `calc_add()`, `calc_multiply()`, `calc_is_valid()`
-4. Create `test/advance/test_calc_add.c` with Unity test cases (mirrors `src/advance/` layout)
-5. Update Makefile: add `test/` directory with wildcard `**/*.c` matching, `make test` target
-6. Verify: `make test` runs all tests with colored output
+### Usage#
 
 ```bash
-# Download Unity
-mkdir -p test/vendor/unity
-curl -L -o unity.zip https://github.com/ThrowTheSwitch/Unity/archive/refs/tags/v2.6.1.zip
-unzip -j unity.zip "Unity-2.6.1/src/*" -d test/vendor/unity/
-rm unity.zip
+# Run all sample chapters (default behavior, backward compatible)
+./build/bin/hello
+# or explicitly:
+./build/bin/hello all
 
-# Download CMock
-mkdir -p test/vendor/cmock
-curl -L -o cmock.zip https://github.com/ThrowTheSwitch/CMock/archive/refs/tags/v2.6.0.zip
-unzip -j cmock.zip "CMock-2.6.0/lib/*" -d test/vendor/cmock/
-rm cmock.zip
+# Run all basic chapters only
+./build/bin/hello basic
 
-# Run tests
-make test
+# Run all advance chapters only
+./build/bin/hello advance
+
+# List available topics
+./build/bin/hello list
+
+# Show usage
+./build/bin/hello help
 ```
 
-## Quality Checklist
+### Example Output (`./build/bin/hello list`)#
 
-- [ ] `make build` zero warnings (note: pre-existing `operators_sample.c` error unrelated)
-- [ ] `valgrind --leak-check=full` zero leaks
-- [ ] `cppcheck --enable=all src/advance/` passes
-- [ ] mdBook has all 15 mandatory sections
-- [ ] First-person voice, real-world analogy opening
-- [ ] Bilingual Chinese + English terms
-- [x] `make test` passes with zero failures (2 tests for `calc_add()`)
-- [ ] Unity tests cover `calc_add()`, `calc_multiply()`, `calc_is_valid()`
-- [ ] CMock v2.6.0 available in `test/vendor/cmock/`
+```
+Available topics:
+  basic     - 27 basic C chapters (variables, data types, functions, ...)
+  advance   - 12 advance C chapters (threads, pointers, error handling, ...)
+  module1   - print_hello example
+  module2   - print_util example
+```
+
+## Implementation Steps#
+
+1. Modify `src/main.c` to parse `argv[1]` and dispatch to subcommands
+2. Update `src/basic/basic.c` — add `main_basic_sample(void)` coordinator
+3. Update `src/advance/advance.c` — add `main_advance_sample(void)` coordinator
+4. Update Makefile help target to show new subcommands
+5. Update `docs/src/SUMMARY.md` with subcommand documentation
+
+## Quality Checklist#
+
+- [ ] `make build` zero warnings
+- [ ] `./build/bin/hello basic` runs all basic chapters
+- [ ] `./build/bin/hello advance` runs all advance chapters
+- [ ] `./build/bin/hello list` prints available topics
+- [ ] `./build/bin/hello all` / no args runs everything (backward compatible)
+- [ ] `./build/bin/hello help` prints usage
+- [ ] Bilingual output (Chinese + English terms)

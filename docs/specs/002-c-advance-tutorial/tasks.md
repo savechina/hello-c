@@ -240,15 +240,16 @@ With multiple developers:
 | Phase 2: Foundational | T005-T010 | ✅ COMPLETE | Extract `calc.c/calc.h` for testability |
 | Phase 3: US1 (P1) MVP | T011-T019 | ✅ COMPLETE | Unity sample test + `make test` |
 | Phase 4: US2 (P2) | T020-T023 | Pending | CMock education in tutorial |
+| Phase 5: US3 (P2) | T033-T039 | Pending | Subcommand support (`hello basic/advance/list`) |
 | Phase N: Polish | T024-T032 | Pending | Documentation updates |
 
-**Total Tasks**: 32
+**Total Tasks**: 39
 **Completed**: 19 (T001-T019)
 **MVP Scope**: ✅ Phase 1 + 2 + 3 = 19 tasks COMPLETE
 
 **MVP Scope**: Phase 1 + Phase 2 + Phase 3 = **19 tasks** (T001-T019)
 
-**Full Scope**: All 32 tasks = Complete Unity + CMock integration with documentation
+**Full Scope**: All 39 tasks = Complete Unity + CMock integration + subcommand support with documentation
 
 ---
 

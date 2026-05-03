@@ -115,6 +115,7 @@ make help      # Show usage
 - C17 (ISO/IEC 9899:2018) | gcc 12+ or clang 15+ + POSIX C standard library, `<stdint.h>`, `<stdio.h>`, Unity v2.6.1 (test framework), CMock v2.6.0 (mock generator) (002-c-advance-tutorial)
 - Unity v2.6.1: Lightweight C test framework (3 source files: unity.c, unity.h, unity_internals.h), zero dependencies, header-only integration (002-c-advance-tutorial)
 - CMock v2.6.0: Ruby-based mock generator, automatically creates mock functions from C headers (test/vendor/cmock/) (002-c-advance-tutorial)
+- C17 (ISO/IEC 9899:2018) | gcc 12+ or clang 15+ + POSIX C standard library, `<stdint.h>`, `<stdio.h>`, etc. (002-c-advance-tutorial)
 
 ## Recent Changes
 - 001-c-basic-tutorial: Added C17 (ISO/IEC 9899:2018) | gcc 12+ or clang 15+ + POSIX C standard library, `<stdint.h>`, `<stdio.h>`, `<stdlib.h>`, `<string.h>`, `<ctype.h>`, `<math.h>`, `<limits.h>`, `<time.h>`, `<unistd.h>`, `<errno.h>`, `<stdarg.h>`

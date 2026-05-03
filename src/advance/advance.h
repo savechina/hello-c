@@ -8,7 +8,7 @@
  * Declares all main_<topic>_sample() functions for the advance tutorial section.
  * Each function demonstrates an advanced C concept with runnable code examples.
  *
- * Called from hello.c (main_hello) after main_basic().
+ * Called from hello.c (main_hello) after main_basic_sample().
  */
 
 #include "advance/calc.h"
@@ -35,7 +35,7 @@ int main_web_socket_sample(void);
 int main_web_concurrent_sample(void);
 int main_async_sample(void);
 
-/* Coordinator entry point */
-int main_advance(void);
+ /* Coordinator entry point */
+int main_advance_sample(void);
 
 #endif /* ADVANCE_H */

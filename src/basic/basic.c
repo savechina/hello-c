@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include "basic/basic.h"
 
-int main_basic(void) {
+int main_basic_sample(void) {
     printf("========================================\n");
     printf("  C 基础入门教程 (Basic C Tutorial)\n");
     printf("========================================\n\n");

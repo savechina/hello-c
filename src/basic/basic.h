@@ -7,7 +7,7 @@
  * All sample code uses _sample.h + _sample.c convention.
  * Each function demonstrates a core C concept with runnable code examples.
  *
- * Called from main_basic() in basic.c → hello.c → main.c
+ * Called from main_basic_sample() in basic.c → hello.c → main.c
  */
 
 /* Core Concepts */
@@ -59,7 +59,7 @@ int main_conditional_comp_sample(void);
 int main_cli_args_sample(void);
 int main_stdlib_sample(void);
 
-/* Coordinator entry point */
-int main_basic(void);
+ /* Coordinator entry point */
+int main_basic_sample(void);
 
 #endif /* BASIC_H */
