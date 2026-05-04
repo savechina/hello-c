@@ -2,7 +2,7 @@
 #include <string.h>
 #include "algo/algo.h"
 #include "module1/func.h"
-#include "module2/util.h"
+#include "util/util.h"
 #include "sysinfo.h"
 #include "hello.h"
 #include "basic/basic.h"
@@ -38,7 +38,7 @@ int main(int argc, char *argv[]) {
             printf("  awesome   - advance C topics (threads, error handling, testing, etc.)\n");
             printf("  algo      - advance C topics (algo, sort etc.)\n");
             printf("  module1   - print_hello example\n");
-            printf("  module2   - print_util example\n");
+            printf("  util   - print_util example\n");
         } else if (strcmp(argv[1], "all") == 0 || strcmp(argv[1], "help") == 0) {
             print_usage();
         } else {

@@ -11,7 +11,7 @@
  * Called from hello.c (main_hello) after main_basic_sample().
  */
 
-#include "advance/calc.h"
+#include "calc.h"
 
 int main_error_handling_sample(void);
 int main_atomic_types_sample(void);
