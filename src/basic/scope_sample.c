@@ -107,7 +107,11 @@ static void demo_const_correctness(void) {
  * Warning suppressed because this IS the point of the demo. */
 
 #pragma GCC diagnostic push
+#ifdef __clang__
 #pragma GCC diagnostic ignored "-Wreturn-stack-address"
+#else
+#pragma GCC diagnostic ignored "-Wreturn-local-addr"
+#endif
 static int *return_local_address(void) {
     int x = 42;
     return &x;  /* intentionally: dangling pointer demo */
@@ -205,6 +209,10 @@ static void demo_lifetime_comparison(void) {
 
 /* ---- Section 6: Dangling pointer explanation ---- */
 
+#pragma GCC diagnostic push
+#ifndef __clang__
+#pragma GCC diagnostic ignored "-Wdangling-pointer"
+#endif
 static void demo_dangling_pointer_explained(void) {
     printf("\n==== [sample] Dangling Pointer — Explained ====\n");
 
@@ -221,9 +229,14 @@ static void demo_dangling_pointer_explained(void) {
     printf("  Fix: always set pointer to NULL after target is destroyed.\n");
     dangling = NULL;
 }
+#pragma GCC diagnostic pop
 
 /* ---- Section 7: Use-after-free explanation ---- */
 
+#pragma GCC diagnostic push
+#ifndef __clang__
+#pragma GCC diagnostic ignored "-Wuse-after-free"
+#endif
 static void demo_use_after_free_explained(void) {
     printf("\n==== [sample] Use-After-Free — Explained ====\n");
 
@@ -243,6 +256,7 @@ static void demo_use_after_free_explained(void) {
 
     data = NULL;
 }
+#pragma GCC diagnostic pop
 
 /* ---- Section 8: Practical scope management ---- */
 

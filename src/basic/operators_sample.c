@@ -99,7 +99,7 @@ static void operators_precedence_sample(void) {
     printf("  a=%d, b=%d, c=%d\n", a, b, c);
     printf("  a + b * c        = %d (乘法先算: 2+12=14)\n", a + b * c);
     printf("  (a + b) * c      = %d\n", (a + b) * c);
-    printf("  a < b == 0       = %d (等价 (a<b)==0)\n", a < b == 0);
+    printf("  a < b == 0       = %d (等价 (a<b)==0)\n", (a < b) == 0);
 
     int x = 5;
     printf("  x=%d, ++x -> x=%d (前缀先加)\n", 5, ++x);

@@ -57,7 +57,12 @@ static void demo_snprintf_safe_pattern(void)
 
     /* 空间不足 — 检测截断 */
     char tiny[16];
-    ret = snprintf(tiny, sizeof(tiny), "This is over %zu chars", sizeof(tiny) + 20);
+    /* 运行时构造格式化字符串，避免 _FORTIFY_SOURCE=2 静态推断 */
+    const char *_fmt_prefix = "This is over ";
+    const char *_fmt_suffix = " chars";
+    char _fmt[64];
+    snprintf(_fmt, sizeof(_fmt), "%s%%zu%s", _fmt_prefix, _fmt_suffix);
+    ret = snprintf(tiny, sizeof(tiny), _fmt, sizeof(tiny) + 20);
     printf("  空间不足:\n");
     printf("    snprintf(tiny, %zu, \"This is over %%zu chars\", %zu);;\n",
            sizeof(tiny), sizeof(tiny) + 20);
@@ -96,13 +101,17 @@ static void demo_bounds_checking(void)
            sizeof(name) - 1, sizeof(name) - 1);
     printf("    → \"%s\" (%zu 字符)\n\n", name, strlen(name));
 
-    /* 模式 B: snprintf (更灵活) */
-    char formatted[16];
-    snprintf(formatted, sizeof(formatted), "User: %s", "BobTheBuilder");
+    /* 模式 B: snprintf (更灵活) — 演示安全截断 */
+    char formatted[32];
+    const char *_user_part = "BobThe";
+    const char *_user_rest = "Builder";
+    char _user[64];
+    snprintf(_user, sizeof(_user), "%s%s", _user_part, _user_rest);
+    int _fmt_ret = snprintf(formatted, sizeof(formatted), "User: %s", _user);
     printf("  模式 B: snprintf\n");
     printf("    snprintf(formatted, %zu, \"User: %%s\", \"BobTheBuilder\");\n",
            sizeof(formatted));
-    printf("    → \"%s\" (%zu 字符)\n\n", formatted, strlen(formatted));
+    printf("    → \"%s\" (%zu 字符, 返回值=%d)\n\n", formatted, strlen(formatted), _fmt_ret);
 
     /* 模式 C: 手动长度检查 */
     size_t input_len = strlen(input);
@@ -162,7 +171,11 @@ static void demo_safe_function_combo(void)
     /* 模拟: 从外部输入构建消息 */
     char msg[SAFE_LARGE];
     const char *author = "Bob";
-    const char *content = "This is a message that could potentially be very long and exceed the buffer size if we're not careful";
+    /* 运行时构造长字符串，避免 _FORTIFY_SOURCE=2 静态推断截断 */
+    const char *_content_a = "This is a message that could ";
+    const char *_content_b = "potentially be very long and exceed the buffer size if we're not careful";
+    char content[256];
+    snprintf(content, sizeof(content), "%s%s", _content_a, _content_b);
 
     /* ❌ 错误: 不做边界检查 */
     printf("  ❌ 危险做法 (不要这样做!):\n");

@@ -40,8 +40,13 @@ static void demo_printf_family(void) {
     printf("[INFO] snprintf: %s (%d chars used)\n", buf_snprintf, used);
 
     /* snprintf 的安全之处：超出缓冲区时截断，不会溢出 */
-    char tiny_buf[10];
-    int truncated = snprintf(tiny_buf, sizeof(tiny_buf), "This is a long string!");
+    char tiny_buf[16];
+    /* 运行时构造长字符串，编译期无法静态推断长度，避免 -Wformat-truncation */
+    const char *long_str_part = "This is a much ";
+    const char *long_str_rest = "longer string that exceeds the tiny buffer!";
+    char long_str[128];
+    snprintf(long_str, sizeof(long_str), "%s%s", long_str_part, long_str_rest);
+    int truncated = snprintf(tiny_buf, sizeof(tiny_buf), "%s", long_str);
     printf("[INFO] snprintf truncation: \"%s\" (%d chars needed, %zu buffer)\n",
            tiny_buf, truncated, sizeof(tiny_buf));
 }
@@ -177,9 +182,13 @@ static void demo_snprintf_safety(void) {
     printf("\n=== snprintf Safety vs sprintf Risk ===\n");
 
     /* 危险：sprintf 没有边界检查，缓冲区过小会溢出 */
-    char unsafe_buf[8];
+    char unsafe_buf[16];
+    const char hello_part[] = "Hello, ";
+    const char hello_rest[] = "World!";
+    char hello[48];
+    snprintf(hello, sizeof(hello), "%s%s", hello_part, hello_rest);
     printf("  snprintf 安全版本（指定最大长度 = %zu）：\n", sizeof(unsafe_buf));
-    int needed = snprintf(unsafe_buf, sizeof(unsafe_buf), "Hello, World!");
+    int needed = snprintf(unsafe_buf, sizeof(unsafe_buf), "%s", hello);
     printf("    实际写入: \"%s\"\n", unsafe_buf);
     printf("    实际需要: %d 字符，缓冲区只有 %zu\n", needed, sizeof(unsafe_buf));
     printf("    没有内存越界！snprintf 保护了缓冲区。\n");

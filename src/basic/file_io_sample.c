@@ -321,9 +321,10 @@ static void demo_file_positioning(void)
 
     /* Read first 10 chars */
     char buf[16];
-    fgets(buf, sizeof(buf), fp);
-    pos = ftell(fp);
-    printf("  读取 \"%.10s...\" 后 ftell = %ld\n", buf, pos);
+    if (fgets(buf, sizeof(buf), fp) != NULL) {
+        pos = ftell(fp);
+        printf("  读取 \"%.10s...\" 后 ftell = %ld\n", buf, pos);
+    }
 
     /* ── fseek: move file position ── */
     fseek(fp, 0, SEEK_SET);  /* rewind to start */
@@ -331,8 +332,9 @@ static void demo_file_positioning(void)
     printf("  fseek(fp, 0, SEEK_SET) → ftell = %ld\n", pos);
 
     /* Read first 5 chars */
-    fgets(buf, sizeof(buf), fp);
-    printf("  读取 \"%s\"\n", buf);
+    if (fgets(buf, sizeof(buf), fp) != NULL) {
+        printf("  读取 \"%s\"\n", buf);
+    }
 
     /* Seek to position 10 */
     fseek(fp, 10, SEEK_SET);

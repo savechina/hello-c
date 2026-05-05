@@ -20,7 +20,8 @@ static void sigint_handler(int signum)
 {
     (void)signum;
     const char msg[] = "  [信号处理] SIGINT 收到! g_interrupted = 1\n";
-    (void)write(STDERR_FILENO, msg, sizeof(msg) - 1);
+    ssize_t _r = write(STDERR_FILENO, msg, sizeof(msg) - 1);
+    (void)_r;
     g_interrupted = 1;
 }
 

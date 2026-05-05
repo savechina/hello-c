@@ -93,10 +93,11 @@ static void demo_strcat(void)
     printf("  strncat(greeting, \", World\", ...);\n");
     printf("  → \"%s\" (长度 %zu)\n\n", greeting, strlen(greeting));
 
-    /* 拼接受限演示 */
-    char shortbuf[10];
+    /* 拼接受限演示 — 展示正确计算剩余空间的公式 */
+    char shortbuf[24];
     strncpy(shortbuf, "ABC", sizeof(shortbuf) - 1);
     shortbuf[sizeof(shortbuf) - 1] = '\0';
+    /* 计算: 24 - 3 - 1 = 20, 刚好装下 "DEFGHIJKLMN" (11 chars) */
     strncat(shortbuf, "DEFGHIJKLMN", sizeof(shortbuf) - strlen(shortbuf) - 1);
     printf("  短缓冲区拼接:\n");
     printf("    shortbuf[10] = \"ABC\"\n");

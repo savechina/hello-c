@@ -62,7 +62,9 @@ static void system_ipc_pipe_basic_sample(void)
         /* 用 write 避免缓冲区问题 */
         char msg[256];
         int len = snprintf(msg, sizeof(msg), "  [子进程] 收到: [%s]\n", buf);
-        write(STDOUT_FILENO, msg, (size_t)len);
+        if (write(STDOUT_FILENO, msg, (size_t)len) < 0) {
+            perror("  write");
+        }
 
         _exit(0);
     } else {
@@ -133,10 +135,10 @@ static void system_ipc_pipe_bidirectional_sample(void)
                 }
             }
 
-            write(p2[1], buf, (size_t)nr);
+            if (write(p2[1], buf, (size_t)nr) < 0) perror("  write");
             char msg[128];
             int len = snprintf(msg, sizeof(msg), "  [子进程] 收到并转大写: [%.*s]\n", (int)nr, buf);
-            write(STDOUT_FILENO, msg, (size_t)len);
+            if (write(STDOUT_FILENO, msg, (size_t)len) < 0) perror("  write");
         }
 
         close(p1[0]);
@@ -204,7 +206,9 @@ static void system_ipc_socketpair_sample(void)
         close(sv[0]);
 
         const char *child_msg = "Hello from child!";
-        write(sv[1], child_msg, strlen(child_msg));
+        if (write(sv[1], child_msg, strlen(child_msg)) < 0) {
+            perror("  write");
+        }
 
         char buf[128];
         ssize_t nr = read(sv[1], buf, sizeof(buf) - 1);
@@ -212,7 +216,9 @@ static void system_ipc_socketpair_sample(void)
             buf[(size_t)nr] = '\0';
             char msg[256];
             int len = snprintf(msg, sizeof(msg), "  [子进程] 收到回复: [%s]\n", buf);
-            write(STDOUT_FILENO, msg, (size_t)len);
+            if (write(STDOUT_FILENO, msg, (size_t)len) < 0) {
+                perror("  write");
+            }
         }
 
         close(sv[1]);
@@ -229,7 +235,9 @@ static void system_ipc_socketpair_sample(void)
         }
 
         const char *reply = "ACK from parent";
-        write(sv[0], reply, strlen(reply));
+        if (write(sv[0], reply, strlen(reply)) < 0) {
+            perror("  write");
+        }
         printf("  [父进程] 回复: [%s]\n", reply);
 
         close(sv[0]);

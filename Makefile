@@ -64,6 +64,11 @@ ifeq ($(UNAME_S),SunOS)
     CFLAGS  += -D__sun__
 endif
 
+ifeq ($(UNAME_S),Linux)
+    # Enable POSIX.1-2008 + BSD extensions on glibc with strict -std=c17
+    CFLAGS  += -D_POSIX_C_SOURCE=200809L -D_DEFAULT_SOURCE
+endif
+
 # ============================================================
 # Test configuration (Unity test framework)
 # ============================================================

@@ -15,6 +15,8 @@
 #include <string.h>
 #include <unistd.h>
 #include <errno.h>
+#include <sys/select.h>
+#include <sys/time.h>
 
 #ifdef __linux__
 #include <sys/epoll.h>

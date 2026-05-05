@@ -38,7 +38,7 @@ static void system_process_fork_sample(void)
         /* 用 write 避免 printf 缓冲问题 (子进程继承父的缓冲区) */
         char buf[128];
         int len = snprintf(buf, sizeof(buf), child_msg, (int)getpid(), (int)getppid());
-        write(STDOUT_FILENO, buf, (size_t)len);
+        if (write(STDOUT_FILENO, buf, (size_t)len) < 0) perror("  write");
 
         /* 子进程必须 _exit */
         _exit(0);
@@ -94,13 +94,13 @@ static void system_process_exec_sample(void)
         printf("  [子进程] 准备 exec 替换...\n");
 
         char *argv[] = { "ls", "-la", "/tmp", NULL };
-        if (execvp(argv[0], argv) < 0) {
+            if (execvp(argv[0], argv) < 0) {
             /* exec 失败时继续执行 (通常意味着命令不存在) */
             const char *err = "  [子进程] exec 失败: ";
-            write(STDERR_FILENO, err, strlen(err));
+            if (write(STDERR_FILENO, err, strlen(err)) < 0) {}
             const char *estr = strerror(errno);
-            write(STDERR_FILENO, estr, strlen(estr));
-            write(STDERR_FILENO, "\n", 1);
+            if (write(STDERR_FILENO, estr, strlen(estr)) < 0) {}
+            if (write(STDERR_FILENO, "\n", 1) < 0) {}
             _exit(1);
         }
         /* 如果 exec 成功，这行永远达不到 */
@@ -146,7 +146,7 @@ static void system_process_wait_sample(void)
             int len = snprintf(msg, sizeof(msg),
                                "  [子进程 #%d] PID=%d, 工作时间 %ds...\n",
                                i + 1, (int)getpid(), i + 1);
-            write(STDOUT_FILENO, msg, (size_t)len);
+            if (write(STDOUT_FILENO, msg, (size_t)len) < 0) {}
             /* 每个子进程 sleep 不同时间 */
             unsigned int sleep_time = (unsigned int)(i + 1);
             /* 用 short sleep to demo */

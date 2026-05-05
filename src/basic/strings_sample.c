@@ -299,7 +299,12 @@ static void demo_snprintf_vs_sprintf(void)
 
     /* ── ✅ SAFE: snprintf — truncation warning ── */
     char tiny[10];
+    #pragma GCC diagnostic push
+    #ifndef __clang__
+    #pragma GCC diagnostic ignored "-Wformat-truncation"
+    #endif
     ret = snprintf(tiny, sizeof(tiny), "Hello, %s!", name);
+    #pragma GCC diagnostic pop
     printf("🔧 snprintf — 空间不足（截断）:\n");
     printf("   char tiny[10];\n");
     printf("   snprintf(tiny, 10, \"Hello, %%s!\", \"World\");\n");
