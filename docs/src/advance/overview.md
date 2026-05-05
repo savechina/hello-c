@@ -9,7 +9,7 @@
 | 透明指针 | 🔴 | 50 min  | [smart-pointers](smart-pointers.md) |
 | 异步与线程 | 🔴 | 50 min  | [async](async.md) |
 | 数据结构遍历 | 🔴 | 50 min  | [iterators](iterators.md) |
-| 高级多态 | 🔴 | 45 min  | [advanced-traits](advanced-traits.md) |
+| 高级多态 | 🔴 | 45 min  | [advanced-traits](advanced_traits.md) |
 | 系统调用 | 🔴 | 50 min  | [system](system.md) |
 | 测试框架 | 🟡 | 35 min  | [testing](testing.md) |
 | 工具链 | 🟢 | 25 min  | [tools](tools.md) |

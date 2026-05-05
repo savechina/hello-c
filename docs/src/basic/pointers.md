@@ -403,6 +403,25 @@ int32_t *p = &some_value;
 set_to_null(&p);  /* 现在 p 变成 NULL 了 */
 ```
 
+```text
+┌──────────────── 指针链 ────────────────┐
+│                                         │
+│  地址            值                      │
+│  ─────────       ─────────              │
+│  [0xffee0]       42         ← value    │
+│                       ↑                 │
+│                       │ *ptr            │
+│  [0xffee8]       0xffee0    ← ptr      │
+│                       ↑                 │
+│                       │ **pptr          │
+│  [0xffef0]       0xffee8    ← pptr     │
+│                                         │
+│  pptr  →  &ptr   →  0xffee8            │
+│  *pptr →  &value →  0xffee0            │
+│  **pptr →  value →  42                 │
+└─────────────────────────────────────────┘
+```
+
 ### Python 变量 vs C 指针对比表
 
 | 特性 | Python | C 语言指针 |

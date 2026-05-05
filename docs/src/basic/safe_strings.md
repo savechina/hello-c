@@ -102,6 +102,29 @@ strncpy(buf, "ABCDEFGH", sizeof(buf) - 1);
 buf[sizeof(buf) - 1] = '\0';  /* 保证终止 */
 ```
 
+```text
+┌────────── strcpy 溢出对比 strncpy 安全 ──────────┐
+│                                                    │
+│  char buf[8];                                      │
+│  strcpy(buf, "HelloWorld!");  // 12 字符           │
+│                                                    │
+│  栈内存: ┌─buf[8]──┬─相邻数据/返回地址─┐            │
+│          │H│e│l│l│o│W│o│r│l│d│!│\0│               │
+│          └─────────┘ ← 越界溢出! → ┘               │
+│  💥 数据被覆盖 → 段错误或安全漏洞                   │
+│                                                    │
+│  char buf[8];                                      │
+│  strncpy(buf, src, sizeof(buf)-1);                 │
+│  buf[sizeof(buf)-1] = '\0';                        │
+│                                                    │
+│  栈内存: ┌─buf[8]─────┐                            │
+│          │H│e│l│l│o│W│o│\0│                        │
+│          └─────────────┘                            │
+│          └── 总在边界内 ──┘                         │
+│  ✅ 截断为 "HelloWo"，绝不越界                      │
+└─────────────────────────────────────────────────────┘
+```
+
 ### 2. `snprintf` 安全格式化
 
 `snprintf` 是 `sprintf` 的安全替代品——它增加了一个 `size` 参数：

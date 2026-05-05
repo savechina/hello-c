@@ -430,6 +430,6 @@ struct Aligned {
 
 | 下一步 | 方向 |
 |--------|------|
-| 下一章 → | [指针](../pointers/pointers.md) — struct 指针与 `->` 运算符 |
+| 下一章 → | [指针](./pointers.md) — struct 指针与 `->` 运算符 |
 | 复习 ← | [结构体基础](./structs.md) — struct 定义、初始化、` .` 访问 |
 | 深入 → | [网络编程](../advance/network.md) — struct 的序列化与网络字节序 |

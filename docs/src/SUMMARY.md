@@ -7,8 +7,6 @@
 # 基础部分（Basic）
 
 - [基础入门](./basic/basic_overview.md) 📋
-
-  **核心概念**
   - [变量与表达式](./basic/variables.md) 🟢
   - [数据类型](./basic/datatype.md) 🟢
   - [运算符与表达式](./basic/operators.md) 🟢
@@ -22,8 +20,6 @@
   - [数组基础](./basic/arrays.md) 🟢
   - [预处理器与宏](./basic/preprocessor.md) 🟢
   - [条件编译](./basic/conditional_comp.md) 🟢
-
-  **内存与指针**
   - [指针](./basic/pointers.md) 🟡
     - [指针基础](./basic/pointer_basics.md)
     - [指针运算](./basic/pointer_arith.md)
@@ -36,19 +32,16 @@
     - [安全字符串](./basic/safe_strings.md)
     - [字符串处理](./basic/string_processing.md)
   - [void* 类型擦除](./basic/void_pointers.md) 🔴
-
-  **数据结构**
   - [结构体](./basic/structs.md) 🟡
     - [结构体基础](./basic/struct_basics.md)
     - [嵌套结构体](./basic/nested_structs.md)
+    - [结构体字段与内存布局](./basic/struct_fields.md)
     - [结构体与函数](./basic/struct_functions.md)
     - [结构体内存布局](./basic/struct_memory_layout.md)
   - [联合体](./basic/unions.md) 🟡
   - [类型别名](./basic/typedef.md) 🟡
   - [枚举](./basic/enums.md) 🟡
   - [作用域与生命周期](./basic/scope.md) 🟡
-
-  **高级模式**
   - [内存管理](./basic/memory_mgmt.md) 🔴
   - [头文件与模块系统](./basic/headers.md) 🟡
   - [日志与格式化输出](./basic/logging.md) 🟢
@@ -66,7 +59,6 @@
 # 进阶部分（Advance）
 
 - [高级进阶](./advance/overview.md) 📋
-  
   - [错误处理](./advance/error-handling.md) 🟡
   - [原子类型](./advance/atomic-types.md) 🟡
   - [透明指针](./advance/smart-pointers.md) 🔴
@@ -75,13 +67,11 @@
   - [数据库 (SQLite)](./advance/database.md) 🟡
   - [测试框架](./advance/testing.md) 🟡
   - [工具链](./advance/tools.md) 🟢
-
   - [异步与并发](./advance/async.md) 🔴
     - [线程创建与生命周期](./advance/async/async_thread.md)
     - [同步原语 (Mutex/Condvar)](./advance/async/async_sync.md)
     - [线程池模式](./advance/async/async_pool.md)
     - [I/O 多路复用 (select/poll)](./advance/async/async_iomux.md)
-
   - [系统编程](./advance/system.md) 🔴
     - [文件与目录操作](./advance/system/file.md)
     - [POSIX 信号处理](./advance/system/signal.md)
@@ -89,11 +79,9 @@
     - [进程管理 (fork/exec)](./advance/system/process.md)
     - [管道与 Socket IPC](./advance/system/ipc.md)
     - [CLI 开发模式](./advance/system/cli.md)
-
   - [Web 开发](./advance/web.md) 🔴
     - [原始 Socket + HTTP 解析](./advance/web/socket.md)
     - [并发服务器模型](./advance/web/concurrent.md)
-
   - [阶段复习](./advance/review.md) 📝
 
 # Algo
