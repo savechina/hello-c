@@ -6,10 +6,10 @@
 |------|------|---------|------|
 | 错误处理 | 🟡 | 40 min  | [error-handling](error-handling.md) |
 | 原子类型 | 🟡 | 35 min  | [atomic-types](atomic-types.md) |
-| 透明指针 | 🔴 | 50 min  | [smart-pointers](smart-pointers.md) |
+| 不透明指针 | 🔴 | 50 min  | [opaque-pointers](opaque-pointers.md) |
 | 异步与线程 | 🔴 | 50 min  | [async](async.md) |
 | 数据结构遍历 | 🔴 | 50 min  | [iterators](iterators.md) |
-| 高级多态 | 🔴 | 45 min  | [advanced-traits](advanced_traits.md) |
+| 高级多态 | 🔴 | 45 min  | [advanced-polymorphism](advanced_polymorphism.md) |
 | 系统调用 | 🔴 | 50 min  | [system](system.md) |
 | 测试框架 | 🟡 | 35 min  | [testing](testing.md) |
 | 工具链 | 🟢 | 25 min  | [tools](tools.md) |

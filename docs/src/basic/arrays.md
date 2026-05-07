@@ -25,7 +25,7 @@
 
 ## 前置要求
 
-完成 [变量](./variables/variables.md) 和 [数据类型](./variables/datatype.md) 章节。
+完成 [变量](./variables.md) 和 [数据类型](./datatype.md) 章节。
 
 ## 第一个例子
 
@@ -396,12 +396,12 @@ printf("%d\n", matrix[1][2]);  // 输出 6 (第 2 行，第 3 列)
 
 - [C99 标准 §6.7.8 — 数组初始化](https://en.cppreference.com/w/c/language/array_initialization)
 - `memcpy` / `memcmp` / `memmove` —— `<string.h>` 中的内存操作函数
-- 下一章: [控制流](./variables/control-flow.md) — if/else 分支与 switch 语句
+- 下一章: [预处理器与宏](./preprocessor.md) — #include 展开、#define 替换
 
 ## 继续学习
 
 | 下一步 | 方向 |
 |--------|------|
-| 下一章 → | [控制流：if/else/switch](./variables/control-flow.md) |
-| 复习 ← | [数据类型](./variables/datatype.md) |
-| 深入 → | [循环](./loops/loops.md) — for/while/do-while |
+| 下一章 → | [预处理器与宏](./preprocessor.md) |
+| 复习 ← | [数据类型](./datatype.md) |
+| 深入 → | [循环](./loops.md) — for/while/do-while |

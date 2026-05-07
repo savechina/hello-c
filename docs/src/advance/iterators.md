@@ -38,8 +38,8 @@ C 语言没有像 Python `for x in list` 那样的魔法——你需要手动管
 
 ## 前置要求
 
-- 已掌握：指针、结构体、`malloc`/`free`
-- 已掌握：函数指针（用于回调和比较函数）
+- 已掌握：[指针](../basic/pointers.md)、[结构体](../basic/structs.md)、[内存管理](../basic/memory_mgmt.md)
+- 已掌握：[函数指针](../basic/function_pointers.md)（用于回调和比较函数）
 - 了解数组的基本概念
 
 ## 第一个例子：单向链表
@@ -537,5 +537,5 @@ void list_foreach(DNode *head, VisitFunc visit, void *user_data) {
 
 本章你理解了 C 语言中四种核心数据结构的遍历方式，以及迭代器模式的实现。这些数据结构是算法和系统设计的基础。下一步，你可以探索排序算法（利用遍历）、哈希表实现，或更高级的数据结构（红黑树、B 树）。
 
-- [上一章](./async.md)：异步与线程
-- [下一章](./data_structures.md)：高级数据结构
+- [上一章](./opaque-pointers.md)：不透明指针
+- [下一章](./advanced_polymorphism.md)：高级多态

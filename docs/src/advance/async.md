@@ -43,8 +43,8 @@
 
 ## 前置要求
 
-- 已掌握：指针、函数指针、`malloc`/`free`
-- 已掌握：结构体 (`struct`) 和自定义类型 (`typedef`)
+- 已掌握：[指针](../basic/pointers.md)、[函数指针](../basic/function_pointers.md)、[内存管理](../basic/memory_mgmt.md)
+- 已掌握：[结构体](../basic/structs.md) (`struct`) 和[类型别名](../basic/typedef.md) (`typedef`)
 - 了解操作系统「进程」的基本概念（程序的一次执行）
 
 ## 第一个例子：创建线程
@@ -712,5 +712,5 @@ atomic_fetch_add(&counter, 1);    /* 原子 +1，不需要 mutex */
 
 本章你理解了多线程的核心概念——线程、竞态、互斥锁和条件变量。下一步，我们将学习如何用条件变量和信号量实现更复杂的同步模式，以及如何用原子操作替代简单的 mutex。
 
-- [上一章](./error_handling.md)：错误处理
-- [下一章](./iterators.md)：数据结构遍历
+- [上一章](./tools.md)：工具链
+- [下一章](./system.md)：系统调用

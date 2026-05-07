@@ -1,4 +1,4 @@
-# 数据库 (Database with SQLite3)
+# 数据库 (Database with SQLite3) 🟡
 
 > "数据是程序的血液——而数据库是让血液有组织流动的心血管系统。"
 

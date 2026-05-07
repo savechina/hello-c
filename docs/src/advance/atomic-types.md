@@ -438,5 +438,5 @@ A: 有, 但很小。`seq_cst` 是最强的内存序, 会插入完整的内存屏
 
 下一章, 我们将探索 **透明指针 (Opaque Pointers)** —— 用 `void*` 实现信息隐藏 (information hiding)、工厂模式和 RAII 风格资源管理的 C 语言惯用法。
 
-- [上一章](./atomic-types.md): 原子类型 (atomic-types)
-- [下一章 →](./smart-pointers.md): 透明指针 (smart-pointers)
+- [上一章](./error-handling.md): 错误处理与 errno 系统
+- [下一章 →](./opaque-pointers.md): 不透明指针 (opaque-pointers)

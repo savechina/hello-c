@@ -428,12 +428,12 @@ int val = *ip;  // 解引用必须转回具体类型
 
 - [cppreference - Pointer arithmetic](https://en.cppreference.com/w/c/language/pointer_expression) — 标准指针运算规则
 - `ptrdiff_t` / `size_t` —— `<stddef.h>` 中的标准类型
-- 下一章：[函数与指针](./functions.md) —— 指针作为函数参数、回调函数
+- 下一章：[void* 类型擦除](./void_pointers.md) —— 万能指针与字节级操作
 
 ## 继续学习
 
 | 下一步 | 方向 |
 |--------|------|
-| 下一章 → | [函数与指针](./functions.md) — 函数参数、回调 |
+| 下一章 → | [void* 类型擦除](./void_pointers.md) — 万能指针与类型擦除 |
 | 复习 ← | [指针基础](./pointers.md) |
 | 深入 → | [多维数组与指针](./arrays.md) — 指针的指针 |

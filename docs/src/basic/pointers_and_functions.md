@@ -82,6 +82,8 @@ pass-by-pointer: a = 11  (变了!)
 
 关键理解：`add_one_value(10)` 收到的是 `10` 的副本，函数退出后副本销毁。`add_one_pointer(&a)` 收到的是 `a` 的地址，`*x` 操作直接修改 `a` 本身。
 
+> 📌 **回顾之前学的**: C 是值传递（Pass by Value），函数参数的修改不会影响调用者。要修改调用者变量，必须传指针（& 取地址）。详见 [函数](./functions.md#参数传递)。
+
 ## 原理解析
 
 ### 1. 值传递——函数收到的是副本
@@ -480,7 +482,7 @@ void process_matrix(int32_t matrix[][3], size_t rows) {
 ## 继续学习
 
 - [上一章](./pointers_and_arrays.md)：指针与数组
-- [下一章](./void_pointers.md)：void* 指针——类型擦除与泛型
+- [下一章](./const_correctness.md)：const 正确性
 
 ---
 

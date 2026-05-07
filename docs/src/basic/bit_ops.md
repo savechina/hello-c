@@ -522,5 +522,5 @@ uint32_t back     = ntohl(net_val);   /* 网络序 → 主机序 */
 
 位运算是底层编程的必备工具。它让你能够精确控制数据表示 —— 从硬件寄存器到网络协议，从权限系统到数据压缩。
 
-- [上一章](./void_generic.md)：void* 泛型编程
-- [下一章](./arrays.md)：数组基础
+- [上一章](./variadic_functions.md)：可变参数函数
+- [下一章](./stdlib.md)：标准库精要

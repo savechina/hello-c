@@ -38,7 +38,7 @@ if (rain) {
 
 ## 前置要求
 
-完成 [变量](./variables/variables.md) 和 [运算符](./variables/operators.md) 章节。
+完成 [变量](./variables.md) 和 [运算符](./operators.md) 章节。
 
 ## 第一个例子
 
@@ -137,6 +137,48 @@ switch (day) {
     default: printf("无效编号！\n"); break;
 }
 ```
+
+## ⚠️ 知识陷阱预警：switch fall-through
+
+C 语言 `switch` 最著名的陷阱是 **fall-through**：如果 `case` 后面没有 `break`，程序会直接"掉落"执行下一个 `case` 的代码。
+
+```c
+int32_t level = 2;
+switch (level) {
+    case 1:
+        printf("初级\n");
+        break;
+    case 2:
+        printf("中级\n");
+        // ← 忘了 break！
+    case 3:
+        printf("高级\n");
+        break;
+    default:
+        printf("未知\n");
+}
+/* 输出：
+   中级
+   高级     ← 意外！这不是我们想要的
+*/
+```
+
+**但 fall-through 有时是有意为之的设计**，不是 bug：
+```c
+/* ✅ 故意 fall-through：多个 case 共用同一行为 */
+switch (ch) {
+    case 'a': case 'e': case 'i':
+    case 'o': case 'u':
+        printf("元音\n");
+        break;
+    default:
+        printf("辅音\n");
+}
+```
+
+C23 引入了 `[[fallthrough]]` 属性来标记有意的 fall-through。在现代代码中，**每个 case 应该显式以 break、return、continue 或 [[fallthrough]] 结束**。
+
+编译器警告：`-Wimplicit-fallthrough`（GCC/Clang）会在忘记 break 时提醒你。
 
 ### 三元运算符 `?:`
 
@@ -456,6 +498,51 @@ void process(int *data, int len) {
     // 真正逻辑在这里，少了一层缩进
 }
 ```
+### 🎯 预测运行结果
+
+先别急着运行——读下面的代码，预测它会输出什么？
+
+```c
+#include <stdio.h>
+#include <stdint.h>
+
+int main(void) {
+    int32_t num = 2;
+    switch (num) {
+        case 1:
+            printf("一 ");
+        case 2:
+            printf("二 ");
+        case 3:
+            printf("三 ");
+            break;
+        default:
+            printf("其他 ");
+    }
+    printf("结束\n");
+    return 0;
+}
+```
+
+<details><summary>点击查看答案</summary>
+
+**预测：** 程序会输出 `二 三 结束`
+
+**实际输出：**
+```
+二 三 结束
+```
+
+**为什么？**
+
+1. `num = 2` 匹配 `case 2`，开始执行
+2. `case 2` 末尾**没有 `break`**，程序"穿透"(fall-through) 继续执行 `case 3`
+3. `case 3` 打印"三 "，遇到 `break` 跳出 `switch`
+4. 最后打印"结束"
+
+**关键教训**：`switch` 的每个 `case` 末尾必须显式以 `break` 结束（除非故意需要 fall-through）。GCC/Clang 的 `-Wimplicit-fallthrough` 选项可以帮助你发现这类问题。
+
+</details>
 
 ## 小结
 
@@ -485,12 +572,12 @@ void process(int *data, int len) {
 - [C99 标准 §6.8.4 — 选择语句 (Selection statements)](https://en.cppreference.com/w/c/language/if)
 - [Duff's Device — 经典 C 优化技巧](https://en.wikipedia.org/wiki/Duff%27s_device)
 - [Guard clause — 维基百科](https://en.wikipedia.org/wiki/Guard_(computer_science))
-- 上一章: [数组基础](./arrays/arrays.md)
+- 上一章: [运算符](./operators.md)
 
 ## 继续学习
 
 | 下一步 | 方向 |
 |--------|------|
-| 下一章 → | [循环](../loops/loops.md) — for/while/do-while |
-| 复习 ← | [运算符](./operators/operators.md) |
-| 深入 → | [预处理器](./preprocessor/preprocessor.md) — #define, #ifdef |
+| 下一章 → | [循环](./loops.md) — for/while/do-while |
+| 复习 ← | [运算符](./operators.md) |
+| 深入 → | [预处理器](./preprocessor.md) — #define, #ifdef |

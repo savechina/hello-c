@@ -86,6 +86,8 @@ gcc -Wall -Wextra -Werror -std=c17 -o demo demo.c
 
 完整源码在仓库 [`src/basic/file_io_sample.c`](https://github.com/savechina/hello-c/blob/main/src/basic/file_io_sample.c)。
 
+> 📌 **回顾之前学的**: 每条 `fopen` 必须配对 `fclose`，否则会导致文件描述符泄漏（leaky fd）。这与 [内存管理](./memory_mgmt.md) 中 malloc/free 的配对原则完全一致。
+
 ## 原理解析
 
 ### 1. FILE* 是什么？
@@ -666,8 +668,8 @@ FILE *fp = fopen("/tmp/secret.txt", "w");
 
 ## 继续学习
 
-- 上一章：[字符串深度](./strings)
-- 下一章：[命令行参数与 I/O 重定向](./cli_args)
+- 上一章：[调试与错误处理](./debugging.md)
+- 下一章：[函数指针](./function_pointers.md)
 
 ---
 

@@ -385,7 +385,7 @@ char s2[] = "hello";
 
 ## 继续学习
 
-- [上一章](./void_pointers.md)：void* 指针
+- [上一章](./pointers_and_functions.md)：指针与函数
 - [下一章](./memory_mgmt.md)：内存管理——栈 vs 堆，malloc/free
 
 ---

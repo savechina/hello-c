@@ -647,7 +647,8 @@ if (path == NULL) {
 
 ## 继续学习
 
-- 上一章：[文件 I/O](./file_io)
+- 上一章：[标准库精要](./stdlib.md)
+- 下一章：[递归函数](./recursion.md)
 
 ---
 

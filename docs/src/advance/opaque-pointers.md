@@ -1,10 +1,12 @@
-# 透明指针 (Opaque Pointers & RAII Patterns)
+# 不透明指针 (Opaque Pointers & RAII Patterns)
 
 ## 开篇故事
 
 想象一家酒店的保险箱 (safe deposit box)。你走进前台, 服务员给你一个编号, 你用这个编号存取物品。你**不知道**保险箱长什么样、里面装了什么、钥匙怎么工作——你只拿到一把「钥匙」(指针), 用这把钥匙存取东西。当你退房 (作用域结束) 时, 保险箱自动上锁并清零。
 
 这就是 C 语言中的**不透明指针 (opaque pointer)** 设计: 调用者拿到一个指针, 但看不到它指向什么样的结构体和内部字段。所有操作通过工厂函数和 API 完成——你永远不会直接触碰内部数据。
+
+> 💡 **RAII 是什么**？RAII = Resource Acquisition Is Initialization（资源获取即初始化）—— 这是 C++/Rust 中一种"在构造函数里分配资源、在析构函数里自动释放"的模式。C 语言没有构造函数/析构函数，但可以用宏和 `goto` 来**模拟**类似效果：离开作用域时自动 cleanup。
 
 ## 本章适合谁
 
@@ -49,6 +51,8 @@ mybuffer_destroy(buf);
 `MyBuffer` 结构体的定义在 `.c` 文件中, 调用者无法 `buf->len = 0`——甚至连 `sizeof(MyBuffer)` 都不知道。
 
 这就是信息隐藏 (Information Hiding) 的力量: 接口稳定, 实现可以任意修改。
+
+> 📌 **回顾之前学的**: 信息隐藏（Information Hiding）——通过 `typedef struct X X;` 声明不完整类型，迫使调用者只能通过公开 API 访问，无法直接修改内部字段。详见 [void* 泛型编程](../basic/void_generic.md) 和 [头文件与模块系统](../basic/headers.md)。
 
 ## 原理解析
 
@@ -561,7 +565,8 @@ Go 语言接口、Rust trait object 本质上都是这种模式 (虚表 dispatch
 
 你已经掌握了 C 语言中高级结构设计的核心模式: 不透明指针、工厂模式、RAII 宏。这些是构建健壮 C 库的基础。
 
-- [上一章](./atomic-types.md): 原子类型 (atomic-types)
-- [上一章 →](../basic/void_generic.md): void\* 泛型编程
+- [上一章](./atomic-types.md): 原子类型与内存序
+- [下一章 →](./iterators.md): 数据结构遍历
+- 前置基础: [void* 泛型编程](../basic/void_generic.md)
 
 > 💡 **提示**: 检查你正在用或正在写的 C 代码 — 哪些地方可以用不透明指针来隐藏内部实现？有没有未配对的 create/destroy？RAII 宏能否简化资源管理？

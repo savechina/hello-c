@@ -1,6 +1,6 @@
-# 枚举与联合体（Enums & Unions）
+# 枚举（Enums）
 
-> "枚举是给整数起了名字，联合体是让多种类型共享同一块内存。" —— 我发现
+> "枚举是给整数起了名字，是'只能选一个'的承诺。" —— 我发现
 
 ## 开篇故事
 
@@ -16,16 +16,12 @@ enum LightState lamp = DIM;  // 当前只有一个状态
 
 在枚举出现之前，程序员用 `#define` 来定义状态码。宏也能工作，但它没有任何类型保护——`set_state(999)` 能通过编译，因为 999 也是一个合法的整数。枚举引入了类型检查的语义约束，让「传入非法状态」这件事在代码层面变得更明显。
 
-枚举和联合体组合之后，还能实现更复杂的「多状态选一」模式。这是 C 语言里最接近 Rust 的 `enum` 的写法。
-
 > "枚举的本质不是数字，而是'只能选一个'的承诺。"
 
 ## 本章适合谁
 
 - 用过 `#define` 定义状态码，但踩过类型安全坑的人
-- 想知道 C 语言怎么实现"多种类型之一"的数据结构
 - 对 Rust `enum`、Python `Enum` 有了解，想对比 C 的枚举
-- 想掌握 tagged union 模式的 C 学习者
 
 ## 你会学到什么
 
@@ -33,7 +29,6 @@ enum LightState lamp = DIM;  // 当前只有一个状态
 - 枚举与 `#define` 常量的对比与选择
 - 枚举值的显式赋值与自动递增
 - 将枚举作为函数参数和返回值
-- Tagged Union 模式（枚举 + 联合体的组合）
 - 枚举的边界验证与错误处理
 - 实际应用：状态机、错误码、配置选项
 
@@ -315,107 +310,7 @@ const char *state_name(LightState s) {
 ```
 </details>
 
-## 联合体的奥秘
-
-### 6. Union（联合体）基础
-
-`union` 是一种特殊的数据类型，它的所有成员**共享同一块内存**。大小等于最大的成员：
-
-```c
-union Data {
-    int i;
-    double d;
-    char str[16];
-};
-
-sizeof(union Data);  /* = 16 字节（str 最大）*/
-```
-
-```
-内存布局:
-┌────────────────────────────────────┐
-│ i (4 bytes)                        │
-│ d (8 bytes, overlaps with i)       │
-│ str[16] (16 bytes, overlaps all)   │
-│ ←── 同一块内存, 你写哪个就读哪个 ──→  │
-└────────────────────────────────────┘
-```
-
-**我的理解**：结构体是"并排摆放的柜子"，联合体是"同一个柜子，什么都能往里放，但一次只能放一种东西"。
-
-### 7. 危险：Union 类型不安全
-
-```c
-union Data u;
-u.d = 3.14;    /* 写入 double */
-printf("%d\n", u.i);  /* ❌ 以 int 读取 double → 垃圾值！*/
-```
-
-编译器**不会检查**你读写的是否是同一种类型——这就是联合体最大的陷阱。
-
-## Tagged Union 模式
-
-### 8. 枚举 + 联合体 = 类型安全的变体
-
-要安全地使用 union，必须搭配一个枚举来标记当前存储的类型，这就是**Tagged Union**（带标签联合体）模式：
-
-```c
-#include <stdio.h>
-#include <stdint.h>
-
-enum ValueKind { VALUE_INT, VALUE_DOUBLE, VALUE_STRING };
-
-struct Variant {
-    enum ValueKind tag;        /* 标签：当前存储什么类型 */
-    union {
-        int32_t int_val;
-        double  double_val;
-        const char *str_val;
-    } data;
-};
-```
-
-```
-struct Variant 内存布局:
-┌──────────────┬────────────────────────┐
-│ tag (enum)   │ data (union)            │
-│ = 4 字节     │ = 最大成员大小 (如 8)   │
-│ 记录类型     │ 实际存储的数据          │
-└──────────────┴────────────────────────┘
-```
-
-现在可以安全地构造和访问：
-
-```c
-struct Variant make_int(int32_t v) {
-    struct Variant var = { .tag = VALUE_INT, .data.int_val = v };
-    return var;
-}
-
-struct Variant make_double(double v) {
-    struct Variant var = { .tag = VALUE_DOUBLE, .data.double_val = v };
-    return var;
-}
-
-void print_variant(const struct Variant *v) {
-    switch (v->tag) {
-        case VALUE_INT:
-            printf("int: %d\n", v->data.int_val);
-            break;
-        case VALUE_DOUBLE:
-            printf("double: %.2f\n", v->data.double_val);
-            break;
-        case VALUE_STRING:
-            printf("string: %s\n", v->data.str_val);
-            break;
-        default:
-            printf("unknown type\n");
-            break;
-    }
-}
-```
-
-### 9. 实际应用：错误码模式
+### 实际应用：错误码模式
 
 C 语言中常见的另一种枚举用法是错误码，配合返回值做 Error-First 风格：
 
@@ -496,12 +391,10 @@ const char *color_names[] = { COLOR_LIST };
 
 ## 小结
 
-祝贺！你已经掌握了 C 语言的枚举与联合体。让我总结一下——
+祝贺！你已经掌握了 C 语言的枚举。让我总结一下——
 
 - **`enum`** 是命名的整数常量，有类型但底层是 `int`
 - **枚举 vs `#define`**：枚举更安全、可调试、支持自动递增
-- **`union`** 的所有成员共享同一块内存，大小 = 最大成员
-- **Tagged Union**（枚举 + 联合体）是 C 中实现类型安全变体的标准模式
 - **枚举验证**：永远用 `switch` + `default` 覆盖所有枚举值，防止非法值
 - **位标志**：枚举可以用位移值做组合操作
 - 枚举的**边界**：C 允许给枚举赋任意 `int`，运行时需验证
@@ -514,9 +407,6 @@ const char *color_names[] = { COLOR_LIST };
 |-----------------|------|
 | 枚举（Enum） | 一组命名的整数常量 |
 | 枚举成员（Enumerator） | 枚举中的每个命名值 |
-| 联合体（Union） | 所有成员共享内存的数据类型 |
-| Tagged Union | 枚举标签 + 联合体的组合模式 |
-| Variant | 变体类型，可以存储多种类型之一 |
 | Bit Flags | 用位运算组合枚举值 |
 | Error-First | 用返回值传递错误码的编程风格 |
 | X-Macro | 枚举与字符串同步的宏技巧 |
@@ -524,14 +414,13 @@ const char *color_names[] = { COLOR_LIST };
 ## 延伸阅读
 
 - [cppreference: Enum types (C)](https://en.cppreference.com/w/c/language/enum)
-- [cppreference: Union types (C)](https://en.cppreference.com/w/c/language/union)
-- K&R《C 程序设计语言》第 1.6、6.5 章
+- K&R《C 程序设计语言》第 1.6 章
 - 《C Primer Plus》第 11 章：结构体和枚举
 
 ## 继续学习
 
-枚举和联合体让你掌握了 C 语言中标识多种状态和共享内存的基础。下一章我们将深入学习**作用域与生命周期**——理解变量在哪里可见、什么时候创建、什么时候销毁，这将让你写出更安全的代码。
+枚举让你掌握了 C 语言中标识多种状态的基础。下一章我们将深入学习**联合体（Union）**——理解多类型如何共享同一块内存。
 
 > 💡 **提示**：检查你的代码里所有 `#define` 定义的状态码，尝试替换为 `enum`。你会发现代码的可读性和安全性都提升了！
 
-[← 上一章：指针运算](./pointer_arith.md) | [下一章：作用域与生命周期 →](./scope.md)
+[← 上一章：指针运算](./pointer_arith.md) | [下一章：联合体 →](./unions.md)
