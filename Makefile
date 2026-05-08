@@ -200,6 +200,7 @@ test-valgrind: $(TEST_BINS)
 clean:
 	@echo "Cleaning project..."
 	@rm -rf $(OBJ_DIR) $(BIN_DIR) $(BUILD_DIR)/vendor/ $(BUILD_DIR)/test-vendor/ $(BUILD_DIR)/test/
+	@rm -f $(OBJ_DIR)/*.d $(OBJ_DIR)/*/*.d 2>/dev/null || true
 	@echo "Clean complete."
 
 # --- Help Target ---

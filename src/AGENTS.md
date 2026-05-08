@@ -13,9 +13,8 @@ Sole module directory. All source `.c`/`.h` files live here in flat or subdirect
 | Entry point | `main.c` | Calls `main_hello()`, `main_sysinfo()` — orchestration only |
 | Main demo | `hello.c/.h` | Fibonacci(factorial), calls `main_basic()` + `main_advance()` |
 | System info | `sysinfo.c/.h` | 327-line multi-platform: macOS/Linux/Solaris/FreeBSD via `#ifdef` |
-| Orphan stub | `h.c` | `main_h()` never called — candidate for deletion |
-| Tutorial stubs | `advance/`, `algo/` | advance = printfs only; algo = header without `.c` |
-| Quick examples | `module1/`, `module2/` | `print_hello()`, `print_util()` — boilerplate demos |
+| Tutorial stubs | `advance/`, `algo/` | advance = printfs only; algo = has `.c` with `main_algo_sample()` |
+| Quick examples | `module1/`, `util/` | `print_hello()`, `print_util()` — boilerplate demos |
 
 ## CONVENTIONS
 
@@ -26,7 +25,6 @@ Sole module directory. All source `.c`/`.h` files live here in flat or subdirect
 
 ## ANTI-PATTERNS (THIS DIR)
 
-- **Orphan**: `h.c` — `main_h()` is dead code, no header file
-- **Empty module**: `algo/algo.h` declares `main_algo()` but no `.c` exists
-- **Duplicate decl**: `main_hello()` in both `../include/global.h` and `hello.h`
-- **Dead include**: `main.c:6` has `// #include "global.h"`
+- **Advance stubs**: `advance/` chapters are printfs only — no real implementations yet
+- **Duplicate decl**: `main_hello()` in both `../include/global.h` and `hello.h` — kept intentionally
+- **algo.h naming**: `algo/algo.h` declares `main_algo()` but `algo.c` implements `main_algo_sample()` — kept for future algo implementations

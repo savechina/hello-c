@@ -18,18 +18,17 @@ hello-c/
 ├── Dockerfile            # Ubuntu 24.04 dev container (full toolchain + mingw + zsh)
 ├── Dockerfile.v24        # Lighter 24.04 (no mingw/zsh)
 ├── Dockerfile.v18        # Legacy 18.04 (rustup-init.sh, protobuf)
-├── include/
-│   └── global.h          # Project-wide decls (DUPLICATE: also declares main_hello)
+├── include/                # global.h — project-wide declarations (main_hello, etc.)
 ├── src/
 │   ├── main.c            # SOLE entry point — orchestration only
 │   ├── hello.c/.h        # Main demo: fibonacci(factorial?), structs, basic/advance
 │   ├── sysinfo.c/.h      # Multi-platform OS detection (327 lines, macOS/Linux/Solaris/FreeBSD)
-│   ├── h.c               # ORPHAN main_h() — never called, no header
 │   ├── basic/            # Tutorial: datatypes, strings, structs, Unicode
 │   ├── advance/          # Stub — only printfs, no content yet
-│   ├── algo/             # ORPHAN header only (no impl)
+│   ├── algo/             # Has algo.c with main_algo_sample() + sorting demos
+│   ├── awesome/          # Curated resources
 │   ├── module1/          # Example: print_hello
-│   └── module2/          # Example: print_util
+│   └── util/             # Example: print_util (renamed from module2)
 ├── test/                 # Unity/CMock tests, mirrors src/ layout
 │   ├── vendor/          # Unity v2.6.1, CMock v2.6.0
 │   ├── advance/         # Tests for advance/ modules (e.g., test_calc_add.c)
@@ -76,13 +75,11 @@ hello-c/
 ## ANTI-PATTERNS (THIS PROJECT)
 
 - **fibonacci/factorial bug**: `src/hello.c:7-11` — named `fibonacci()` but implements factorial logic (n * recursive, not F(n-1)+F(n-2))
-- **Duplicate declarations**: `main_hello()` declared in both `include/global.h` AND `src/hello.h`
-- **Orphan code**: `src/h.c` (`main_h()`) — never called anywhere
-- **Orphan header**: `src/algo/algo.h` — declares `main_algo()`, no `.c` implementation
-- **Dead `#include`**: `src/main.c:6` — `// #include "global.h"` leftover from refactoring
-- **Makefile duplicate**: `-include $(OBJECTS:.o=.d)` appears twice (lines 69 & 100) ✅ FIXED
+- **hello.c:17** — `fibonacci(60)` will overflow; the function is actually factorial
+- **src/basic/datatype_sample.c** mixes safe (`strncpy`) and unsafe (`strcpy`, `sprintf`) — pedagogical intent
 - **Makefile globstar**: `**.c` non-portable (works on macOS, not all Make versions)
-- **Makefile circular**: `build <- build` dependency dropped ✅ FIXED (removed `build/` from `DIRS`, removed `clean` from `build` target)
+- **Duplicate declarations**: `main_hello()` declared in both `include/global.h` AND `src/hello.h` — kept intentionally
+- **algo.h naming mismatch**: `src/algo/algo.h` declares `main_algo()` but `algo.c` implements `main_algo_sample()` — kept for future algo implementations
 
 ## UNIQUE STYLES
 

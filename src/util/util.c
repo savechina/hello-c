@@ -2,5 +2,5 @@
 #include "util.h"
 
 void print_util() {
-    printf("Utility from module2!\n");
+    printf("Utility from util!\n");
 }
