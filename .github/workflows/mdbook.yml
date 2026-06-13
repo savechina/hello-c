@@ -34,17 +34,43 @@ jobs:
       MDBOOK_VERSION: 0.4.36
     steps:
       - uses: actions/checkout@v4
-      - name: Install mdBook
+      - name: Install mdBook & plugins
         run: |
           curl --proto '=https' --tlsv1.2 https://sh.rustup.rs -sSf -y | sh
           rustup update
           cargo install --version ${MDBOOK_VERSION} mdbook
+          cargo install mdbook-admonish
+          cargo install mdbook-alerts
+          cargo install mdbook-pagetoc --version 0.2.2
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@v5
       - name: Build with mdBook
         run: mdbook build
         working-directory: docs
+      - name: Generate sitemap
+        run: |
+          SITE_URL="https://renyan.org/hello/c"
+          cd docs/book
+          echo '<?xml version="1.0" encoding="UTF-8"?>' > sitemap.xml
+          echo '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">' >> sitemap.xml
+          echo '  <url>' >> sitemap.xml
+          echo "    <loc>${SITE_URL}/</loc>" >> sitemap.xml
+          echo '    <priority>1.0</priority>' >> sitemap.xml
+          echo '    <changefreq>weekly</changefreq>' >> sitemap.xml
+          echo '  </url>' >> sitemap.xml
+          find . -name "*.html" ! -name "print.html" ! -name "404.html" | sort | while read -r file; do
+            url=$(echo "$file" | sed 's|^\./||' | sed "s|^|${SITE_URL}/|")
+            echo '  <url>' >> sitemap.xml
+            echo "    <loc>$url</loc>" >> sitemap.xml
+            echo '    <priority>0.8</priority>' >> sitemap.xml
+            echo '    <changefreq>monthly</changefreq>' >> sitemap.xml
+            echo '  </url>' >> sitemap.xml
+          done
+          echo '</urlset>' >> sitemap.xml
+          echo "Generated sitemap.xml with $(grep -c '<url>' sitemap.xml) entries"
+      - name: Copy robots.txt
+        run: cp docs/src/robots.txt docs/book/robots.txt
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

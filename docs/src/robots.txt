@@ -1,0 +1,11 @@
+# robots.txt for Hello C Tutorial
+# https://renyan.org/hello/c/
+
+User-agent: *
+Allow: /
+
+# Sitemap location
+Sitemap: https://renyan.org/hello/c/sitemap.xml
+
+# Disallow print version to reduce crawl waste
+Disallow: /print.html
