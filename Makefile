@@ -57,7 +57,8 @@ INC_DIRS    := $(sort $(dir $(SOURCES)))
 CFLAGS      += $(addprefix -I,$(INC_DIRS))
 
 # LDFLAGS: Linker flags for linking (e.g., libraries)
-LDFLAGS     := -lm -pthread -lsqlite3
+# NOTE: -lsqlite3 placed at end; platform blocks may prepend -L paths before it
+LDFLAGS     := -lm -pthread
 
 ifeq ($(UNAME_S),SunOS)
     LDFLAGS  += -lkstat
@@ -68,6 +69,15 @@ ifeq ($(UNAME_S),Linux)
     # Enable POSIX.1-2008 + BSD extensions on glibc with strict -std=c17
     CFLAGS  += -D_POSIX_C_SOURCE=200809L -D_DEFAULT_SOURCE
 endif
+
+ifeq ($(UNAME_S),FreeBSD)
+    # FreeBSD installs third-party libs (e.g. sqlite3) under /usr/local
+    LDFLAGS := -L/usr/local/lib $(LDFLAGS)
+    CFLAGS  += -I/usr/local/include
+endif
+
+# Common libraries (appended after platform-specific -L paths)
+LDFLAGS += -lsqlite3
 
 # ============================================================
 # Test configuration (Unity test framework)
