@@ -87,7 +87,7 @@ The tutorial demonstrates how to write portable C code using `#if defined(...)` 
 ### Edge Cases
 
 - Older compiler versions: Tutorial assumes C17 with GCC 12+ / Clang 15+. Earlier versions may fail on `_Generic` or other C11/C17 features — the book notes these requirements upfront
-- Known `fibonacci()` naming bug in `src/hello.c`: New tutorial chapters will not replicate this bug; function names accurately describe their behavior
+- Known `fibonacci()` naming bug in `src/hello.c` — fixed: function renamed to `factorial()` (logic was always factorial), called with n=20, output correct (`Factorial of 20 is 2432902008176640000`); new tutorial chapters keep names matching their behavior
 - Skipping chapters: Each `main_<topic>()` is independently callable from `main_basic()`, allowing non-linear study
 - Platform-specific headers: All `#include` for platform headers (e.g., `<mach/mach.h>`, `<sys/utsname.h>`) stay within appropriate `#ifdef` blocks
 - **Cognitive load**: Error-first learning means each concept shows the WRONG approach first — the tutorial must immediately follow with WHY it's wrong (compiler output/memory diagram) and the CORRECT fix, to avoid learners memorizing mistakes

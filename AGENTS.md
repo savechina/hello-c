@@ -21,7 +21,7 @@ hello-c/
 ├── include/                # global.h — project-wide declarations (main_hello, etc.)
 ├── src/
 │   ├── main.c            # SOLE entry point — orchestration only
-│   ├── hello.c/.h        # Main demo: fibonacci(factorial?), structs, basic/advance
+│   ├── hello.c/.h        # Main demo: factorial, structs, basic/advance
 │   ├── sysinfo.c/.h      # Multi-platform OS detection (327 lines, macOS/Linux/Solaris/FreeBSD)
 │   ├── basic/            # ~50 chapters, one `_sample.c` per topic (memory/strings/structs/IO)
 │   ├── advance/          # ~20 chapters with real implementations (threads, memory safety, net)
@@ -76,8 +76,6 @@ hello-c/
 
 ## ANTI-PATTERNS (THIS PROJECT)
 
-- **fibonacci/factorial bug**: `src/hello.c:7-11` — named `fibonacci()` but implements factorial logic (n * recursive, not F(n-1)+F(n-2))
-- **hello.c:21** — `fibonacci(60)` will overflow; the function is actually factorial
 - **Makefile globstar**: `**.c` non-portable (works on macOS, not all Make versions)
 - **Duplicate declarations**: `main_hello()` declared in both `include/global.h` AND `src/hello.h` — kept intentionally
 - **Deliberate unsafe call**: `src/basic/logging_sample.c:34` `sprintf` is an intentional counter-example (comment says 危险！无边界检查), wrapped in a scoped `#pragma clang diagnostic ignored "-Wdeprecated-declarations"` because `-fsanitize=address` makes ASan re-resolve the deprecated declaration and `-Werror` would fail the build
@@ -109,7 +107,7 @@ make help      # Show usage
 - Valgrind has **no arm64-Darwin support** — on Apple Silicon use `make asan` instead of `make test-valgrind`
 - LeakSanitizer is Linux-only; `make asan`/`make test-asan` set `detect_leaks=0` on Darwin. Use `MallocStackLogging=1 leaks --atExit` for leak hunting there — leaks are NOT auto-detected on macOS
 - On macOS `gcc` is Apple clang, which lacks `-fanalyzer`; `make analyze` probes and skips
-- **Test coverage is near-zero**: only `src/advance/calc.c` and `src/advance/raii_sample.c` have tests. There is no `test/basic/` directory
+- **Test coverage**: `calc`, `raii_sample`, `async_thread` and `variables` have Unity tests (6 binaries; `test/basic/` exists via `test/basic/test_variables_sample.c`)
 - The test link rule links every object except `main.o`, so adding a test needs no Makefile change
 
 ## Active Technologies

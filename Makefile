@@ -216,13 +216,15 @@ test-valgrind: $(TEST_BINS)
 # Detects heap/stack/global buffer overflow, use-after-free, double-free, invalid free.
 # NOTE: LeakSanitizer exists on Linux ONLY. On macOS, leak checking must use `leaks`
 # (Apple's tool) instead: MallocStackLogging=1 leaks --atExit -- ./build/bin/hello-asan
+# NOTE: allocator_may_return_null=1 — OOM-path tests (malloc(SIZE_MAX)) must get NULL,
+# not an ASan allocation-size-too-big abort.
 SAN_FLAGS := -fsanitize=address,undefined -fno-omit-frame-pointer -g -O1
 ASAN_BIN  := $(BIN_DIR)/$(TARGET)-asan
 
 ifeq ($(UNAME_S),Darwin)
-    ASAN_OPTS := detect_leaks=0
+    ASAN_OPTS := detect_leaks=0:allocator_may_return_null=1
 else
-    ASAN_OPTS := detect_leaks=1
+    ASAN_OPTS := detect_leaks=1:allocator_may_return_null=1
 endif
 
 .PHONY: asan

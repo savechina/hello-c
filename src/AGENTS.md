@@ -11,7 +11,7 @@ Sole module directory. All source `.c`/`.h` files live here in flat or subdirect
 | Task | Location | Notes |
 |------|----------|-------|
 | Entry point | `main.c:22` | `main(int argc, char *argv[])` — argv dispatch only |
-| Main demo | `hello.c:16` | Fibonacci (actually factorial); calls `main_basic_sample()` + `main_advance_sample()` |
+| Main demo | `hello.c:16` | `factorial()` demo; calls `main_basic_sample()` + `main_advance_sample()` |
 | System info | `sysinfo.c:41` | 327-line multi-platform: macOS/Linux/Solaris/FreeBSD via `#ifdef` |
 | Basic chapters | `basic/` | ~47 chapters, one `_sample.c` each |
 | Advance chapters | `advance/` | ~20 chapters with real implementations (threads, memory safety, net) |
