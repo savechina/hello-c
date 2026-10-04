@@ -29,9 +29,21 @@ static void demo_printf_family(void) {
     fprintf(stderr, "[ERROR] fprintf: 输出到 stderr（错误流）\n");
     fprintf(stdout, "[INFO] fprintf(stdout): 显式输出到 stdout\n");
 
-    /* sprintf → 写入字符数组（危险！无边界检查） */
+    /* sprintf → 写入字符数组（危险！无边界检查）
+   ⚠️ 本行是【故意的反例示范】，但 macOS SDK 把 sprintf 标记为 deprecated，
+   开启 -fsanitize=address 时 ASan runtime 会interpose sprintf 并重新解析该声明，
+   导致 -Wdeprecated-declarations 在 -Werror 下报错。
+   故在此处局部关闭该警告 —— push/pop 保证不影响文件其他部分。
+   GCC 不弃用 sprintf，故用 __clang__ 保护避免未知 pragma 警告。 */
+#if defined(__clang__)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+#endif
     char buf_sprintf[32];
     sprintf(buf_sprintf, "Hello, %s! Score: %d", "Alice", 95);
+#if defined(__clang__)
+#pragma clang diagnostic pop
+#endif
     printf("[INFO] sprintf: %s\n", buf_sprintf);
 
     /* snprintf → 写入字符数组（安全！指定最大长度） */
