@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "basic/variables_sample.h"
 #include <stdint.h>
+#include <inttypes.h>
 #include <string.h>
 
 /* ── const vs #define demo ── */
@@ -93,9 +94,14 @@ static void variables_cast_sample(void) {
     printf("  (double)7/2  = %.1f (cast first, then div)\n", (double)a / b);
 
     printf("\n  --- Integer Overflow Demo ---\n");
-    int32_t max = INT32_MAX;
-    printf("  INT32_MAX = %d\n", max);
-    printf("  INT32_MAX + 1 = %d (overflow! wraps to negative)\n", max + 1);
+    int32_t smax = INT32_MAX;
+    printf("  INT32_MAX = %d\n", (int)smax);
+    /* 无符号溢出是 C 标准定义的行为: 按模2^N 回绕 */
+    printf("  (uint32_t)INT32_MAX + 1 = %" PRIu32 "  ← 无符号: 标准定义, 按模回绕\n",
+           (uint32_t)smax + 1u);
+    printf("  (int32_t) 有符号溢出是【未定义行为】, 不是回绕!\n");
+    printf("  编译器有权假设它永不发生, -O2 下可能把相关判断整个优化掉。\n");
+    printf("  所以边界检查必须写成 if (x> INT32_MAX - n) 而不能靠事后判断结果。\n");
 }
 
 static void variables_safe_string_sample(void) {
