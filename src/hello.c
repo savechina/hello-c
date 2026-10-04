@@ -4,11 +4,11 @@
 /**
  * factorial
  */
-unsigned long long fibonacci(int n) {
+unsigned long long factorial(int n) {
   if (n == 0 || n == 1)
     return 1;
 
-  return n * fibonacci(n - 1);
+  return n * factorial(n - 1);
 }
 /**
  * hello main
@@ -17,8 +17,8 @@ int main_hello() {
     int x = 100020;
     printf("Hello, x = %d\n", x);
 
-    int num = 60;
-    printf("Factorial of %d is %llu\n", num, fibonacci(num));
+    int num = 20;
+    printf("Factorial of %d is %llu\n", num, factorial(num));
 
     main_basic_sample();
 

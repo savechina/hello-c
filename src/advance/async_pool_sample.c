@@ -72,7 +72,28 @@ static int pool_init(ThreadPool *pool, int num_workers, int max_queue)
     pthread_cond_init(&pool->not_full, NULL);
 
     for (int i = 0; i < num_workers; i++) {
-        pthread_create(&pool->workers[i], NULL, worker_loop, pool);
+        if (pthread_create(&pool->workers[i], NULL, worker_loop, pool) != 0) {
+            /* 失败处理 (failure handling): 先置 shutdown 并唤醒已启动的 worker
+             * (否则它们阻塞在 not_empty 上, join 会永久挂起), join 回收 0..i-1,
+             * 销毁已初始化的 mutex/cond (与 pool_shutdown 一致), 再按 calloc
+             * 失败路径释放, 避免零句柄被 pool_shutdown 误 join。 */
+            pthread_mutex_lock(&pool->mutex);
+            pool->shutdown = 1;
+            pthread_cond_broadcast(&pool->not_empty);
+            pthread_mutex_unlock(&pool->mutex);
+            for (int j = 0; j < i; j++) {
+                pthread_join(pool->workers[j], NULL);
+            }
+            pthread_mutex_destroy(&pool->mutex);
+            pthread_cond_destroy(&pool->not_empty);
+            pthread_cond_destroy(&pool->not_full);
+            fprintf(stderr, "  [Error] pool_init: pthread_create 失败\n");
+            free(pool->workers);
+            free(pool->queue);
+            pool->workers = NULL;
+            pool->queue = NULL;
+            return -1;
+        }
     }
     return 0;
 }

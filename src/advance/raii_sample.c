@@ -174,7 +174,13 @@ static size_t demo3_align_up(size_t v, size_t a)
 bool raii_arena_init(arena_t *a, size_t cap)
 {
     a->base = malloc(cap);
-    if (a->base == NULL) return false;
+    if (a->base == NULL) {
+        /* 初始化失败时返回全零对象: 失败路径同样置零 cap/used，
+         * 调用方拿到的是 zeroed object 而不是 indeterminate 字段。 */
+        a->cap = 0;
+        a->used = 0;
+        return false;
+    }
     a->cap = cap;
     a->used = 0;
     return true;

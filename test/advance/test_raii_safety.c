@@ -3,7 +3,8 @@
  * @brief Unit tests for the memory-safety primitives in raii_sample.c.
  *
  * These guard the invariants the abstractions exist to provide:
- * - arena: overflow-safe capacity checks, max_align_t alignment, single destroy
+ * - arena: overflow-safe capacity checks, max_align_t alignment, single destroy,
+ *          failed init zeroes the object instead of leaving indeterminate fields
  * - Option<T>: SOME/NONE discrimination, out-param not written when NONE
  * - Buf64:  bounds enforced against capacity, len never corrupted on rejection
  */
@@ -79,6 +80,19 @@ void test_arena_destroy_resets_state(void)
     TEST_ASSERT_NULL(a.base);
     TEST_ASSERT_EQUAL_UINT(0u, (unsigned)a.used);
     TEST_ASSERT_EQUAL_UINT(0u, (unsigned)a.cap);
+}
+
+/* malloc(SIZE_MAX) fails deterministically: the failed init must hand back a
+ * zeroed object, so a later raii_arena_alloc reads cap==0 instead of garbage. */
+void test_arena_init_failure_zeroes_state(void)
+{
+    arena_t a;
+    memset(&a, 0xAA, sizeof(a));
+
+    TEST_ASSERT_FALSE(raii_arena_init(&a, SIZE_MAX));
+    TEST_ASSERT_NULL(a.base);
+    TEST_ASSERT_EQUAL_UINT(0u, (unsigned)a.cap);
+    TEST_ASSERT_EQUAL_UINT(0u, (unsigned)a.used);
 }
 
 /* --- Option<T> --- */
@@ -166,6 +180,7 @@ int main(void)
     RUN_TEST(test_arena_alloc_aligns_to_max_align);
     RUN_TEST(test_arena_rejects_overflow_request);
     RUN_TEST(test_arena_destroy_resets_state);
+    RUN_TEST(test_arena_init_failure_zeroes_state);
     RUN_TEST(test_opt_some_yields_value);
     RUN_TEST(test_opt_none_reports_absence);
     RUN_TEST(test_opt_none_handles_null_out);
