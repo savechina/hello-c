@@ -7,6 +7,7 @@
 | 错误处理 | 🟡 | 40 min  | [error-handling](error-handling.md) |
 | 原子类型 | 🟡 | 35 min  | [atomic-types](atomic-types.md) |
 | 不透明指针 | 🔴 | 50 min  | [opaque-pointers](opaque-pointers.md) |
+| 内存安全工程 | 🔴 | 55 min  | [memory-safety](memory-safety.md) |
 | 异步与线程 | 🔴 | 50 min  | [async](async.md) |
 | 数据结构遍历 | 🔴 | 50 min  | [iterators](iterators.md) |
 | 高级多态 | 🔴 | 45 min  | [advanced-polymorphism](advanced_polymorphism.md) |

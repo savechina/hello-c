@@ -63,6 +63,7 @@
   - [错误处理](./advance/error-handling.md) 🟡
   - [原子类型](./advance/atomic-types.md) 🟡
   - [不透明指针](./advance/opaque-pointers.md) 🔴
+  - [内存安全工程](./advance/memory-safety.md) 🔴
   - [迭代器与遍历](./advance/iterators.md) 🔴
   - [高级多态](./advance/advanced_polymorphism.md) 🔴
   - [数据库 (SQLite)](./advance/database.md) 🟡
