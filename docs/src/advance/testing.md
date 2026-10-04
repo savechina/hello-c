@@ -366,6 +366,37 @@ make test
   → 全部通过 → exit code 0
 ```
 
+### 在 Sanitizer 下运行 —— make test-asan
+
+`make test` 编译出来的测试二进制**不带任何插桩**——它对内存错误是完全瞎的。
+"测试全绿"和"代码没有内存 bug"是两件毫不相干的事。要让测试真正兜底：
+
+```bash
+make test        # 只验证断言逻辑
+make test-asan   # 同样的测试，跑在 ASan + UBSan 下
+```
+
+`make test-asan` 会**重新编译全部源码**加 `-fsanitize=address,undefined`，
+并用 `UBSAN_OPTIONS=halt_on_error=1` 保证一旦触发未定义行为就判红。
+
+**已验证的门禁效果（mutation testing）**：
+
+| 把 bug 改回去 | `make test` | `make test-asan` | `make asan` |
+|---|---|---|---|
+| 有符号溢出 `max + 1`（`variables_sample.c`） | ✅ 绿（瞎的） | **🔴 红** — UBSan 报 `signed integer overflow` | 🔴 红 |
+| 分离线程读 `&stack_local`（`async_thread_sample.c`） | ✅ 绿（瞎的） | ✅ 绿 ← 检测不到 | **🔴 红** — `stack-use-after-scope` |
+
+> ⚠️ **诚实的边界**: 单元测试并不能包打天下。同一个 bug，`make test-asan` 抓不到而
+> `make asan` 抓得到——因为两个二进制**之后执行的代码不同**，栈帧复用时机不同，
+> ASan 是否命中取决于时序。**工具检测是概率性的，结构性修复才是确定的。**
+
+**当前覆盖范围**（新增测试）：
+
+- `test/basic/test_variables_sample.c` — 溢出示例的 UBSan 门禁
+- `test/advance/test_async_thread_lifecycle.c` — 线程 demo 冒烟测试（真正的门禁是 `make asan`）
+- `test/advance/test_raii_safety.c` — 内存安全原语（arena / Option / Buf64）不变量
+- `test/advance/test_calc_*.c` — 纯函数单元测试
+
 ## Mock 函数 — 函数指针注入
 
 Mock 是测试中最重要的概念之一：**用假数据替换真实依赖**。

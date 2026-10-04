@@ -210,6 +210,49 @@ gcc -Wall -Wextra -Werror -std=c17
 
 **`-Werror` 强制修复**：warning → error，编译失败。不允许「带警告交付」。
 
+## 动态分析 — ASan / UBSan
+
+编译期检查抓不到运行时才发生的错误。项目 Makefile 已内置三个门禁：
+
+```bash
+make asan       # 整个程序在 ASan + UBSan 下编译并运行
+make test-asan  # 所有 Unity 测试在 ASan + UBSan 下运行
+make analyze    # GCC -fanalyzer 静态分析（需要真 GCC: make analyze CC=gcc-14）
+```
+
+核心编译选项（见 Makefile `SAN_FLAGS`）：
+
+```makefile
+SAN_FLAGS := -fsanitize=address,undefined -fno-omit-frame-pointer -g -O1
+```
+
+**各自抓什么**：
+
+| 检查器 | 抓到的 bug | 例子 |
+|---|---|---|
+| AddressSanitizer | 缓冲区溢出、use-after-free、**stack-use-after-scope**、double-free | 分离线程读已销毁的栈变量 |
+| UBSan | 未定义行为：**有符号溢出**、越界下标、空指针解引用 | `INT32_MAX + 1` 当成"回绕" |
+| GCC `-fanalyzer` | 编译期路径分析：泄漏、double-free | `malloc` 后某个分支忘了 `free` |
+
+**平台限制（重要）**：
+
+| 工具 | macOS (Apple Silicon) | Linux |
+|------|----------------------|-------|
+| ASan / UBSan | ✅ | ✅ |
+| LeakSanitizer（泄漏） | ❌ 不支持 | ✅ |
+| Valgrind | ❌ 无 arm64 支持 | ✅ |
+| `-fanalyzer` | ❌ Apple clang 没有 | ✅ |
+
+macOS 上查泄漏改用自带工具：
+
+```bash
+MallocStackLogging=1 leaks --atExit -- ./build/bin/hello-asan
+```
+
+> ⚠️ **诚实的边界**：ASan 检测依赖时序，同一个 bug 可能 `make asan` 抓得到、
+> `make test-asan` 抓不到（栈帧复用时机不同）。**工具是概率性的，结构性修复才是确定的。**
+> 详见 [内存安全工程](memory-safety.md) 与 [测试框架](testing.md) 的 mutation 表。
+
 ## 集成覆盖率到 Makefile
 
 在 Makefile 中添加覆盖率目标：
@@ -261,6 +304,9 @@ cppcheck --enable=all --error-exitcode=1 src/
 
 # 编译器警告计数为 0
 make build 2>&1 | grep -c 'warning' || true
+
+# 内存安全门禁（ASan + UBSan）
+make asan && make test-asan
 ```
 
 质量门禁 = 代码的「出厂检验标准」。不达标 → 拒绝合并。

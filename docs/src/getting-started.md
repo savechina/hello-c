@@ -141,6 +141,17 @@ $ make help
 
 显示所有可用的 Make 目标和配置信息。
 
+### 内存安全检查
+
+```bash
+$ make asan       # 整个程序在 AddressSanitizer + UBSan 下编译并运行
+$ make test-asan  # 所有测试在 ASan + UBSan 下运行
+```
+
+C 语言没有所有权检查器，这两个目标是项目自带的「兜底」——缓冲区溢出、use-after-free、
+未定义行为都会在运行时直接判红。提交前建议至少跑一次 `make asan`。
+（macOS 上不检测内存泄漏，详见 [工具链](advance/tools.md)。）
+
 ## 阅读文档
 
 教程文档由 **mdBook** 生成。你可以本地预览：
