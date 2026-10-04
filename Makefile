@@ -180,10 +180,15 @@ $(BUILD_DIR)/test-vendor/%.o: $(TEST_VENDOR_DIR)/%.c | $(BUILD_DIR)
 	@mkdir -p $(dir $@)
 	$(CC) $(TEST_CFLAGS) -c $< -o $@
 
-$(BUILD_DIR)/test/%: $(TEST_DIR)/%.c $(TEST_VENDOR_OBJS) $(OBJ_DIR)/advance/calc.o | $(BUILD_DIR)/test
+# Link every src object except main.o, which owns the sole main().
+# Verified: the object set has no duplicate symbols, so any test can reach
+# any module without the rule needing to hardcode a single .o per test file.
+TEST_LINK_OBJS := $(filter-out $(OBJ_DIR)/main.o,$(OBJECTS))
+
+$(BUILD_DIR)/test/%: $(TEST_DIR)/%.c $(TEST_VENDOR_OBJS) $(OBJECTS) | $(BUILD_DIR)/test
 	@mkdir -p $(dir $@)
 	$(CC) $(TEST_CFLAGS) -c $< -o $@.o
-	$(CC) $(TEST_CFLAGS) $@.o $(TEST_VENDOR_OBJS) $(OBJ_DIR)/advance/calc.o -o $@
+	$(CC) $(TEST_CFLAGS) $@.o $(TEST_VENDOR_OBJS) $(TEST_LINK_OBJS) $(LDFLAGS) -o $@
 	@echo "Test binary built: $@"
 
 # --- Test Target ---
@@ -196,6 +201,7 @@ test: $(TEST_BINS)
 	[ $$failed -eq 0 ]
 
 # --- Valgrind Test Target ---
+# NOTE: Valgrind has no arm64-Darwin support. On Apple Silicon use `make asan`.
 .PHONY: test-valgrind
 test-valgrind: $(TEST_BINS)
 	@failed=0; \
@@ -204,6 +210,74 @@ test-valgrind: $(TEST_BINS)
 		valgrind --leak-check=full --error-exitcode=1 $$t || { failed=1; }; \
 	done; \
 	[ $$failed -eq 0 ]
+
+# --- Sanitizer Target (ASan + UBSan) ---
+# Portable memory-safety gate: works on both macOS and Linux, unlike Valgrind.
+# Detects heap/stack/global buffer overflow, use-after-free, double-free, invalid free.
+# NOTE: LeakSanitizer exists on Linux ONLY. On macOS, leak checking must use `leaks`
+# (Apple's tool) instead: MallocStackLogging=1 leaks --atExit -- ./build/bin/hello-asan
+SAN_FLAGS := -fsanitize=address,undefined -fno-omit-frame-pointer -g -O1
+ASAN_BIN  := $(BIN_DIR)/$(TARGET)-asan
+
+ifeq ($(UNAME_S),Darwin)
+    ASAN_OPTS := detect_leaks=0
+else
+    ASAN_OPTS := detect_leaks=1
+endif
+
+.PHONY: asan
+asan:
+	@echo "Building with AddressSanitizer + UndefinedBehaviorSanitizer..."
+	@$(CC) $(SOURCES) $(VENDOR_SOURCES) $(SAN_FLAGS) $(CFLAGS) $(LDFLAGS) -o $(ASAN_BIN)
+	@echo "Running under ASan+UBSan ($(ASAN_OPTS))..."
+	@ASAN_OPTIONS=$(ASAN_OPTS) UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1 $(ASAN_BIN) < /dev/null
+
+# --- Test Under Sanitizers ---
+# `make test` has no instrumentation, so it cannot catch leaks, overflows or UB.
+# This builds instrumented objects into a SEPARATE dir (so the normal build/obj
+# is never polluted) and runs each test binary under ASan+UBSan.
+ASAN_OBJ_DIR  := $(BUILD_DIR)/obj-asan
+ASAN_SRCS     := $(filter-out $(SRC_DIR)/main.c,$(SOURCES) $(VENDOR_SOURCES))
+ASAN_OBJECTS  := $(patsubst $(SRC_DIR)/%.c,$(ASAN_OBJ_DIR)/%.o,$(filter $(SRC_DIR)/%,$(ASAN_SRCS)))
+ASAN_VENDOR_O := $(patsubst $(SRC_DIR)/%.c,$(ASAN_OBJ_DIR)/%.o,$(filter $(VENDOR_DIR)/%,$(ASAN_SRCS)))
+ASAN_TEST_BINS:= $(patsubst $(TEST_DIR)/%.c,$(BUILD_DIR)/test-asan/%,$(TEST_SOURCES))
+
+$(ASAN_OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(SAN_FLAGS) -c $< -o $@
+
+.PHONY: test-asan
+test-asan: $(ASAN_TEST_BINS)
+	@echo "=== Running tests under ASan+UBSan ($(ASAN_OPTS)) ==="
+	@failed=0; \
+	for t in $(ASAN_TEST_BINS); do \
+		echo "--- $$t"; \
+		ASAN_OPTIONS=$(ASAN_OPTS) UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1 ./$$t < /dev/null || { failed=1; }; \
+	done; \
+	[ $$failed -eq 0 ] && echo "=== all tests clean under ASan+UBSan ==="
+
+$(BUILD_DIR)/test-asan/%: $(TEST_DIR)/%.c $(ASAN_OBJECTS) $(ASAN_VENDOR_O) $(TEST_VENDOR_OBJS)
+	@mkdir -p $(dir $@)
+	$(CC) $(TEST_CFLAGS) $(SAN_FLAGS) -c $< -o $@.o
+	$(CC) $(TEST_CFLAGS) $@.o $(TEST_VENDOR_OBJS) $(ASAN_OBJECTS) $(ASAN_VENDOR_O) \
+		$(SAN_FLAGS) $(LDFLAGS) -o $@
+
+# --- Static Analysis Target ---
+# NOTE: -fanalyzer is GCC-only. On macOS `gcc` is Apple clang, which lacks it,
+# so we probe for support and skip cleanly. For real GCC: `make analyze CC=gcc-14`.
+.PHONY: analyze
+analyze:
+	@if echo 'int main(void){return 0;}' | $(CC) -fanalyzer -x c - -o /dev/null >/dev/null 2>&1; then \
+		echo "Running GCC static analyzer (-fanalyzer) on src/hello.c..."; \
+		$(CC) -std=c17 -fanalyzer -Wanalyzer-double-free -Wanalyzer-malloc-leak \
+			-Wanalyzer-use-of-uninitialized-value -Wanalyzer-null-argument \
+			-I$(INCLUDE_DIR) $(addprefix -I,$(INC_DIRS)) -c src/hello.c -o /dev/null && \
+		echo "analyzer pass complete"; \
+	else \
+		echo "SKIP: $(CC) does not support -fanalyzer (it is GCC-only)."; \
+		echo "      On macOS, 'gcc' is Apple clang. Install real GCC (brew install gcc)"; \
+		echo "      and re-run with: make analyze CC=gcc-14"; \
+	fi
 
 # --- Clean Target ---
 .PHONY: clean
@@ -222,6 +296,11 @@ help:
 	@echo "  all        (default) Builds the final executable '$(TARGET)'."
 	@echo "  build      Builds the final executable '$(TARGET)'."
 	@echo "  run        Run the final executable '$(TARGET)'."
+	@echo "  asan       Build + run under AddressSanitizer + UndefinedBehaviorSanitizer (memory-safety gate)."
+	@echo "  analyze    Run GCC static analyzer (-fanalyzer) for leaks/double-free/uninit reads."
+	@echo "  test       Build + run Unity tests."
+	@echo "  test-asan  Run Unity tests under ASan+UBSan (catches memory errors plain 'test' cannot)."
+	@echo "  test-valgrind  Run Unity tests under Valgrind (NOT available on arm64 macOS — use 'make test-asan')."
 	@echo "  sample CHAPTER=<name>  Rebuild and run (all _sample.c files included)."
 	@echo "  sample-all             Same as 'run' — full tutorial suite."
 	@echo "  clean      Removes all compiled objects and the executable."
