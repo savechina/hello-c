@@ -62,6 +62,10 @@ int main_advance_sample(void) {
     main_web_concurrent_sample();
     printf("\n");
 
+    printf("--- 内存安全工程 (Memory Safety Engineering) ---\n");
+    main_raii_sample();
+    printf("\n");
+
     printf("进阶教程完毕。\n");
     return 0;
 }

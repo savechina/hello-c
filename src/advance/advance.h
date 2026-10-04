@@ -34,6 +34,7 @@ int main_database_sample(void);
 int main_web_socket_sample(void);
 int main_web_concurrent_sample(void);
 int main_async_sample(void);
+int main_raii_sample(void);
 
  /* Coordinator entry point */
 int main_advance_sample(void);
