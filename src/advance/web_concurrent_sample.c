@@ -232,6 +232,11 @@ static void web_concurrent_thread_per_connection_sample(void)
 
         /* 给线程传递 fd */
         int *arg = malloc(sizeof(int));
+        if (arg == NULL) {
+            printf("    [Error] malloc\n");
+            close(client_fd);
+            continue;
+        }
         *arg = client_fd;
 
         pthread_t tid;
