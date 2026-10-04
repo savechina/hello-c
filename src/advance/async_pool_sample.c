@@ -46,12 +46,22 @@ typedef struct {
 } ThreadPool;
 
 static void *worker_loop(void *arg);
-static void pool_init(ThreadPool *pool, int num_workers, int max_queue);
+static int  pool_init(ThreadPool *pool, int num_workers, int max_queue);
 
-static void pool_init(ThreadPool *pool, int num_workers, int max_queue)
+static int pool_init(ThreadPool *pool, int num_workers, int max_queue)
 {
     pool->workers = calloc((size_t)num_workers, sizeof(pthread_t));
     pool->queue = calloc((size_t)max_queue, sizeof(Task));
+    /* 内存安全: 必须在下面 pthread_create 解引用 workers[] 之前检查，
+     * 否则 NULL 会被当作数组首地址传入 → 空指针解引用 (undefined behavior)。 */
+    if (pool->workers == NULL || pool->queue == NULL) {
+        fprintf(stderr, "  [Error] pool_init: calloc 失败\n");
+        free(pool->workers);
+        free(pool->queue);
+        pool->workers = NULL;
+        pool->queue = NULL;
+        return -1;
+    }
     pool->queue_head = 0;
     pool->queue_tail = 0;
     pool->queue_count = 0;
@@ -64,6 +74,7 @@ static void pool_init(ThreadPool *pool, int num_workers, int max_queue)
     for (int i = 0; i < num_workers; i++) {
         pthread_create(&pool->workers[i], NULL, worker_loop, pool);
     }
+    return 0;
 }
 
 static void *worker_loop(void *arg)
@@ -149,7 +160,7 @@ static void async_pool_create_sample(void)
     const int max_queue = POOL_MAX_TASKS;
 
     /* 只是创建 — 不提交任务，演示后立即关闭 */
-    pool_init(&pool, num_workers, max_queue);
+    if (pool_init(&pool, num_workers, max_queue) != 0) return;
     printf("  线程池已创建: %d 个 worker, 队列容量 %d\n", num_workers, max_queue);
 
     pool_shutdown(&pool, num_workers);
@@ -186,7 +197,7 @@ static void async_pool_submit_sample(void)
 
     ThreadPool pool;
     const int num_workers = 2;
-    pool_init(&pool, num_workers, POOL_MAX_TASKS);
+    if (pool_init(&pool, num_workers, POOL_MAX_TASKS) != 0) return;
 
     IntTask tasks[6];
     for (int32_t i = 0; i < 6; i++) {
@@ -236,7 +247,7 @@ static void async_pool_shutdown_sample(void)
 
     ThreadPool pool;
     const int num_workers = 2;
-    pool_init(&pool, num_workers, POOL_MAX_TASKS);
+    if (pool_init(&pool, num_workers, POOL_MAX_TASKS) != 0) return;
 
     LabelTask labels[] = {
         {0, "准备数据"},
