@@ -140,17 +140,55 @@ static void smart_pointers_factory_pattern_sample(void)
    Demo 3: RAII-style 宏 —— 作用域结束时自动清理
    --------------------------------------------------------- */
 
-/* 文件 RAII 宏: 在 for 循环中自动关闭文件 */
+/* 方式 A: for 循环宏。清理发生在 for 的第三个表达式。
+   ⚠️ 局限: 循环体里的 return / break / goto / continue 会跳过清理表达式 → 泄漏。 */
 #define WITH_FILE(var, path, mode) \
     for (FILE *var = fopen(path, mode); \
          var != NULL; \
          fclose(var), var = NULL)
 
-/* malloc RAII 宏: 离开作用域时自动 free */
 #define WITH_MALLOC(ptr, type, count) \
     for (type *ptr = calloc(count, sizeof(type)); \
          ptr != NULL; \
          (free(ptr), ptr = NULL))
+
+/* 方式 B: __attribute__((cleanup)) —— 由编译器在作用域退出时插入清理调用。
+   ✅ 优势: return / break / goto 全部安全，无需依赖跳转纪律。
+   注意属性写在【变量声明】上，写在函数上会触发 -Wignored-attributes。 */
+static void __attribute__((unused)) raii_close_file(FILE **fp)
+{
+    if (*fp != NULL) { fclose(*fp); *fp = NULL; }
+}
+
+static void __attribute__((unused)) raii_free(void **p)
+{
+    if (*p != NULL) { free(*p); *p = NULL; }
+}
+
+/* ⚠️ 常见陷阱: cleanup 函数收到的参数是【变量类型的指针】。
+   变量声明为 void*  → 清理函数必须收 void**
+   变量声明为 int32_t* → 清理函数必须收 int32_t**
+   用错类型会报: 'cleanup' function parameter type is incompatible */
+static int raii_early_return_demo(int use_for_macro)
+{
+    if (use_for_macro) {
+        WITH_MALLOC(arr, int32_t, 4) {
+            arr[0] = 1;
+            printf("    (for 宏版本) 即将从循环体中间 return → 清理表达式被跳过\n");
+            free(arr);   /* 真实代码这里会泄漏；手动释放仅为让 ASan 门禁保持绿色 */
+            arr = NULL;
+            return 42;
+        }
+        return 0;
+    }
+
+    void *__attribute__((__cleanup__(raii_free))) raw = calloc(4, sizeof(int32_t));
+    if (raw == NULL) return -1;
+    int32_t *arr = (int32_t *)raw;
+    arr[0] = 1;
+    printf("    (cleanup 属性版本) 即将从函数中间 return → 编译器仍插入 free\n");
+    return 42;
+}
 
 static void smart_pointers_raii_macros_sample(void)
 {
@@ -183,6 +221,18 @@ static void smart_pointers_raii_macros_sample(void)
     printf("    }\n");
     printf("    // 退出 for 时, 第三个表达式 (cleanup) 自动执行\n");
     printf("    // 等价于 Rust 的 drop / C++ 的 destructor\n\n");
+
+    printf("  ⚠️  for 宏的局限: 循环体里 return / break / goto 会跳过清理\n");
+    printf("  ✅  __attribute__((cleanup)) 由编译器插入清理调用, 不受跳转影响\n\n");
+
+    printf("  [作用域中途 return 对比]\n");
+    int r1 = raii_early_return_demo(1);
+    printf("    for 宏版本返回: %d\n", r1);
+    int r2 = raii_early_return_demo(0);
+    printf("    cleanup 属性版本返回: %d (内存已自动释放)\n\n", r2);
+
+    printf("  另外: exit() / _exit() / longjmp() 会【绕过】栈展开,\n");
+    printf("  只触发 atexit / __attribute__((destructor)), 不触发 cleanup。\n\n");
 }
 
 /* ---------------------------------------------------------
@@ -248,7 +298,11 @@ static void smart_pointers_generic_array_sample(void)
         int32_t *val = malloc(sizeof(int32_t));
         if (val == NULL) break;
         *val = i * 10;
-        generic_array_push(arr, val);
+        /* push 失败时容器未接管所有权，val 必须自行释放否则泄漏 */
+        if (generic_array_push(arr, val) != 0) {
+            free(val);
+            break;
+        }
     }
 
     printf("  通用数组 (void* 类型擦除):\n");
