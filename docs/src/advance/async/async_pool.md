@@ -138,9 +138,34 @@ if (count == max_queue) {
 ```c
 /* ❌ 一个任务耗时 10 秒 → 其他 worker 空闲 */
 pool_submit(pool, long_task, &data);   // 10 秒
-pool_submit(pool, quick_task, &data);  // 等 10 秒才被执行
+pool_submit(pool, quick_task, &data);   // 等 10 秒才被执行
 // ✅ 拆分长任务，或限制队列深度做背压 (backpressure)
 ```
+
+### ❌ 错误 4: 分配失败不检查就用
+
+```c
+pool->workers = calloc(n, sizeof(pthread_t));
+/* ❌ 没检查 NULL 就往下走 */
+for (int i = 0; i < n; i++)
+    pthread_create(&pool->workers[i], ...);   // NULL 解引用!
+```
+
+`calloc` 返回 `NULL` 是**正常控制流**（内存耗尽），不是"不可能发生"。
+
+```c
+/* ✅ 修复：init 返回错误码，调用方直接放弃 */
+if (pool->workers == NULL || pool->queue == NULL) {
+    fprintf(stderr, "  [Error] pool_init: calloc 失败\n");
+    free(pool->workers); free(pool->queue);
+    return -1;
+}
+/* 调用方 */
+if (pool_init(&pool, n, q) != 0) return;   // 失败路径显式处理
+```
+
+> 📌 **配套代码**：`src/advance/async_pool_sample.c` 的 `pool_init()` 现在返回 `int`，
+> 三个调用点都检查返回值。NULL 检查必须在**指针被解引用之前**（即 `pthread_create` 之前），而不是只在 malloc 后面"顺手写一下"。
 
 ## 动手练习
 

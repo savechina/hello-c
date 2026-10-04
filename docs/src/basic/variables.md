@@ -265,20 +265,40 @@ double avg2 = (double)7 / 2; /* 方法2：强制类型转换 */
 ### 错误 3：溢出——超出变量范围
 
 ```c
-/* ❌ 错误代码 */
+/* ❌ 错误代码：把有符号溢出当成"回绕" */
 #include <stdint.h>
 int32_t max = 2147483647;
-int32_t next = max + 1;  /* 溢出！回绕到 -2147483648 */
-printf("%d\n", next);    /* 输出: -2147483648 */
+int32_t next = max + 1;  /* 这不是"回绕到 -2147483648"，是【未定义行为】! */
+printf("%d\n", next);    /* 运行时可能恰好得到 -2147483648，但那只是运气 */
 ```
 
+> ⚠️ **关键区分（很多人搞错）**
+> - **有符号整数溢出 (signed overflow)**：C 标准规定是**未定义行为 (UB)**。编译器有权假设它永不发生，`-O2` 下甚至会把依赖它的判断整个优化掉。"这次编译出来是回绕" ≠ "标准说它回绕"。
+> - **无符号整数溢出 (unsigned overflow)**：标准**明确定义**——按模 2^N 回绕，可依赖。
+>
+> 所以"溢出回绕到负数"只对 `unsigned` 成立；对 `int32_t` 那句注释本身就是错的。
+
 ```c
-/* ✅ 修复：使用更大类型 */
+/* ✅ 修复 1：无符号回绕是标准定义的行为，可以依赖 */
+#include <stdint.h>
+uint32_t u = UINT32_MAX;
+uint32_t wrapped = u + 1u;          /* 0，标准保证 */
+
+/* ✅ 修复 2：用更大类型 */
 #include <stdint.h>
 int64_t max = 2147483647LL;
-int64_t next = max + 1;  /* 安全 */
+int64_t next = max + 1;             /* 安全 */
 printf("%lld\n", (long long)next);  /* 输出: 2147483648 */
+
+/* ✅ 修复 3：边界检查必须写在【加法之前】——不能靠事后看结果对不对 */
+int32_t add(int32_t x, int32_t n) {
+    if (x > INT32_MAX - n) return INT32_MAX;   /* 事前判断，运算本身绝不溢出 */
+    return x + n;
+}
 ```
+
+> 📌 **配套代码**：`src/basic/variables_sample.c` 的 `variables_cast_sample()` 演示了正确写法；
+> `test/basic/test_variables_sample.c` 在 `make test-asan` 下由 UBSan 把任何有符号溢出直接判红。
 
 ## 动手练习
 

@@ -182,6 +182,36 @@ pthread_join(t, NULL);  // ❌ 未定义行为！
 // ✅ 已 detach 的线程不能 join
 ```
 
+### ❌ 错误 4: 把父函数的栈变量交给分离线程
+
+```c
+static void *worker(void *arg) {
+    int32_t id = *(const int32_t *)arg;   // 读到的可能是死栈帧
+    ...
+}
+
+static void demo(void) {
+    int32_t id = 42;
+    pthread_create(&t, NULL, worker, &id);  // ❌ 传了 &id
+    pthread_detach(t);
+    return;   // ← id 随帧销毁，分离线程可能还在读它 → stack-use-after-scope
+}
+```
+
+joined 线程没问题——你 `pthread_join` 之后栈变量才死。**分离线程没有 join 这道栅栏**，
+它的生命周期完全可能超过父函数。
+
+```c
+/* ✅ 修复：按值传（POSIX 允许整数经 void* 传递） */
+pthread_create(&t, NULL, worker, (void *)(intptr_t)42);
+// worker 内: int32_t id = (int32_t)(intptr_t)arg;
+```
+
+> 📌 **怎么验证**: 这个 bug 由 `make asan` 抓（回退成 `&id` 后 3/3 次报 `stack-use-after-scope`）；
+> 注意它**不会**被 `make test-asan` 抓——单元测试二进制的栈帧复用时机不同。
+> 检测依赖时序，所以**结构上按值传递**才是正解，不要指望工具兜底。
+> 详见 [内存安全工程](../memory-safety.md)。
+
 ## 动手练习
 
 ### 🟢 入门：创建 3 个线程
@@ -321,6 +351,7 @@ Rust 用所有权系统保证安全，C 则需要手动管理。
 - **pthread_join** 等待线程结束，回收资源
 - **void\*** 传参时记住「每个线程的栈地址要独立」
 - **pthread_detach** = Fire-and-forget，之后不能再 join
+- **分离线程没有 join 栅栏**——绝不能把指向父函数栈变量的指针交给它（按值传）
 - 线程的退出顺序不可预测——这就是并发
 
 ## 术语表
