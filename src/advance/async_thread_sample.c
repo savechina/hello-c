@@ -160,7 +160,9 @@ static void async_thread_return_sample(void)
 
 static void *async_thread_detached_sample_worker(void *arg)
 {
-    int32_t id = *(const int32_t *)arg;
+    /* 分离线程的栈帧可能比主函数活得久，所以不能接收指向主函数局部变量的指针。
+     * POSIX 允许把整数经 (void *)(intptr_t) 传参，这里按值接收。 */
+    int32_t id = (int32_t)(intptr_t)arg;
     printf("  [分离线程 %" PRId32 "] 我在后台安静地工作...\n", id);
     printf("  [分离线程 %" PRId32 "] 做完了，自动回收。\n", id);
     return NULL;
@@ -170,10 +172,10 @@ static void async_thread_detached_sample(void)
 {
     printf("--- 4. 分离线程 (pthread_detach — Fire-and-forget) ---\n");
 
-    int32_t id = 42;
     pthread_t t;
 
-    pthread_create(&t, NULL, async_thread_detached_sample_worker, &id);
+    pthread_create(&t, NULL, async_thread_detached_sample_worker,
+    (void *)(intptr_t)42);
     /* 告诉系统：这个线程结束后自动回收，不需要 join */
     pthread_detach(t);
 
