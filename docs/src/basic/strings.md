@@ -32,4 +32,4 @@ printf("大小: %zu\n", sizeof(greeting));  // 10（含 \0）
 
 ---
 
-> 本章完整示例代码位于 [`src/basic/strings_sample.c`](https://github.com/savechina/hello-c/blob/main/src/basic/strings_sample.c)。
+> 本章四个子章节的示例代码分别位于 [`src/basic/string_basics_sample.c`](https://github.com/savechina/hello-c/blob/main/src/basic/string_basics_sample.c)、[`string_operations_sample.c`](https://github.com/savechina/hello-c/blob/main/src/basic/string_operations_sample.c)、[`safe_strings_sample.c`](https://github.com/savechina/hello-c/blob/main/src/basic/safe_strings_sample.c)、[`string_processing_sample.c`](https://github.com/savechina/hello-c/blob/main/src/basic/string_processing_sample.c)。

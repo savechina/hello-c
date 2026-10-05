@@ -32,7 +32,7 @@ A runnable C source file that demonstrates a chapter's concept.
 - `chapter_ref` (string) — linked TutorialChapter filename stem
 - `c_file` (string) — source file, e.g., `src/basic/pointers.c`
 - `h_file` (string) — header file, e.g., `src/basic/pointers.h`
-- `sample_file` (string) — sample file, e.g., `src/basic/pointers_sample.c`
+- `sample_file` (string) — sample file, e.g., `src/basic/pointer_basics_sample.c`
 - `entry_function` (string) — `main_<topic>()` in both integrated and sample files (no `main()`, avoids link conflicts)
 - `valgrind_clean` (boolean) — true if zero leaks/zero errors under valgrind
 - `warnings` (integer) — must be 0 under `-Wall -Wextra -Werror`
