@@ -79,6 +79,21 @@ endif
 # Common libraries (appended after platform-specific -L paths)
 LDFLAGS += -lsqlite3
 
+# --- Binary Hardening (normal build only; asan/tsan/test keep plain flags) ---
+# Per the OSSF Compiler Hardening Guide: stack-protector-strong on all
+# platforms; Linux additionally gets _FORTIFY_SOURCE=3 at compile time and
+# full RELRO + immediate binding + PIE at link time. Apple's ld rejects
+# -z,relro and darwin PIE is already the default, so macOS gets only the
+# stack protector. Sanitizer/test rules below keep plain CFLAGS/LDFLAGS.
+HARDEN_CFLAGS  := -fstack-protector-strong
+HARDEN_LDFLAGS :=
+ifeq ($(UNAME_S),Linux)
+    HARDEN_CFLAGS  += -D_FORTIFY_SOURCE=3
+    HARDEN_LDFLAGS += -Wl,-z,relro,-z,now -pie
+endif
+NORMAL_CFLAGS  := $(CFLAGS) $(HARDEN_CFLAGS)
+NORMAL_LDFLAGS := $(LDFLAGS) $(HARDEN_LDFLAGS)
+
 # ============================================================
 # Test configuration (Unity test framework)
 # ============================================================
@@ -125,12 +140,12 @@ build: $(DIRS) $(BIN_DIR)/$(TARGET)
 # --- Project Vendor Compilation Rule ---
 $(BUILD_DIR)/vendor/%.o: $(VENDOR_DIR)/%.c | $(BUILD_DIR)
 	@mkdir -p $(dir $@)
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(NORMAL_CFLAGS) -c $< -o $@
 
 # --- Linker Rule (Build Executable) ---
 $(BIN_DIR)/$(TARGET): $(OBJECTS) $(VENDOR_OBJS)
 	@echo "Linking executable: $@"
-	$(CC) $(OBJECTS) $(VENDOR_OBJS) $(LDFLAGS) -o $@
+	$(CC) $(OBJECTS) $(VENDOR_OBJS) $(NORMAL_LDFLAGS) -o $@
 
 # --- Compilation Rule (Build Object Files) ---
 # Compiles each .c file into a .o file in OBJ_DIR
@@ -139,7 +154,7 @@ $(BIN_DIR)/$(TARGET): $(OBJECTS) $(VENDOR_OBJS)
 # -c: Compile only, do not link
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@echo "Compiling $< to $@ ..."
-	$(CC) $(CFLAGS) -c $< -o $@
+	$(CC) $(NORMAL_CFLAGS) -c $< -o $@
 
 # --- Directory Creation Rule ---
 $(DIRS):
@@ -234,6 +249,38 @@ asan:
 	@echo "Running under ASan+UBSan ($(ASAN_OPTS))..."
 	@ASAN_OPTIONS=$(ASAN_OPTS) UBSAN_OPTIONS=print_stacktrace=1:halt_on_error=1 $(ASAN_BIN) < /dev/null
 
+# --- Sanitizer Target (TSan) ---
+# Data-race detection gate, mirrors `make asan`: build then run.
+# Instrumented objects live in a SEPARATE obj dir (build/obj-tsan/, same
+# layout as build/obj-asan/) so the normal build/obj is never polluted.
+# No ASAN_OPTIONS/UBSAN_OPTIONS here — those are ASan-only. TSAN_OPTIONS
+# points at test/tsan.supp, which suppresses ONLY the two intentional
+# Error-First race demos (nonatomic_inc_thread, race_increment); any other
+# race still fails the gate. Uses plain CFLAGS (no FORTIFY/hardening).
+TSAN_FLAGS   := -fsanitize=thread -fno-omit-frame-pointer -g -O1
+TSAN_BIN     := $(BIN_DIR)/$(TARGET)-tsan
+TSAN_OBJ_DIR := $(BUILD_DIR)/obj-tsan
+TSAN_OBJECTS := $(patsubst $(SRC_DIR)/%.c,$(TSAN_OBJ_DIR)/%.o,$(SOURCES)) \
+                $(patsubst $(VENDOR_DIR)/%.c,$(TSAN_OBJ_DIR)/vendor/%.o,$(VENDOR_SOURCES))
+
+$(TSAN_OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(TSAN_FLAGS) -c $< -o $@
+
+$(TSAN_OBJ_DIR)/vendor/%.o: $(VENDOR_DIR)/%.c
+	@mkdir -p $(dir $@)
+	$(CC) $(CFLAGS) $(TSAN_FLAGS) -c $< -o $@
+
+$(TSAN_BIN): $(TSAN_OBJECTS)
+	@mkdir -p $(dir $@)
+	@echo "Linking ThreadSanitizer executable: $@"
+	$(CC) $(TSAN_OBJECTS) $(TSAN_FLAGS) $(LDFLAGS) -o $@
+
+.PHONY: tsan
+tsan: $(TSAN_BIN)
+	@echo "Running under ThreadSanitizer (data-race detection)..."
+	@TSAN_OPTIONS="suppressions=$(CURDIR)/test/tsan.supp" $(TSAN_BIN) < /dev/null
+
 # --- Test Under Sanitizers ---
 # `make test` has no instrumentation, so it cannot catch leaks, overflows or UB.
 # This builds instrumented objects into a SEPARATE dir (so the normal build/obj
@@ -299,6 +346,7 @@ help:
 	@echo "  build      Builds the final executable '$(TARGET)'."
 	@echo "  run        Run the final executable '$(TARGET)'."
 	@echo "  asan       Build + run under AddressSanitizer + UndefinedBehaviorSanitizer (memory-safety gate)."
+	@echo "  tsan       Run the program under ThreadSanitizer (data-race detection)."
 	@echo "  analyze    Run GCC static analyzer (-fanalyzer) for leaks/double-free/uninit reads."
 	@echo "  test       Build + run Unity tests."
 	@echo "  test-asan  Run Unity tests under ASan+UBSan (catches memory errors plain 'test' cannot)."

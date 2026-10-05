@@ -1,0 +1,14 @@
+# ThreadSanitizer suppressions for hello-c
+#
+# The tutorial deliberately runs two "Error-First" (错误优先) demos that CREATE
+# a data race on purpose as teaching content — the printed output narrates the
+# race (期望 vs 实际 丢失更新). Suppressing those exact demo functions keeps
+# `make tsan` a strict gate: any OTHER race in the codebase still fails it.
+#
+#   atomic_types_sample.c Demo 1  → nonatomic_inc_thread (非原子计数器演示)
+#   async_sync_sample.c   Demo 1  → race_increment (无锁共享计数演示)
+#
+# Format: <check_type>:<regex matched against stack frames>
+
+race:nonatomic_inc_thread
+race:race_increment

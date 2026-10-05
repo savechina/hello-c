@@ -102,13 +102,13 @@ gcov 是 GCC 内置的覆盖率工具。编译时加 `-fprofile-arcs -ftest-cove
 
 ```bash
 # 1. 编译时开启覆盖率
-gcc -fprofile-arcs -ftest-coverage -o hello src/tools_sample.c
+gcc -fprofile-arcs -ftest-coverage -o hello src/advance/tools_sample.c
 
 # 2. 运行测试
 ./hello  # 生成 .gcda 文件
 
 # 3. 分析覆盖率
-gcov -b src/tools_sample.c
+gcov -b src/advance/tools_sample.c
 ```
 
 gcov 输出示例：
@@ -212,12 +212,13 @@ gcc -Wall -Wextra -Werror -std=c17
 
 ## 动态分析 — ASan / UBSan
 
-编译期检查抓不到运行时才发生的错误。项目 Makefile 已内置三个门禁：
+编译期检查抓不到运行时才发生的错误。项目 Makefile 已内置四个门禁：
 
 ```bash
 make asan       # 整个程序在 ASan + UBSan 下编译并运行
 make test-asan  # 所有 Unity 测试在 ASan + UBSan 下运行
 make analyze    # GCC -fanalyzer 静态分析（需要真 GCC: make analyze CC=gcc-14）
+make tsan       # 整个程序在 ThreadSanitizer 下运行，检测数据竞争
 ```
 
 核心编译选项（见 Makefile `SAN_FLAGS`）：
@@ -252,6 +253,58 @@ MallocStackLogging=1 leaks --atExit -- ./build/bin/hello-asan
 > ⚠️ **诚实的边界**：ASan 检测依赖时序，同一个 bug 可能 `make asan` 抓得到、
 > `make test-asan` 抓不到（栈帧复用时机不同）。**工具是概率性的，结构性修复才是确定的。**
 > 详见 [内存安全工程](memory-safety.md) 与 [测试框架](testing.md) 的 mutation 表。
+
+## 数据竞争检测 — TSan
+
+ASan 管内存错误，**数据竞争 (data race)** 归 ThreadSanitizer 管。`make tsan` 是 `make asan` 的姊妹门禁：用 TSan 编译整个程序并运行，报告无同步的并发读写。
+
+```bash
+make tsan       # 整个程序在 TSan 下编译并运行，检测数据竞争
+```
+
+核心编译选项（见 Makefile `TSAN_FLAGS`）：
+
+```makefile
+TSAN_FLAGS := -fsanitize=thread -fno-omit-frame-pointer -g -O1
+```
+
+**各自抓什么**：
+
+| 检查器 | 抓到的 bug | 例子 |
+|---|---|---|
+| AddressSanitizer（`make asan`） | 内存错误：溢出、use-after-free、double-free | 分离线程读已销毁的栈变量 |
+| ThreadSanitizer（`make tsan`） | 数据竞争：无同步的并发读写 | 两个线程同时 `count++` 而没有 mutex |
+
+- TSan 的目标文件放在**独立目录** `build/obj-tsan/`（产物 `build/bin/hello-tsan`），与普通构建和 ASan 构建互不污染
+- TSan 使用普通 CFLAGS（不叠加 FORTIFY / hardening），`TSAN_OPTIONS` 指向抑制文件 `test/tsan.supp` —— 只屏蔽两个**刻意演示竞争**的 Error-First 教学函数（`nonatomic_inc_thread`、`race_increment`），其他任何竞争照样让 `make tsan` 失败
+- ⚠️ **TSan 与 ASan 不能同时开启**（运行时冲突）——所以是两个独立目标：内存错误跑 `make asan`，数据竞争跑 `make tsan`
+
+## 二进制加固 — Hardening
+
+普通构建默认叠加加固选项（`make asan` / `make tsan` / `make test` 保持原始 flags，避免干扰检测器）：
+
+| 选项 | 平台 | 作用 |
+|------|------|------|
+| `-fstack-protector-strong` | 所有平台 | 栈金丝雀 (stack canary)：溢出覆盖返回地址时中止程序 |
+| `-D_FORTIFY_SOURCE=3` | 仅 Linux | 编译期把 `strcpy`/`memcpy` 等换成带边界检查的 `_*_chk` 版本 |
+| `-Wl,-z,relro,-z,now` | 仅 Linux | RELRO：GOT 表只读 + 立即绑定，防 GOT 劫持 |
+| `-pie` | 仅 Linux | Position-Independent Executable，配合 ASLR 生效 |
+
+**macOS 只有 stack-protector**：Apple 的 `ld` 不支持 `-z relro`，而 PIE 在 darwin 上是默认行为。对应 Makefile 片段：
+
+```makefile
+HARDEN_CFLAGS  := -fstack-protector-strong
+HARDEN_LDFLAGS :=
+ifeq ($(UNAME_S),Linux)
+    HARDEN_CFLAGS  += -D_FORTIFY_SOURCE=3
+    HARDEN_LDFLAGS += -Wl,-z,relro,-z,now -pie
+endif
+
+NORMAL_CFLAGS  := $(CFLAGS) $(HARDEN_CFLAGS)
+NORMAL_LDFLAGS := $(LDFLAGS) $(HARDEN_LDFLAGS)
+```
+
+> 💡 这些都是**编译期免费的防线**——不改一行代码，代价接近零。依据是 OSSF Compiler Hardening Guide；`make build` 之后可以用 `checksec --file=build/bin/hello`（Linux）验证 RELRO/PIE 是否生效。
 
 ## 集成覆盖率到 Makefile
 
@@ -307,6 +360,9 @@ make build 2>&1 | grep -c 'warning' || true
 
 # 内存安全门禁（ASan + UBSan）
 make asan && make test-asan
+
+# 数据竞争门禁（TSan）
+make tsan
 ```
 
 质量门禁 = 代码的「出厂检验标准」。不达标 → 拒绝合并。
@@ -404,6 +460,7 @@ A：不是。覆盖率只衡量「哪些代码被执行了」，不衡量「执�
 - **Makefile**：标准构建结构 + 多目标
 - **gcov/lcov**：代码覆盖率分析，HTML 可视化
 - **cppcheck**：静态分析，发现内存泄漏、空指针等 bug
+- **TSan**：`make tsan` 数据竞争门禁；普通构建默认叠加二进制加固（stack-protector / FORTIFY / RELRO+PIE）
 - **CI 流水线**：GitHub Actions 自动化 Build/Test/Lint
 - **质量门禁**：覆盖率阈值 + 静态分析无 error
 
