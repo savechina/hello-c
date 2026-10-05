@@ -23,8 +23,8 @@ hello-c/
 │   ├── main.c            # SOLE entry point — orchestration only
 │   ├── hello.c/.h        # Main demo: factorial, structs, basic/advance
 │   ├── sysinfo.c/.h      # Multi-platform OS detection (327 lines, macOS/Linux/Solaris/FreeBSD)
-│   ├── basic/            # ~50 chapters, one `_sample.c` per topic (memory/strings/structs/IO)
-│   ├── advance/          # ~20 chapters with real implementations (threads, memory safety, net)
+│   ├── basic/            # ~45 chapters, one `_sample.c` per topic (memory/strings/structs/IO)
+│   ├── advance/          # ~24 chapters with real implementations (threads, memory safety, net)
 │   ├── algo/             # Has algo.c with main_algo_sample() + sorting demos
 │   ├── awesome/          # Curated resources
 │   ├── module1/          # Example: print_hello
@@ -46,6 +46,7 @@ hello-c/
 | Modify build flags | `Makefile` CFLAGS line | Don't forget `-D__PLATFORM__` for sysinfo |
 | Update docs | `docs/src/` + `SUMMARY.md`, then push | mdBook auto-deploys via GitHub Actions |
 | **Check memory safety** | `make asan` | ASan+UBSan gate; run before committing |
+| **Check data races** | `make tsan` | ThreadSanitizer gate; `test/tsan.supp` suppresses only the 2 intentional race demos |
 | **Find leaks/double-free** | `make analyze` | GCC `-fanalyzer`; needs real GCC (`make analyze CC=gcc-14`) |
 
 ## CODE MAP
@@ -94,6 +95,7 @@ make asan      # Build + run under AddressSanitizer + UBSan (memory-safety gate)
 make analyze   # GCC -fanalyzer (needs real GCC: make analyze CC=gcc-14)
 make test      # Compile and run Unity tests
 make test-asan # Run Unity tests under ASan+UBSan (catches what plain `test` cannot)
+make tsan      # Build + run under ThreadSanitizer (data-race gate)
 make run       # Build + execute
 make clean     # Remove build/
 make help      # Show usage
@@ -107,7 +109,7 @@ make help      # Show usage
 - Valgrind has **no arm64-Darwin support** — on Apple Silicon use `make asan` instead of `make test-valgrind`
 - LeakSanitizer is Linux-only; `make asan`/`make test-asan` set `detect_leaks=0` on Darwin. Use `MallocStackLogging=1 leaks --atExit` for leak hunting there — leaks are NOT auto-detected on macOS
 - On macOS `gcc` is Apple clang, which lacks `-fanalyzer`; `make analyze` probes and skips
-- **Test coverage**: `calc`, `raii_sample`, `async_thread` and `variables` have Unity tests (6 binaries; `test/basic/` exists via `test/basic/test_variables_sample.c`)
+- **Test coverage**: `calc`, `raii_sample`, `async_thread`, `variables`, `type_generic`, `static_assert`, `designated_init`, `integer_safety`, `volatile`, `strict_aliasing` and `restrict` have Unity tests (13 binaries; `test/basic/` exists via `test/basic/test_variables_sample.c`)
 - The test link rule links every object except `main.o`, so adding a test needs no Makefile change
 
 ## Active Technologies
