@@ -8,14 +8,14 @@
  * 用指针穿过函数的墙，让被调函数修改调用者的变量。
  */
 
-static void swap_by_value(int32_t a, int32_t b)
+void swap_by_value(int32_t a, int32_t b)
 {
     int32_t tmp = a;
     a = b;
     b = tmp;
 }
 
-static void swap_by_pointer(int32_t *a, int32_t *b)
+void swap_by_pointer(int32_t *a, int32_t *b)
 {
     int32_t tmp = *a;
     *a = *b;
