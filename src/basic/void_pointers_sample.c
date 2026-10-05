@@ -96,7 +96,7 @@ static void demo_tagged_generic(void)
     printf("\n  ⚠️  类型擦除后必须靠 tag 或协议追回类型!\n\n");
 }
 
-static int cmp_int32(const void *a, const void *b)
+int cmp_int32(const void *a, const void *b)
 {
     int32_t va = *(const int32_t *)a;
     int32_t vb = *(const int32_t *)b;
