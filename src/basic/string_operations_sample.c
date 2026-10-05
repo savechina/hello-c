@@ -11,7 +11,7 @@
 #define BUF_LARGE  128
 
 /* ── 1. strlen — 手动实现 vs 库函数 ── */
-static size_t my_strlen(const char *str)
+size_t my_strlen(const char *str)
 {
     size_t len = 0;
     while (str[len] != '\0') {
