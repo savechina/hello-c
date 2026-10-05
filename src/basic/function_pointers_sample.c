@@ -16,17 +16,17 @@
 
 /* ── 1. 基本函数指针声明与调用 ── */
 
-static int32_t add(int32_t a, int32_t b)
+int32_t add(int32_t a, int32_t b)
 {
     return a + b;
 }
 
-static int32_t sub(int32_t a, int32_t b)
+int32_t sub(int32_t a, int32_t b)
 {
     return a - b;
 }
 
-static int32_t mul(int32_t a, int32_t b)
+int32_t mul(int32_t a, int32_t b)
 {
     return a * b;
 }
@@ -86,7 +86,7 @@ static void demo_dispatch_table(void)
 /* ── 3. 函数指针作为参数 (高阶函数) ── */
 
 /* apply: 接受一个二元操作函数指针 */
-static int32_t apply_op(int32_t a, int32_t b, binary_op_t op)
+int32_t apply_op(int32_t a, int32_t b, binary_op_t op)
 {
     return op(a, b);
 }
@@ -94,17 +94,17 @@ static int32_t apply_op(int32_t a, int32_t b, binary_op_t op)
 /* map_op: 对数组每个元素应用一个一元操作函数指针 */
 typedef int32_t (*unary_op_t)(int32_t);
 
-static int32_t square(int32_t x)
+int32_t square(int32_t x)
 {
     return x * x;
 }
 
-static int32_t negate(int32_t x)
+int32_t negate(int32_t x)
 {
     return -x;
 }
 
-static void apply_unary_to_array(int32_t arr[], int32_t len, unary_op_t op)
+void apply_unary_to_array(int32_t arr[], int32_t len, unary_op_t op)
 {
     for (int32_t i = 0; i < len; i++) {
         arr[i] = op(arr[i]);
