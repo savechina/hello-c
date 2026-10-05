@@ -14,6 +14,7 @@
 #include "calc.h"
 
 int main_error_handling_sample(void);
+int main_volatile_sample(void);
 int main_atomic_types_sample(void);
 int main_smart_pointers_sample(void);
 int main_async_thread_sample(void);
@@ -33,7 +34,8 @@ int main_tools_sample(void);
 int main_database_sample(void);
 int main_web_socket_sample(void);
 int main_web_concurrent_sample(void);
-int main_async_sample(void);
+int main_strict_aliasing_sample(void);
+int main_restrict_sample(void);
 int main_raii_sample(void);
 
  /* Coordinator entry point */

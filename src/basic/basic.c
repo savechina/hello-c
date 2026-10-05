@@ -57,6 +57,18 @@ int main_basic_sample(void) {
     main_conditional_comp_sample();
     printf("\n");
 
+    printf("--- 类型泛型 (_Generic) ---\n");
+    main_type_generic_sample();
+    printf("\n");
+
+    printf("--- 编译期断言 (_Static_assert) ---\n");
+    main_static_assert_sample();
+    printf("\n");
+
+    printf("--- 指定初始化与复合字面量 (Designated Initializers) ---\n");
+    main_designated_init_sample();
+    printf("\n");
+
     /* === 内存与指针 (Memory & Pointers) === */
     printf("--- 指针基础 (Pointer Basics) ---\n");
     main_pointer_basics_sample();
@@ -167,6 +179,10 @@ int main_basic_sample(void) {
 
     printf("--- 位运算与内存操作 (Bit Operations) ---\n");
     main_bit_ops_sample();
+    printf("\n");
+
+    printf("--- 整数安全 (Integer Safety) ---\n");
+    main_integer_safety_sample();
     printf("\n");
 
     printf("--- 命令行参数与 I/O 重定向 (CLI Args) ---\n");

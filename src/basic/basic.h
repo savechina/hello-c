@@ -55,7 +55,11 @@ int main_function_pointers_sample(void);
 int main_callbacks_sample(void);
 int main_void_generic_sample(void);
 int main_bit_ops_sample(void);
+int main_integer_safety_sample(void);
 int main_conditional_comp_sample(void);
+int main_type_generic_sample(void);
+int main_static_assert_sample(void);
+int main_designated_init_sample(void);
 int main_cli_args_sample(void);
 int main_stdlib_sample(void);
 
