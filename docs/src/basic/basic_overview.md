@@ -40,6 +40,9 @@ C 语言诞生于 1972 年，是世界上最古老但仍广泛使用的编程语
 | [命令行参数](./cli_args.md) | `argc`/`argv`、标准 I/O | 🟢 简单 | 30 分钟 |
 | [枚举](./enums.md) | enum 定义、枚举常量 | 🟡 中等 | 30 分钟 |
 | [类型别名](./typedef.md) | type aliases、函数指针 typedef | 🟢 简单 | 20 分钟 |
+| [类型泛型 (_Generic)](./type_generic.md) | `_Generic` 选择表达式、类型安全 max/min | 🟡 中等 | 35 分钟 |
+| [编译期断言 (_Static_assert)](./static_assert.md) | `_Static_assert`、编译期不变量检查 | 🟢 简单 | 25 分钟 |
+| [指定初始化与复合字面量](./designated_init.md) | designated initializer、compound literal | 🟡 中等 | 30 分钟 |
 
 #### 函数子章节
 
@@ -47,7 +50,7 @@ C 语言诞生于 1972 年，是世界上最古老但仍广泛使用的编程语
 |------|------|------|
 | [函数基础](./functions_basics.md) | 声明、定义、返回类型、参数 | 🟢 |
 | [函数作用域](./function_scope.md) | 局部/全局变量、static、extern | 🟢 |
-| [递归函数](./recursion.md) | 基线条件、阶乘、fibonacci | 🟡 |
+| [递归函数](./recursion.md) | 基线条件、阶乘、fibonacci（`recursion_fibonacci` 返回 `long long`） | 🟡 |
 | [可变参数函数](./variadic_functions.md) | va_list、printf 内部原理 | 🟡 |
 
 ### US2：中级概念 (Intermediate Concepts) — 进阶阶段 🟡
@@ -101,9 +104,10 @@ C 语言诞生于 1972 年，是世界上最古老但仍广泛使用的编程语
 | [回调函数与多态](./callbacks.md) | 回调模式、qsort 比较器 | 🔴 困难 | 50 分钟 |
 | [可变参数函数](./variadic_functions.md) | `va_list`、`printf` 原理 | 🔴 困难 | 45 分钟 |
 | [位运算与内存操作](./bit_ops.md) | 位运算符、位掩码 | 🟡 中等 | 35 分钟 |
+| [整数安全 (Integer Safety)](./integer_safety.md) | 有符号溢出防护、移位宽度检查 (CERT INT30/33-C) | 🔴 困难 | 40 分钟 |
 | [标准库精要](./stdlib.md) | 常用标准函数 | 🟡 中等 | 30 分钟 |
 | [命令行参数](./cli_args.md) | `argc`/`argv`、重定向 | 🟢 简单 | 30 分钟 |
-| [递归函数](./recursion.md) | 基线条件、阶乘、fibonacci | 🟡 中等 | 40 分钟 |
+| [递归函数](./recursion.md) | 基线条件、阶乘、fibonacci（`recursion_fibonacci` 返回 `long long`） | 🟡 中等 | 40 分钟 |
 | [C 术语表](./basic_glossary.md) | 46 条中英对照术语 | 📚 | — |
 | [基础阶段复习](./review_basic.md) | 20 道复习题含答案 | 📝 | — |
 

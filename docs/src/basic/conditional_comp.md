@@ -39,7 +39,7 @@
 #endif
 ```
 
-> [完整源码](https://github.com/[your-repo]/hello-c/blob/main/src/basic/conditional_comp_sample.c)
+> [完整源码](https://github.com/savechina/hello-c/blob/main/src/basic/conditional_comp_sample.c)
 
 ## 原理解析
 

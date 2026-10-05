@@ -66,6 +66,8 @@ ops[2] = 140  (20 * 7)
 
 这里 `ops` 就是一个 **dispatch table**（分发表）—— 一个函数指针的数组。通过数组索引，运行时决定调用哪个函数。
 
+> 💡 **配套示例**: 本章的完整实现（dispatch table + VTable + 接口模式 + NULL guard）在 [`src/advance/advanced_traits_sample.c`](https://github.com/savechina/hello-c/blob/main/src/advance/advanced_traits_sample.c)（入口 `main_advanced_traits_sample()`，注册在 `src/advance/advance.c`）—— 从上面这个 `ops[]` 数组出发，逐步扩展到 `ShapeVTable` + `Shape{vtable, data}` 的 Circle/Rectangle/Triangle 多态。
+
 ## 原理解析
 
 ### 1. Dispatch Table：函数指针数组

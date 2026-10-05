@@ -54,6 +54,8 @@ mybuffer_destroy(buf);
 
 > 📌 **回顾之前学的**: 信息隐藏（Information Hiding）——通过 `typedef struct X X;` 声明不完整类型，迫使调用者只能通过公开 API 访问，无法直接修改内部字段。详见 [void* 泛型编程](../basic/void_generic.md) 和 [头文件与模块系统](../basic/headers.md)。
 
+> 💡 **配套示例**: 本章的可运行版本在 [`src/advance/smart_pointers_sample.c`](https://github.com/savechina/hello-c/blob/main/src/advance/smart_pointers_sample.c)（入口 `main_smart_pointers_sample()`，注册在 `src/advance/advance.c`）——7 个 demo 依次演示: 内存泄漏的 error-first 对照、工厂模式 + 不透明指针（`SmartBuffer`）、RAII 宏（`WITH_FILE`/`WITH_MALLOC` + `__attribute__((cleanup))`）、void\* 通用容器、公开 vs 不透明对比、RAII 安全模式、内存布局可视化。建议读完本章后跑一遍源码。
+
 ## 原理解析
 
 ### 1. 内存泄漏 — 原始指针的问题 (Error-First)

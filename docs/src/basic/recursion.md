@@ -281,30 +281,38 @@ long long safe_factorial(int n) {
 ### ❌ 错误 4：重复计算（Fibonacci 的经典问题）
 
 ```c
-/* ❌ 朴素递归 Fibonacci —— 指数级重复计算 */
-int fibonacci(int n) {
-    if (n <= 1) {
-        return n;
+/* ❌ 朴素递归 Fibonacci —— 指数级重复计算
+ * 仓库实现见 src/basic/recursion_sample.c 的 recursion_fibonacci()
+ * （static、返回 long long），结构如下 */
+long long recursion_fibonacci(int n) {
+    if (n <= 0) {
+        return 0;
     }
-    return fibonacci(n - 1) + fibonacci(n - 2);
-    /* fibonacci(5) 会调用 fibonacci(4) 和 fibonacci(3)
-       fibonacci(4) 又会调用 fibonacci(3) 和 fibonacci(2)
-       → fibonacci(3) 被计算了 2 次！
+    if (n == 1) {
+        return 1;
+    }
+    return recursion_fibonacci(n - 1) + recursion_fibonacci(n - 2);
+    /* recursion_fibonacci(5) 会调用 recursion_fibonacci(4) 和 recursion_fibonacci(3)
+       recursion_fibonacci(4) 又会调用 recursion_fibonacci(3) 和 recursion_fibonacci(2)
+       → recursion_fibonacci(3) 被计算了 2 次！
        → n=40 时需要约 20 亿次调用！ */
 }
 ```
 
+> 📌 **配套代码**：`src/basic/recursion_sample.c` 的 `recursion_fibonacci_sample()` 打印 `fib(0)` ~ `fib(10)`，
+> 并提示「fib(40) 需要约 20 亿次调用，不要用递归！」。
+
 ✅ **修正 1**：迭代法（推荐）。
 
 ```c
-int fibonacci_iterative(int n) {
+long long fibonacci_iterative(int n) {
     if (n <= 1) {
         return n;
     }
-    int prev2 = 0;
-    int prev1 = 1;
+    long long prev2 = 0;
+    long long prev1 = 1;
     for (int i = 2; i <= n; i++) {
-        int current = prev1 + prev2;
+        long long current = prev1 + prev2;
         prev2 = prev1;
         prev1 = current;
     }
@@ -332,18 +340,19 @@ int fibonacci_iterative(int n) {
 <summary>点击查看答案</summary>
 
 ```c
-int fibonacci(int n) {
+/* 与 src/basic/recursion_sample.c 的 recursion_fibonacci() 一致 */
+long long recursion_fibonacci(int n) {
     if (n <= 0) {
         return 0;
     }
     if (n == 1) {
         return 1;
     }
-    return fibonacci(n - 1) + fibonacci(n - 2);
+    return recursion_fibonacci(n - 1) + recursion_fibonacci(n - 2);
 }
 
 /* 验证 */
-printf("fib(10) = %d\n", fibonacci(10));  /* 55 */
+printf("fib(10) = %lld\n", recursion_fibonacci(10));  /* 55 */
 ```
 </details>
 

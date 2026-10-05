@@ -6,7 +6,10 @@
 |------|------|---------|------|
 | 错误处理 | 🟡 | 40 min  | [error-handling](error-handling.md) |
 | 原子类型 | 🟡 | 35 min  | [atomic-types](atomic-types.md) |
+| volatile | 🟡 | 30 min  | [volatile](volatile.md) |
 | 不透明指针 | 🔴 | 50 min  | [opaque-pointers](opaque-pointers.md) |
+| 严格别名与有效类型 | 🔴 | 45 min  | [strict-aliasing](strict-aliasing.md) |
+| restrict 指针契约 | 🔴 | 35 min  | [restrict](restrict.md) |
 | 内存安全工程 | 🔴 | 55 min  | [memory-safety](memory-safety.md) |
 | 异步与线程 | 🔴 | 50 min  | [async](async.md) |
 | 数据结构遍历 | 🔴 | 50 min  | [iterators](iterators.md) |

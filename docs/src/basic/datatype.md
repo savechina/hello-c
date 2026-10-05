@@ -54,7 +54,7 @@ int main(void) {
 }
 ```
 
-完整源码在仓库 [`src/basic/datatype.c`](https://github.com/savechina/hello-c/blob/main/src/basic/datatype.c)。
+完整源码在仓库 [`src/basic/datatype_sample.c`](https://github.com/savechina/hello-c/blob/main/src/basic/datatype_sample.c)。
 
 ## 原理解析
 
@@ -565,5 +565,5 @@ printf("7 %% 2 = %d\n", (int)(x % y));
 
 ---
 
-> 本章代码位于仓库 [`src/basic/datatype.c`](https://github.com/savechina/hello-c/blob/main/src/basic/datatype.c) 和 [`src/basic/datatype_sample.c`](https://github.com/savechina/hello-c/blob/main/src/basic/datatype_sample.c)。
+> 本章代码位于仓库 [`src/basic/datatype_sample.c`](https://github.com/savechina/hello-c/blob/main/src/basic/datatype_sample.c)。
 > 运行 `make build && make run` 查看完整演示输出。

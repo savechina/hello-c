@@ -21,6 +21,9 @@
   - [条件编译](./basic/conditional_comp.md) 🟢
   - [枚举](./basic/enums.md) 🟡
   - [类型别名](./basic/typedef.md) 🟢
+  - [类型泛型 (_Generic)](./basic/type_generic.md) 🟡
+  - [编译期断言 (_Static_assert)](./basic/static_assert.md) 🟢
+  - [指定初始化与复合字面量 (Designated Initializers)](./basic/designated_init.md) 🟡
 
   - [指针](./basic/pointers.md) 🟡
     - [指针基础](./basic/pointer_basics.md)
@@ -51,6 +54,7 @@
   - [void* 泛型编程](./basic/void_generic.md) 🔴
   - [可变参数函数](./basic/variadic_functions.md) 🔴
   - [位运算与内存操作](./basic/bit_ops.md) 🟡
+  - [整数安全 (Integer Safety)](./basic/integer_safety.md) 🔴
   - [标准库精要](./basic/stdlib.md) 🟡
   - [命令行参数](./basic/cli_args.md) 🟢
   - [递归函数](./basic/recursion.md) 🟡
@@ -62,7 +66,10 @@
 - [高级进阶](./advance/overview.md) 📋
   - [错误处理](./advance/error-handling.md) 🟡
   - [原子类型](./advance/atomic-types.md) 🟡
+  - [volatile (易变限定符)](./advance/volatile.md) 🟡
   - [不透明指针](./advance/opaque-pointers.md) 🔴
+  - [严格别名与有效类型 (Strict Aliasing & Effective Type)](./advance/strict-aliasing.md) 🔴
+  - [restrict 指针契约 (Pointer Qualifier Contract)](./advance/restrict.md) 🔴
   - [内存安全工程](./advance/memory-safety.md) 🔴
   - [迭代器与遍历](./advance/iterators.md) 🔴
   - [高级多态](./advance/advanced_polymorphism.md) 🔴
@@ -92,4 +99,8 @@
 
 # Algo
 
+- [算法示例](./algo/algo.md)
+
 # Awesome
+
+- [资源精选](./awesome.md)

@@ -4,20 +4,19 @@
 
 ## OVERVIEW
 
-~47 beginner chapters. Convention is one `<topic>_sample.c` + `<topic>_sample.h` pair per
+~45 beginner chapters. Convention is one `<topic>_sample.c` + `<topic>_sample.h` pair per
 topic; each exposes `main_<topic>_sample(void)` which `basic.c` calls in sequence.
 
 ## STRUCTURE
 
 ```
 basic/
-├── basic.c                 # main_basic_sample() — calls 41 sample functions in order
+├── basic.c                 # main_basic_sample() — calls 45 sample functions in order
 ├── basic.h
 ├── datatype_sample.c       # int/float/char + string/date samples (69 lines)
 ├── memory_mgmt_sample.c    # malloc/calloc/realloc/free, create_person() factory
 ├── scope_sample.c          # stack vs heap lifetime, UAF/dangling demos
 ├── safe_strings_sample.c   # bounded string ops, snprintf vs sprintf
-├── strings_sample.c        # strncpy/strtok/strstr edge cases
 └── ...                     # ~40 more _sample.c chapters (structs, unions, enums, IO, …)
 ```
 

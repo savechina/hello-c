@@ -147,10 +147,10 @@ int main(void) {
 }
 ```
 
-**assert 的输出格式**：
+**assert 的输出格式**（示例输出，行号对应上方示例代码）：
 
 ```
-assertion "ptr != NULL" failed: file "src/main.c", line 8, function: main
+assertion "ptr != NULL" failed: file "main.c", line 6, function: main
 程序中止（收到 SIGABRT 信号）
 ```
 
