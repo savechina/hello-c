@@ -6,7 +6,7 @@
 #include <sys/types.h>
 #include <sys/wait.h>
 
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
 #include <sys/socket.h>
 #endif
 
@@ -17,14 +17,11 @@
  *           Unix socket 像两个房间之间装了专用电话
  * ==================================================================== */
 
-#if defined(__APPLE__) || defined(__linux__)
-#endif
-
 /* ── 1. Basic Pipe (单向) ── */
 
 static void system_ipc_pipe_basic_sample(void)
 {
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
     printf("=== 1. 单向管道 (system_ipc_pipe_basic_sample) ===\n");
     printf("  类比: 一根单向管子 — 一头写，一头读\n\n");
 
@@ -99,7 +96,7 @@ static void system_ipc_pipe_basic_sample(void)
 
 static void system_ipc_pipe_bidirectional_sample(void)
 {
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
     printf("=== 2. 双向管道 (system_ipc_pipe_bidirectional_sample) ===\n");
     printf("  类比: 两根管子 — 一个方向传话，一个方向回话\n\n");
 
@@ -195,7 +192,7 @@ static void system_ipc_pipe_bidirectional_sample(void)
 
 static void system_ipc_socketpair_sample(void)
 {
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
     printf("=== 3. Unix Domain Socket (system_ipc_socketpair_sample) ===\n");
     printf("  类比: Unix socket 像两个房间之间的专用电话 — 全双工\n\n");
 

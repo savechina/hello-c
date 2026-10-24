@@ -22,7 +22,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
 #define POSIX_AVAILABLE 1
 #endif
 
@@ -34,6 +34,7 @@
 #include <netinet/in.h>
 #include <sys/select.h>
 #include <errno.h>
+#include <fcntl.h>
 #include <sys/wait.h>
 #include <pthread.h>
 #include <signal.h>

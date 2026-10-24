@@ -17,7 +17,7 @@
  *              直接看到里面的东西
  * ==================================================================== */
 
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
 
 static double bench_readwrite(const char *path, size_t size)
 {
@@ -110,7 +110,7 @@ static double bench_mmap(const char *path, size_t size)
 
 static void system_mmap_read_sample(void)
 {
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
     printf("=== 1. 内存映射读取 (system_mmap_read_sample) ===\n");
     printf("  类比: mmap 像给房间开了扇窗 — 不用走门，直接看到内容\n\n");
 
@@ -159,7 +159,7 @@ static void system_mmap_read_sample(void)
 
 static void system_mmap_write_sample(void)
 {
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
     printf("=== 2. 内存映射写入 (system_mmap_write_sample) ===\n");
     printf("  类比: 在墙上开了扇窗，可以直接往房间里放东西\n\n");
 
@@ -219,7 +219,7 @@ static void system_mmap_write_sample(void)
 
 static void system_mmap_compare_sample(void)
 {
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
     printf("=== 3. 性能对比 (system_mmap_compare_sample) ===\n");
     printf("  类比: read/write 是敲门等管理员开门；mmap 是打通墙壁\n\n");
 

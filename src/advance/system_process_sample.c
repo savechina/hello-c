@@ -12,14 +12,11 @@
  * 进程管理类比: fork 像细胞分裂 — 一个进程分裂成两个独立进程
  * ==================================================================== */
 
-#if defined(__APPLE__) || defined(__linux__)
-#endif
-
 /* ── 1. Basic fork ── */
 
 static void system_process_fork_sample(void)
 {
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
     printf("=== 1. fork 创建子进程 (system_process_fork_sample) ===\n");
     printf("  类比: 克隆一个自己去干活\n\n");
 
@@ -76,7 +73,7 @@ static void system_process_fork_sample(void)
 
 static void system_process_exec_sample(void)
 {
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
     printf("=== 2. exec 替换进程 (system_process_exec_sample) ===\n");
     printf("  类比: 子进程吃下「变身药」，变成另一个程序\n\n");
 
@@ -130,7 +127,7 @@ static void system_process_exec_sample(void)
 
 static void system_process_wait_sample(void)
 {
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
     printf("=== 3. 等待子进程 (system_process_wait_sample) ===\n");
     printf("  类比: 父进程等分身干完活再收工\n\n");
 
@@ -193,7 +190,7 @@ static void system_process_wait_sample(void)
 
 static void system_process_zombie_sample(void)
 {
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
     printf("=== 4. 僵尸进程 (system_process_zombie_sample) ===\n");
     printf("  类比: 分身干完活了但父进程不确认 → 变成幽灵状态\n\n");
 

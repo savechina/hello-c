@@ -12,7 +12,7 @@
  *           你去开门（信号处理函数），处理完继续做事
  * ==================================================================== */
 
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
 
 static volatile sig_atomic_t g_interrupted = 0;
 
@@ -39,7 +39,7 @@ static void user_handler(int signum)
 
 static void system_signal_handler_sample(void)
 {
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
     printf("=== 1. 信号处理 (system_signal_handler_sample) ===\n");
     printf("  类比: 用 sigaction 安装一个门铃 — 按下 Ctrl+C 或发信号触发\n\n");
 
@@ -75,7 +75,7 @@ static void system_signal_handler_sample(void)
 
 static void system_signal_block_sample(void)
 {
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
     printf("=== 2. 信号阻塞 (system_signal_block_sample) ===\n");
     printf("  类比: 挂一个「请勿打扰」牌子 — 门铃按了也不响\n\n");
 
@@ -131,7 +131,7 @@ static void system_signal_block_sample(void)
 
 static void system_signal_sigaction_sample(void)
 {
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
     printf("=== 3. SA_RESTART 标志 (system_signal_sigaction_sample) ===\n");
     printf("  类比: SA_RESTART 像「自动重拨」——被挂断的电话自动再拨一次\n\n");
 

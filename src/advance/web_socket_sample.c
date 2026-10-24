@@ -18,7 +18,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#if defined(__APPLE__) || defined(__linux__)
+#if !defined(_WIN32)
 #define POSIX_SOCKETS 1
 #include <unistd.h>
 #include <sys/socket.h>
