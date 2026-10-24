@@ -18,13 +18,6 @@
 #include <sys/types.h>
 #include <unistd.h>
 #define OS_NAME "sunOS"
-#if defined(__illumos__)
-// Specific code for Illumos-based OS (best way to distinguish forks)
-#define OS_ILLUMOS
-#else
-// Assumed to be traditional (Oracle) Solaris or older Illumos/SunOS
-#define OS_SOLARIS
-#endif
 #elif defined(__FreeBSD__)
 #include <sys/sysctl.h>
 #define OS_NAME "FreeBSD"
@@ -178,14 +171,15 @@ void get_system_info() {
     char line[256];
     while (fgets(line, sizeof(line), fp)) {
       if (strstr(line, "PRETTY_NAME=")) {
-        printf("OS Version: %s",
-               line + strlen("PRETTY_NAME=") + 1); // +1
-                                                   // 跳过等号和第一个引号
-        // 移除末尾的引号和换行符
-        char *end = strrchr(line, '"');
-        if (end)
-          *end = '\0';
-        printf("OS Version: %s\n", line + strlen("PRETTY_NAME=") + 1);
+        char *value = line + strlen("PRETTY_NAME=");
+        // 先去掉换行符，再去掉首尾引号
+        value[strcspn(value, "\r\n")] = '\0';
+        if (*value == '"')
+          value++;
+        size_t len = strlen(value);
+        if (len > 0 && value[len - 1] == '"')
+          value[len - 1] = '\0';
+        printf("OS Version: %s\n", value);
         break;
       }
     }
