@@ -13,6 +13,9 @@ static void platform_detection_sample(void) {
 #elif defined(__FreeBSD__)
     printf("  当前平台: FreeBSD\n");
     printf("  __FreeBSD__ 已定义 ✓\n");
+#elif defined(__sun) || defined(__sun__) || defined(__illumos__)
+    printf("  当前平台: Solaris/illumos\n");
+    printf("  __sun__ 已定义 ✓ (Makefile 在 SunOS 上定义 -D__sun__)\n");
 #else
     printf("  当前平台: 未知 (其他类 Unix 系统)\n");
 #endif
