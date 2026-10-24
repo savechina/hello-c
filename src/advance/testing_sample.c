@@ -15,7 +15,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <time.h>
-#include <time.h>
 #include "advance/testing_sample.h"
 #include "advance/calc.h"
 

@@ -223,7 +223,7 @@ void *raii_arena_alloc(arena_t *a, size_t n)
 {
     size_t off = demo3_align_up(a->used, _Alignof(max_align_t));
     if (n > a->cap || off > a->cap - n) return NULL;
-    void *p = a->base + off;
+    unsigned char *p = (unsigned char *)a->base + off;
     a->used = off + n;
     return p;
 }

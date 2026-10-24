@@ -47,4 +47,6 @@ basic/
   would otherwise fail the build.
 - **Signed overflow is UB, not wraparound**: `variables_sample.c` now teaches this correctly —
   do not reintroduce `INT32_MAX + 1` on a signed type as a "wraps to negative" demo.
-- **Platform-specific**: `<sys/signal.h>` and `<sys/time.h>` used unconditionally (POSIX only)
+- **Platform conventions**: `src/basic/` uses only ISO C `<signal.h>`/`<time.h>` —
+  the POSIX `<sys/signal.h>`/`<sys/time.h>` variants are not used in this directory
+  (POSIX-only headers live in `src/advance/`)

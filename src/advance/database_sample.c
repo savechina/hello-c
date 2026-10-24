@@ -24,11 +24,20 @@
 #include <inttypes.h>
 #include <stdlib.h>
 #include <string.h>
-#include <inttypes.h>
 
 #include "advance/database_sample.h"
 
+#ifdef __has_include
 #if __has_include(<sqlite3.h>)
+#define DB_HAVE_SQLITE3 1
+#else
+#define DB_HAVE_SQLITE3 0
+#endif
+#else
+#define DB_HAVE_SQLITE3 0
+#endif
+
+#if DB_HAVE_SQLITE3
 
 #include <sqlite3.h>
 
@@ -483,11 +492,11 @@ static void database_cleanup_sample(void)
  *  Coordinator entry
  * ==================================================================== */
 
-#else /* __has_include(<sqlite3.h>) */
+#else /* DB_HAVE_SQLITE3 */
 
 /*  sqlite3.h 不存在时的 fallback */
 
-#endif /* __has_include(<sqlite3.h>) */
+#endif /* DB_HAVE_SQLITE3 */
 
 int main_database_sample(void)
 {
@@ -495,7 +504,7 @@ int main_database_sample(void)
     printf("  数据库 (Database with SQLite3)\n");
     printf("========================================\n\n");
 
-#if __has_include(<sqlite3.h>)
+#if DB_HAVE_SQLITE3
 
     /* Phase 1: Open & Schema */
     database_open_close_sample();
