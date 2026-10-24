@@ -1,0 +1,16 @@
+# clangd / LSP 配置
+#
+# 编译器（Makefile）会传入 -Iinclude、每个源码目录的 -I 以及 -Itest/vendor/unity，
+# 但编辑器不会，因此 clangd 会误报 'unity.h' file not found 和大量
+# "Call to undeclared function 'TEST_ASSERT_*'"。这里补齐同样的 include 路径。
+#
+# 依据：Makefile:52（CFLAGS -I$(INCLUDE_DIR)）、Makefile:56-57（INC_DIRS 逐目录 -I）、
+#       Makefile:109（TEST_CFLAGS -I$(UNITY_DIR)）。
+#
+# 注意：本文件只影响 clangd/LSP，不参与 Makefile 构建，不会影响任何门禁结果。
+CompileFlags:
+  Add:
+    - -std=c17
+    - -Iinclude
+    - -Isrc
+    - -Itest/vendor/unity

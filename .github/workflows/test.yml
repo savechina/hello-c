@@ -1,0 +1,70 @@
+name: Test
+
+# C 代码门禁：编译、Unity 测试、ASan/UBSan、TSan、GCC -fanalyzer。
+#
+# 注意（首次运行需留意）:
+#   Makefile 只在 Darwin 上关闭 detect_leaks，Linux 上 LeakSanitizer 是开启的，
+#   因此 error_handling / database 等故意演示失败的章节可能报出真实泄漏。
+#   若确认属于教学演示的预期泄漏，在下面两个 sanitizer 步骤加
+#   ASAN_OPTIONS=detect_leaks=0 即可，不必改 Makefile。
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: build + tests + sanitizers (clang)
+    runs-on: ubuntu-latest
+    env:
+      # 用 clang：src/basic/logging_sample.c 里故意保留的 sprintf 反例依赖
+      # `#pragma clang diagnostic ignored "-Wdeprecated-declarations"`，
+      # GCC 不识别该 pragma，配合 -Werror 会直接编译失败。
+      CC: clang
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libsqlite3-dev   # Makefile:80 链接 -lsqlite3
+
+      - name: Build
+        run: make build
+
+      - name: Unity tests
+        run: make test
+
+      - name: Tests under ASan + UBSan
+        run: make test-asan
+
+      - name: Demos under ASan + UBSan
+        run: make asan
+
+      - name: Demos under ThreadSanitizer
+        run: make tsan
+
+  analyze:
+    name: static analysis (GCC -fanalyzer)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libsqlite3-dev
+
+      # ubuntu-latest 的 cc 就是真 GCC，-fanalyzer 可用（macOS 上只有 Apple clang，会跳过）。
+      # 注意：目前该目标只分析 src/hello.c 一个文件，扩到全部源文件见 TODOS.md。
+      - name: GCC -fanalyzer
+        run: make analyze
