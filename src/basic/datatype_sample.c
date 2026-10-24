@@ -48,6 +48,13 @@ int main_datatype_sample(void) {
     printf("  const int MAX_ITEMS = %d\n", MAX_ITEMS);
     printf("  const double E      = %.5f\n", E);
 
+    /* --- float.h 浮点极限 (floating-point limits) --- */
+    /* %g 自动选择 %f/%e 中更紧凑的表示 */
+    printf("  FLT_MAX      = %g\n", FLT_MAX);
+    printf("  FLT_MIN      = %g\n", FLT_MIN);
+    printf("  FLT_EPSILON  = %g\n", FLT_EPSILON);
+    printf("  DBL_MAX      = %g\n", DBL_MAX);
+
     return 0;
 }
 

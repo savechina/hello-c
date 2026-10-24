@@ -16,17 +16,17 @@
 
 /* ── 1. 基本函数指针声明与调用 ── */
 
-int32_t add(int32_t a, int32_t b)
+int32_t fp_add(int32_t a, int32_t b)
 {
     return a + b;
 }
 
-int32_t sub(int32_t a, int32_t b)
+int32_t fp_sub(int32_t a, int32_t b)
 {
     return a - b;
 }
 
-int32_t mul(int32_t a, int32_t b)
+int32_t fp_mul(int32_t a, int32_t b)
 {
     return a * b;
 }
@@ -36,7 +36,7 @@ static void demo_basic_function_pointer(void)
     printf("=== 1. 基本函数指针声明与调用 ===\n");
 
     /* 声明函数指针: int32_t (*fp)(int32_t, int32_t) */
-    int32_t (*fp)(int32_t, int32_t) = &add;
+    int32_t (*fp)(int32_t, int32_t) = &fp_add;
 
     /* 方式 A: 隐式解引用调用 fp(a, b) */
     int32_t r1 = fp(3, 5);
@@ -47,11 +47,11 @@ static void demo_basic_function_pointer(void)
     printf("  (*fp)(10, 20) = %" PRId32 "\n", r2);
 
     /* 赋值: 函数名 decay 为指针（& 可省略） */
-    fp = sub;
+    fp = fp_sub;
     int32_t r3 = fp(100, 37);
     printf("  fp = sub; fp(100, 37) = %" PRId32 "\n", r3);
 
-    fp = mul;
+    fp = fp_mul;
     int32_t r4 = (*fp)(6, 7);
     printf("  fp = mul; (*fp)(6, 7) = %" PRId32 "\n", r4);
 
@@ -68,7 +68,7 @@ static void demo_dispatch_table(void)
     printf("=== 2. 函数指针数组: Dispatch Table ===\n");
 
     /* 函数指针数组 */
-    const binary_op_t ops[3] = { add, sub, mul };
+    const binary_op_t ops[3] = { fp_add, fp_sub, fp_mul };
     const char *op_names[3] = { "+", "-", "*" };
 
     int32_t x = 10, y = 3;
@@ -94,12 +94,12 @@ int32_t apply_op(int32_t a, int32_t b, binary_op_t op)
 /* map_op: 对数组每个元素应用一个一元操作函数指针 */
 typedef int32_t (*unary_op_t)(int32_t);
 
-int32_t square(int32_t x)
+int32_t fp_square(int32_t x)
 {
     return x * x;
 }
 
-int32_t negate(int32_t x)
+int32_t fp_negate(int32_t x)
 {
     return -x;
 }
@@ -116,8 +116,8 @@ static void demo_higher_order_function(void)
     printf("=== 3. 函数指针作为参数 (高阶函数) ===\n");
 
     /* 二元操作: apply_op */
-    printf("  apply_op(6, 7, mul) = %" PRId32 "\n", apply_op(6, 7, mul));
-    printf("  apply_op(100, 37, sub) = %" PRId32 "\n", apply_op(100, 37, sub));
+    printf("  apply_op(6, 7, mul) = %" PRId32 "\n", apply_op(6, 7, fp_mul));
+    printf("  apply_op(100, 37, sub) = %" PRId32 "\n", apply_op(100, 37, fp_sub));
 
     /* 一元操作: apply_unary_to_array */
     int32_t nums[5] = { 1, 2, 3, 4, 5 };
@@ -125,12 +125,12 @@ static void demo_higher_order_function(void)
     for (int32_t i = 0; i < 5; i++) printf("%" PRId32 " ", nums[i]);
     printf("\n");
 
-    apply_unary_to_array(nums, 5, square);
+    apply_unary_to_array(nums, 5, fp_square);
     printf("  square 后: ");
     for (int32_t i = 0; i < 5; i++) printf("%" PRId32 " ", nums[i]);
     printf("\n");
 
-    apply_unary_to_array(nums, 5, negate);
+    apply_unary_to_array(nums, 5, fp_negate);
     printf("  negate 后: ");
     for (int32_t i = 0; i < 5; i++) printf("%" PRId32 " ", nums[i]);
     printf("\n");
