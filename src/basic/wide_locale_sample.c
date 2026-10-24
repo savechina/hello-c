@@ -82,15 +82,22 @@ int wl_roundtrip_ok(const char *src)
 
     memset(&ps_out, 0, sizeof(ps_out));
     for (i = 0; i <= n_wide; i++) { /* i == n_wide 时转 L'\0' */
+        mbstate_t ps_probe = ps_out;
+        size_t need = wcrtomb(NULL, wide[i], &ps_probe);
+
+        if (need == (size_t)-1) {
+            return 0;
+        }
+        /* 预检查容量再写入，避免先写 NUL 再判界导致 1 字节溢出 */
+        if (need > sizeof(back) - back_len) {
+            return 0;
+        }
         size_t n = wcrtomb(back + back_len, wide[i], &ps_out);
 
         if (n == (size_t)-1) {
             return 0;
         }
         back_len += n;
-        if (back_len >= sizeof(back)) {
-            return 0;
-        }
     }
 
     return memcmp(src, back, back_len) == 0 && back[back_len - 1] == '\0' ? 1 : 0;

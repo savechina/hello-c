@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include <inttypes.h>
 #include <string.h>
-#include <strings.h>
 #include "basic/bit_ops_sample.h"
 
 /*
@@ -120,7 +119,7 @@ static void demo_bitmask_patterns(void)
         printf("  ❌ READ 未设置\n");
     }
 
-    flags &= ~0u;
+    flags &= ~(FLAG_READ | FLAG_WRITE | FLAG_EXECUTE | FLAG_DELETE);
     printf("  全部清除:         "); print_bits32(flags); printf("\n\n");
 }
 
