@@ -106,8 +106,16 @@ static void system_ipc_pipe_bidirectional_sample(void)
     int p1[2]; /* 父 → 子 */
     int p2[2]; /* 子 → 父 */
 
-    if (pipe(p1) < 0 || pipe(p2) < 0) {
+    /* T1a: 两根管道分开检查 — 第二根失败时必须回收第一根已创建的 fd,
+       否则错误路径泄漏 file descriptor (参照上方 basic pipe demo 的做法) */
+    if (pipe(p1) < 0) {
         printf("  [Error] pipe: %s\n", strerror(errno));
+        return;
+    }
+    if (pipe(p2) < 0) {
+        printf("  [Error] pipe: %s\n", strerror(errno));
+        close(p1[0]);
+        close(p1[1]);
         return;
     }
 
@@ -115,6 +123,11 @@ static void system_ipc_pipe_bidirectional_sample(void)
 
     if (pid < 0) {
         printf("  [Error] fork: %s\n", strerror(errno));
+        /* T1b: fork 失败后回收全部 4 个 fd, 防止错误路径 fd 泄漏 */
+        close(p1[0]);
+        close(p1[1]);
+        close(p2[0]);
+        close(p2[1]);
         return;
     }
 
@@ -198,6 +211,9 @@ static void system_ipc_socketpair_sample(void)
 
     if (pid < 0) {
         printf("  [Error] fork: %s\n", strerror(errno));
+        /* T1c: fork 失败后回收 socketpair 的两个 fd, 防止错误路径 fd 泄漏 */
+        close(sv[0]);
+        close(sv[1]);
         return;
     }
 

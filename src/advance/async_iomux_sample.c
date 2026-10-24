@@ -32,10 +32,17 @@ static void async_iomux_select_sample(void)
 {
     printf("--- 1. select() 监控多文件描述符 ---\n");
 
-    /* 创建两个管道 */
+    /* 创建两个管道 — 分开检查: 第二根失败时必须回收第一根的 fd,
+       否则错误路径泄漏 file descriptor */
     int pipe1[2], pipe2[2];
-    if (pipe(pipe1) != 0 || pipe(pipe2) != 0) {
+    if (pipe(pipe1) != 0) {
         perror("  pipe 创建失败");
+        return;
+    }
+    if (pipe(pipe2) != 0) {
+        perror("  pipe 创建失败");
+        close(pipe1[0]);
+        close(pipe1[1]);
         return;
     }
 
@@ -101,6 +108,11 @@ static void async_iomux_pipe_multiplex_sample(void)
     for (int i = 0; i < n; i++) {
         if (pipe(pipes[i]) != 0) {
             perror("  pipe 创建失败");
+            /* 第 i 根管道失败: 回收此前 pipes[0..i-1] 的全部 fd, 防止错误路径 fd 泄漏 */
+            for (int j = 0; j < i; j++) {
+                close(pipes[j][0]);
+                close(pipes[j][1]);
+            }
             return;
         }
     }
