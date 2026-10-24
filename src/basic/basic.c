@@ -15,6 +15,10 @@ int main_basic_sample(void) {
     main_datatype_sample();
     printf("\n");
 
+    printf("--- 宽字符与区域设置 (Wide Chars & Locale) ---\n");
+    main_wide_locale_sample();
+    printf("\n");
+
     printf("--- 运算符与表达式 (Operators & Expressions) ---\n");
     main_operators_sample();
     printf("\n");
@@ -32,6 +36,10 @@ int main_basic_sample(void) {
     main_functions_basics_sample();
     printf("\n");
 
+    printf("--- 内联函数 (Inline Functions) ---\n");
+    main_inline_functions_sample();
+    printf("\n");
+
     printf("--- 函数作用域 (Function Scope) ---\n");
     main_function_scope_sample();
     printf("\n");
@@ -46,6 +54,10 @@ int main_basic_sample(void) {
 
     printf("--- 数组基础 (Arrays) ---\n");
     main_arrays_sample();
+    printf("\n");
+
+    printf("--- VLA 与柔性数组成员 (VLA & Flexible Array Members) ---\n");
+    main_vla_flexible_sample();
     printf("\n");
 
     printf("--- 预处理器与宏 (Preprocessor & Macros) ---\n");
@@ -126,6 +138,10 @@ int main_basic_sample(void) {
 
     printf("--- 结构体内存布局 (Struct Memory Layout) ---\n");
     main_struct_memory_layout_sample();
+    printf("\n");
+
+    printf("--- C11 存储类说明符 (_Alignas/_Noreturn/_Thread_local) ---\n");
+    main_c11_storage_sample();
     printf("\n");
 
     printf("--- 联合体 (Unions) ---\n");

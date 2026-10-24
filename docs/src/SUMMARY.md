@@ -10,13 +10,16 @@
 
   - [变量与表达式](./basic/variables.md) 🟢
   - [数据类型](./basic/datatype.md) 🟢
+  - [宽字符与本地化 (wchar_t / setlocale)](./basic/wide_locale.md)
   - [运算符与表达式](./basic/operators.md) 🟢
   - [控制流](./basic/control_flow.md) 🟢
   - [循环](./basic/loops.md) 🟢
   - [函数](./basic/functions.md) 🟢
     - [函数基础](./basic/functions_basics.md)
+    - [C99 inline 函数](./basic/inline_functions.md)
     - [函数作用域](./basic/function_scope.md)
   - [数组基础](./basic/arrays.md) 🟢
+  - [VLA 与柔性数组成员](./basic/vla_flexible.md)
   - [预处理器与宏](./basic/preprocessor.md) 🟢
   - [条件编译](./basic/conditional_comp.md) 🟢
   - [枚举](./basic/enums.md) 🟡
@@ -42,6 +45,7 @@
     - [嵌套结构体](./basic/nested_structs.md)
     - [结构体与函数](./basic/struct_functions.md)
     - [结构体内存布局](./basic/struct_memory_layout.md)
+    - [C11 存储类说明符 (_Alignas / _Noreturn / _Thread_local)](./basic/c11_storage.md)
   - [联合体](./basic/unions.md) 🟡
   - [作用域与生命周期](./basic/scope.md) 🟡
   - [内存管理](./basic/memory_mgmt.md) 🔴

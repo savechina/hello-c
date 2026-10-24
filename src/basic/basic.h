@@ -13,14 +13,17 @@
 /* Core Concepts */
 int main_variables_sample(void);
 int main_datatype_sample(void);
+int main_wide_locale_sample(void);
 int main_operators_sample(void);
 void main_control_flow_sample(void);
 void main_loops_sample(void);
 int main_functions_basics_sample(void);
+int main_inline_functions_sample(void);
 int main_function_scope_sample(void);
 int main_recursion_sample(void);
 int main_variadic_functions_sample(void);
 void main_arrays_sample(void);
+int main_vla_flexible_sample(void);
 void main_preprocessor_sample(void);
 
 /* Memory & Pointers */
@@ -40,6 +43,7 @@ int main_struct_basics_sample(void);
 int main_nested_structs_sample(void);
 int main_struct_functions_sample(void);
 int main_struct_memory_layout_sample(void);
+int main_c11_storage_sample(void);
 int main_unions_sample(void);
 int main_typedef_sample(void);
 int main_enums_sample(void);
