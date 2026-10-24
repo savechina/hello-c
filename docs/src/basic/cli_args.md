@@ -30,7 +30,7 @@
 
 ## 前置要求
 
-- 已完成 [文件 I/O](./file_io) 章节（`fprintf(stderr, ...)` 的使用）
+- 已完成 [文件 I/O](./file_io.md) 章节（`fprintf(stderr, ...)` 的使用）
 - 理解指针（`char *argv[]` 是字符串数组）
 - 基本终端操作经验（在命令行运行过程）
 - 已配置 C 编译环境（`gcc` 或 `clang`）
