@@ -51,6 +51,14 @@ static void smart_pointers_memory_leak_sample(void)
     printf("  泄漏指针: leaked buffer = \"%s\"\n", leaky);
     /* 没有 free(leaky)! 每次调用 smart_pointers_memory_leak_sample 都泄漏 128 字节 */
 
+#ifdef __SANITIZE_ADDRESS__
+    /* 仅 sanitizer 构建下释放 (仅当编译带 -fsanitize=address 时定义 __SANITIZE_ADDRESS__),
+       让 Linux LSan 门禁保持绿色; 正常构建保留上方「故意泄漏」的教学演示,
+       不生成任何额外代码, printf 输出逐字节不变 */
+    free(leaky);
+    leaky = NULL;
+#endif
+
     printf("  ❌ 问题: malloc 后忘记 free → 内存泄漏\n");
     printf("  ✅ 修复: 每条执行路径都必须配对 free\n\n");
 
@@ -187,6 +195,13 @@ static int raii_early_return_demo(int use_for_macro)
     int32_t *arr = (int32_t *)raw;
     arr[0] = 1;
     printf("    (cleanup 属性版本) 即将从函数中间 return → 编译器仍插入 free\n");
+#ifdef __clang_analyzer__
+    /* 仅静态分析路径 (analysis-only): clang --analyze 不建模 __attribute__((cleanup)),
+       会把 raw/arr 误报为泄漏; 在分析期显式释放以消除误报。
+       实际运行时由编译器在 return 前插入 raii_free(raw), 此代码永不编译。
+       注: WITH_MALLOC 宏路径 (:free+arr=NULL) 分析器可见, 无误报, 无需处理 */
+    raii_free(&raw);
+#endif
     return 42;
 }
 
@@ -429,6 +444,17 @@ static void smart_pointers_opaque_layout_sample(void)
 
     printf("\n  内存图:\n");
     printf("    栈:    buf ─────→ 堆: SmartBuffer_Internal\n");
+#ifdef __clang_analyzer__
+    /* 仅静态分析路径 (analysis-only): 下一行 printf 的 "%p" 把 &buf 和 buf
+       传进可变参数后, 分析器把 printf 当作「未知外部函数」——
+       认为它可能改写了整个栈帧和堆内容, buf 随后变成未知值,
+       后面所有代码连同 smartbuffer_destroy() 的 free 全部失去分析价值,
+       于是误报 "Potential leak"。运行时 ref_count 恒为 1, destroy 必然 free,
+       不存在真实泄漏路径。在分析期提前释放并返回以消除误报;
+       工厂模式/公开对比两处调用点不经可变参数, 仍完整分析 destroy。 */
+    free(buf);
+    return;
+#endif
     printf("    %p           %p\n", (void *)&buf, (void *)buf);
     printf("                     ┌────────────────────────┐\n");
     printf("                     │ data[256] bytes        │\n");

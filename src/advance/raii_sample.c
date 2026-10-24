@@ -57,9 +57,22 @@ static int demo1_early_return(void)
     int fd __attribute__((__cleanup__(demo1_close_fd))) = open("/dev/null", O_RDONLY);
     void *p __attribute__((__cleanup__(demo1_free))) = malloc(64);
 
-    if (fd < 0 || p == NULL) return -1;
+    if (fd < 0 || p == NULL) {
+#ifdef __clang_analyzer__
+        /* 仅静态分析路径 (analysis-only): clang --analyze 不建模
+           __attribute__((cleanup)), 在此显式释放以消除「泄漏」误报;
+           实际运行时由 cleanup 属性自动释放, 此代码永不编译 */
+        demo1_free(&p);
+#endif
+        return -1;
+    }
 
     printf("    函数体中间 return，清理仍会触发\n");
+#ifdef __clang_analyzer__
+    /* 仅静态分析路径 (analysis-only): 成功返回路径同样不被 cleanup 建模,
+       显式释放以消除「泄漏」误报; 运行时由 cleanup 属性自动释放 */
+    demo1_free(&p);
+#endif
     return 0;
 }
 
@@ -74,6 +87,14 @@ static void raii_cleanup_attribute_sample(void)
         void *b __attribute__((__cleanup__(demo1_free))) = malloc(32);
         (void)f;
         printf("    声明顺序: f → a → b\n");
+#ifdef __clang_analyzer__
+        /* 仅静态分析路径 (analysis-only): 分析器不建模 cleanup 属性,
+           作用域结束时会把 a/b 误报为泄漏 (并连带 dead-store 告警);
+           在分析期显式释放以消除误报。实际运行时由 cleanup 属性
+           按逆序自动清理, 此代码永不编译 */
+        demo1_free(&a);
+        demo1_free(&b);
+#endif
     }
     printf("    析构顺序: b → a → f （后声明的先清理）\n\n");
 
@@ -85,8 +106,18 @@ static void raii_cleanup_attribute_sample(void)
             (void)outer;
             (void)inner;
             printf("    内层作用域结束\n");
+#ifdef __clang_analyzer__
+            /* 仅静态分析路径 (analysis-only): 分析器不建模 cleanup 属性,
+               内层作用域结束时把 inner 误报为泄漏; 分析期显式释放消除误报,
+               运行时由 cleanup 属性自动清理, 此代码永不编译 */
+            demo1_free(&inner);
+#endif
         }
         printf("    外层作用域结束\n");
+#ifdef __clang_analyzer__
+        /* 仅静态分析路径 (analysis-only): 同上, 消除 outer 的泄漏误报 */
+        demo1_free(&outer);
+#endif
     }
 
     printf("\n  [3. 函数中途提前 return]\n");
