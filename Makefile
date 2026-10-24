@@ -13,14 +13,15 @@ SRC_DIR     := src
 INCLUDE_DIR := include
 # Project-level third-party dependencies (generic, for future use)
 VENDOR_DIR      := vendor
-VENDOR_SOURCES  := $(wildcard $(VENDOR_DIR)/**/*.c)
-VENDOR_OBJS     := $(patsubst $(VENDOR_DIR)/%.c,$(BUILD_DIR)/vendor/%.o,$(VENDOR_SOURCES))
 # Build output root directory
 BUILD_DIR   := build
 # Directory for intermediate object files (.o)
 OBJ_DIR     := $(BUILD_DIR)/obj
 # Directory for the final executable
 BIN_DIR     := $(BUILD_DIR)/bin
+# Vendor sources/objects must be defined AFTER BUILD_DIR because they expand it now
+VENDOR_SOURCES  := $(wildcard $(VENDOR_DIR)/**/*.c)
+VENDOR_OBJS     := $(patsubst $(VENDOR_DIR)/%.c,$(BUILD_DIR)/vendor/%.o,$(VENDOR_SOURCES))
 
 # Find all .c source files in SRC_DIR (including _sample.c files)
 # Per hello-rust convention: all samples compiled into single 'hello' binary
@@ -30,10 +31,6 @@ SOURCES     := $(wildcard $(SRC_DIR)/**.c $(SRC_DIR)/**/**.c)
 # e.g., src/main.c -> build/obj/main.o
 OBJECTS     := $(patsubst $(SRC_DIR)/%.c,$(OBJ_DIR)/%.o,$(SOURCES))
 
-# --- DEBUGGING LINES ---
-$(info DEBUG: SOURCES found: $(SOURCES))
-$(info DEBUG: OBJECTS found: $(OBJECTS))
-# --- END DEBUGGING LINES ---
 
 # --- Compiler & Flags ---
 # Operation System
@@ -114,14 +111,12 @@ TEST_SOURCES     := $(filter-out $(TEST_VENDOR_DIR)/%, $(TEST_SOURCES_RAW))
 TEST_BINS        := $(patsubst $(TEST_DIR)/%.c,$(BUILD_DIR)/test/%,$(TEST_SOURCES))
 
 $(BUILD_DIR)/test:
-	@mkdir -p $@
+	@mkdir -p $@ $(sort $(dir $(TEST_BINS)))
 
 # --- Directories Setup ---
 # Create output directories if they don't exist
 OBJ_SUBDIRS := $(sort $(dir $(OBJECTS)))
 DIRS        := $(OBJ_SUBDIRS) $(BIN_DIR)
-
-$(info DEBUG: DIRS found: $(DIRS))
 
 # --- Include Dependency Files (.d) ---
 -include $(OBJECTS:.o=.d)
@@ -138,7 +133,11 @@ all: build
 build: $(DIRS) $(BIN_DIR)/$(TARGET)
 
 # --- Project Vendor Compilation Rule ---
-$(BUILD_DIR)/vendor/%.o: $(VENDOR_DIR)/%.c | $(BUILD_DIR)
+# Real directory target (NOT the phony `build`) as order-only prereq.
+$(BUILD_DIR)/vendor:
+	@mkdir -p $@
+
+$(BUILD_DIR)/vendor/%.o: $(VENDOR_DIR)/%.c | $(BUILD_DIR)/vendor
 	@mkdir -p $(dir $@)
 	$(CC) $(NORMAL_CFLAGS) -c $< -o $@
 
@@ -152,13 +151,21 @@ $(BIN_DIR)/$(TARGET): $(OBJECTS) $(VENDOR_OBJS)
 # $<: The name of the first prerequisite (the .c file)
 # $@: The name of the target (the .o file)
 # -c: Compile only, do not link
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
+# Order-only dir prereqs keep `make -j` from racing the mkdir of OBJ_SUBDIRS.
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.c | $(OBJ_SUBDIRS)
 	@echo "Compiling $< to $@ ..."
 	$(CC) $(NORMAL_CFLAGS) -c $< -o $@
 
 # --- Directory Creation Rule ---
 $(DIRS):
 	@mkdir -p $@
+
+# When `clean` is an explicit goal, run the whole invocation serially so
+# `make -j clean build` cannot race `rm -rf` against the compilers. This only
+# kicks in for that combination; plain `make -j build/test` stays parallel.
+ifneq ($(filter clean,$(MAKECMDGOALS)),)
+.NOTPARALLEL:
+endif
 
 # --- Run Target ---
 .PHONY: run
@@ -191,7 +198,11 @@ sample-all: build
 # ============================================================
 # Test vendor compilation (generic rule for all test/vendor/**/*.c)
 # ============================================================
-$(BUILD_DIR)/test-vendor/%.o: $(TEST_VENDOR_DIR)/%.c | $(BUILD_DIR)
+# Real directory target (NOT the phony `build`) as order-only prereq.
+$(BUILD_DIR)/test-vendor:
+	@mkdir -p $@
+
+$(BUILD_DIR)/test-vendor/%.o: $(TEST_VENDOR_DIR)/%.c | $(BUILD_DIR)/test-vendor
 	@mkdir -p $(dir $@)
 	$(CC) $(TEST_CFLAGS) -c $< -o $@
 
