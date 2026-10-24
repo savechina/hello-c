@@ -342,10 +342,14 @@ static void web_concurrent_iomux_server_sample(void)
         if (FD_ISSET(server_fd, &read_set)) {
             /* 新连接 */
             int client_fd = accept(server_fd, NULL, NULL);
-            if (client_fd > maxfd) {
-                maxfd = client_fd;
+            if (client_fd >= 0) {
+                if (client_fd > maxfd) {
+                    maxfd = client_fd;
+                }
+                /* 把 client_fd 加入 fd 数组 */
+                /* demo 未维护 fd 数组 — 不复用就必须立即关闭, 否则每轮 accept 泄漏一个 fd */
+                close(client_fd);
             }
-            /* 把 client_fd 加入 fd 数组 */
         }
 
         /* 检查所有 client fd 是否可读 */

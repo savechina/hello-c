@@ -322,6 +322,10 @@ static void iterators_binary_tree_sample(void)
     printf("=== 4. 二叉树遍历 (Binary Tree Traversal) ===\n");
 
     TreeNode *root = tree_new(1);
+    if (root == NULL) {
+        fprintf(stderr, "  Error: malloc failed\n");
+        return;
+    }
     root->left = tree_new(2);
     root->right = tree_new(3);
     if (root->left == NULL || root->right == NULL) {

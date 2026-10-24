@@ -273,6 +273,10 @@ static void demo_text_vs_binary(void)
     const char *test_str = "Line1\nLine2\n";
 
     FILE *fp = fopen(BINARY_DEMO_FILE, "wb");
+    if (fp == NULL) {
+        fprintf(stderr, "❌ fopen failed: %s\n", strerror(errno));
+        return;
+    }
     fwrite(test_str, 1, strlen(test_str), fp);
     fclose(fp);
 

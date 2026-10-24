@@ -136,7 +136,8 @@ static void system_process_wait_sample(void)
 
     /* 创建 3 个子进程 */
     int num_children = 3;
-    pid_t children[3];
+    /* 初始化为 0: fork 失败的槽位保持 0, 后面 waitpid 循环跳过 — 避免读未初始化值 (uninitialized read) */
+    pid_t children[3] = {0};
 
     for (int i = 0; i < num_children; i++) {
         pid_t pid = fork();
@@ -155,12 +156,19 @@ static void system_process_wait_sample(void)
         } else if (pid > 0) {
             children[i] = pid;
             printf("  [父进程] 创建子进程 #%d, PID=%d\n", i + 1, (int)pid);
+        } else {
+            /* fork 失败: 打印一条错误信息后停止创建剩余子进程 (stop creating) */
+            printf("  [Error] fork: %s\n", strerror(errno));
+            break;
         }
     }
 
     printf("  [父进程] 等待所有子进程...\n");
 
     for (int i = 0; i < num_children; i++) {
+        if (children[i] == 0) {
+            continue; /* 跳过 fork 失败留下的空槽 (skip failed slot) */
+        }
         int status = 0;
         pid_t waited = waitpid(children[i], &status, 0);
         if (waited > 0 && WIFEXITED(status)) {
