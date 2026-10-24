@@ -5,3 +5,6 @@ build
 test/mocks/
 
 cscope*
+
+# vim swap files
+*.sw?
