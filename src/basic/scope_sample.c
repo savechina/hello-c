@@ -210,7 +210,7 @@ static void demo_lifetime_comparison(void) {
 /* ---- Section 6: Dangling pointer explanation ---- */
 
 #pragma GCC diagnostic push
-#ifndef __clang__
+#if !defined(__clang__) && defined(__GNUC__) && __GNUC__ >= 12
 #pragma GCC diagnostic ignored "-Wdangling-pointer"
 #endif
 static void demo_dangling_pointer_explained(void) {
@@ -234,7 +234,7 @@ static void demo_dangling_pointer_explained(void) {
 /* ---- Section 7: Use-after-free explanation ---- */
 
 #pragma GCC diagnostic push
-#ifndef __clang__
+#if !defined(__clang__) && defined(__GNUC__) && __GNUC__ >= 12
 #pragma GCC diagnostic ignored "-Wuse-after-free"
 #endif
 static void demo_use_after_free_explained(void) {
