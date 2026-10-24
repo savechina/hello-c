@@ -223,6 +223,7 @@ static void system_file_dir_scan_sample(void)
     struct dirent *ent;
     while ((ent = readdir(dir)) != NULL && count < 10) {
         const char *type;
+#if defined(__APPLE__) || defined(__linux__) || defined(__FreeBSD__)
         switch (ent->d_type) {
             case DT_DIR:  type = "dir";     break;
             case DT_REG:  type = "file";    break;
@@ -231,6 +232,23 @@ static void system_file_dir_scan_sample(void)
             case DT_SOCK: type = "socket";  break;
             default:      type = "unknown"; break;
         }
+#else
+        /* 可移植回退: 无 d_type 的平台 (illumos/Solaris) 用 lstat 判断类型 */
+        char full_path[1024];
+        struct stat st;
+        snprintf(full_path, sizeof(full_path), "%s/%s", dir_path, ent->d_name);
+        if (lstat(full_path, &st) < 0) {
+            type = "unknown";
+        } else if (S_ISDIR(st.st_mode)) {
+            type = "dir";
+        } else if (S_ISREG(st.st_mode)) {
+            type = "file";
+        } else if (S_ISLNK(st.st_mode)) {
+            type = "link";
+        } else {
+            type = "other";
+        }
+#endif
         printf("  │ %-6d │ %-26.26s │ %-8s │\n", count + 1, ent->d_name, type);
         count++;
     }
