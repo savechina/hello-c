@@ -105,8 +105,10 @@ static void wide_demo(void)
     printf("=== wchar_t 基础: 纯 ASCII 无需 locale ===\n");
     printf("  sizeof(wchar_t) = %zu\n", sizeof(wchar_t));
     n = wl_mbtowc_n(name, wide, sizeof(wide) / sizeof(wide[0]));
+    /* %lc 形参是 wint_t; FreeBSD 上 wchar_t 是 unsigned int 而 wint_t 是 int,
+     * 必须显式转换才能通过 -Wformat (macOS/Linux/illumos 上同为 int 也保持正确) */
     printf("  wl_mbtowc_n(\"%s\") = %zu, wide[0]=%lc (L'%c')\n",
-           name, n, wide[0], name[0]);
+           name, n, (wint_t)wide[0], name[0]);
     printf("  wl_roundtrip_ok(\"%s\") = %d\n", name, wl_roundtrip_ok(name));
     printf("  ❌ 错例: 未 setlocale 就 mbrtowc UTF-8 → (size_t)-1, 见注释\n\n");
 }
