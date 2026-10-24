@@ -83,7 +83,7 @@ $ make --version
 ## 克隆项目
 
 ```bash
-$ git clone https://github.com/your-org/hello-c.git
+$ git clone https://github.com/savechina/hello-c.git
 $ cd hello-c
 ```
 
