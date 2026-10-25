@@ -17,7 +17,6 @@
 | [多平台事件模型](event-models.md) | 🔴 | kqueue（macOS/FreeBSD）、epoll（Linux）、ports（illumos）、poll（兜底） |
 | [VFS 与挂载点](vfs.md) | 🟡 | getmntinfo/getmntent/mnttab、statvfs |
 | [内核接口探测](kernel-interface.md) | 🔴 | sysctl、kstat、/proc 与 /sys——驱动教学的 userland 替代 |
-| [真实项目: 终端 TODO](todo-project.md) | 🟡 | 数据结构 CRUD + 二进制持久化 + 资源纪律 |
 
 ## 为什么没有驱动章节？
 

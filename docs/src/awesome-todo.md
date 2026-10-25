@@ -669,4 +669,4 @@ rename(tmp, path);   /* 同一文件系统内, rename 是原子的 */
 > 并发访问、或数据量超过内存时，就该把这套手工活交给数据库——
 > 这正是 [SQLite 章](../database.md) 要讲的。
 
-[← 上一章：高级进阶总览](../overview.md) | [下一章 → 数据库 (SQLite)](../database.md)
+[← 上一章：资源精选](awesome.md) | [回到目录 → SUMMARY](index.md)

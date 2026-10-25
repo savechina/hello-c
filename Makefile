@@ -25,7 +25,10 @@ VENDOR_OBJS     := $(patsubst $(VENDOR_DIR)/%.c,$(BUILD_DIR)/vendor/%.o,$(VENDOR
 
 # Find all .c source files in SRC_DIR (including _sample.c files)
 # Per hello-rust convention: all samples compiled into single 'hello' binary
+# EXCEPT todo_main.c — it owns its own main() for the standalone todo binary,
+# so it must not be linked into hello (duplicate main symbol).
 SOURCES     := $(wildcard $(SRC_DIR)/**.c $(SRC_DIR)/**/**.c)
+SOURCES     := $(filter-out $(SRC_DIR)/awesome/todo_main.c,$(SOURCES))
 
 # Generate corresponding .o object files based on sources and OBJ_DIR
 # e.g., src/main.c -> build/obj/main.o
@@ -169,10 +172,24 @@ endif
 
 # --- Run Target ---
 .PHONY: run
-run:
+run: build
 	@echo "Running project..."
 	$(BIN_DIR)/$(TARGET)
 	@echo "Running complete"
+
+# ============================================================
+# Standalone app: terminal TODO (build/bin/todo — separate main)
+# ============================================================
+# todo_main.c is excluded from SOURCES above (it has its own main()); the
+# binary is one-shot-linked with the shared business core todo_sample.c.
+$(BIN_DIR)/todo: $(SRC_DIR)/awesome/todo_main.c $(SRC_DIR)/awesome/todo_sample.c | $(BIN_DIR)
+	@echo "Linking standalone app: $@"
+	$(CC) $(NORMAL_CFLAGS) $(NORMAL_LDFLAGS) $(SRC_DIR)/awesome/todo_main.c $(SRC_DIR)/awesome/todo_sample.c -o $@
+
+.PHONY: todo
+todo: $(BIN_DIR)/todo
+	@echo "TODO app: ./build/bin/todo [list|add <text>|done <id>|rm <id>|clear]"
+	@echo "Storage: $$TODO_FILE or $$HOME/.hello-c-todo.dat"
 
 # ==============================================================================
 # --- Sample Targets (hello-rust convention) ---
@@ -364,6 +381,7 @@ help:
 	@echo "  test-valgrind  Run Unity tests under Valgrind (NOT available on arm64 macOS — use 'make test-asan')."
 	@echo "  sample CHAPTER=<name>  Rebuild and run (all _sample.c files included)."
 	@echo "  sample-all             Same as 'run' — full tutorial suite."
+	@echo "  todo       Build the standalone TODO app (build/bin/todo, own main())."
 	@echo "  clean      Removes all compiled objects and the executable."
 	@echo "  help       Displays this help message."
 	@echo ""
