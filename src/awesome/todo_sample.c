@@ -28,7 +28,11 @@
 #include "awesome/todo_sample.h"
 
 /* CTDL 文件魔数 — header 里 extern, 唯一定义在此 */
-const char TODO_FILE_MAGIC[TODO_FILE_MAGIC_LEN] = "CTDL";
+/* 魔数是裸字节 (fwrite/memcmp 用, 无 NUL 终止): 逐字符初始化, 不用
+ * "CTDL" 字面量 — 数组恰好 4 字节时 clang 21+ 会触发
+ * -Wunterminated-string-initialization; GCC 的 nonstring 属性 Apple clang
+ * 不识别, 逐字符写法跨编译器通用 */
+const char TODO_FILE_MAGIC[TODO_FILE_MAGIC_LEN] = {'C', 'T', 'D', 'L'};
 
 /* ====================================================================
  *  工厂与销毁 (资源纪律: 谁分配, 谁释放; free 后置 NULL)

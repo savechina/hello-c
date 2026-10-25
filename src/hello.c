@@ -10,8 +10,9 @@ unsigned long long factorial(int n) {
 
   return n * factorial(n - 1);
 }
+
 /**
- * hello main
+ * hello main entry
  */
 int main_hello() {
   int x = 100020;
@@ -20,8 +21,11 @@ int main_hello() {
   int num = 20;
   printf("Factorial of %d is %llu\n", num, factorial(num));
 
+  // basic sample entry
   main_basic_sample();
 
+  // advance sample entry
   main_advance_sample();
+
   return 0;
 }

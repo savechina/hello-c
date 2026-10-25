@@ -27,7 +27,9 @@
 #define TODO_MAX_COUNT 100000u /* count 合法上限 (防损坏文件巨额分配) */
 #define TODO_FILE_VERSION 1u   /* 文件格式版本 */
 
-/* CTDL 文件魔数: 4 字节 "CTDL" (C ToDo List) */
+/* CTDL 文件魔数: 4 字节 "CTDL" (C ToDo List)。
+ * 裸字节用途 (fwrite/memcmp), 无 NUL 终止; 定义处用逐字符初始化,
+ * 避开 clang 21+ 的 -Wunterminated-string-initialization */
 extern const char TODO_FILE_MAGIC[TODO_FILE_MAGIC_LEN];
 
 /** 错误码 — 负值为失败, 0 为成功 */
