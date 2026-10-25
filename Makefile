@@ -192,6 +192,25 @@ todo: $(BIN_DIR)/todo
 	@echo "Storage: $$TODO_FILE or $$HOME/.hello-c-todo.dat"
 
 # ==============================================================================
+# Standalone app: assembly hello (build/bin/asm-hello)
+# ==============================================================================
+# hello_arm.s is the hosted (macOS/AArch64) asm hello — assembled with the
+# regular toolchain driver (clang reads .s and links libc automatically).
+# The bare-metal samples (src/asm/main.s, src/asm/marm.s) are NOT built here:
+# they need nasm/aarch64-none-elf toolchains + QEMU (see their headers).
+$(BIN_DIR)/asm-hello: $(SRC_DIR)/asm/hello_arm.s | $(BIN_DIR)
+	@echo "Assembling standalone app: $@"
+	$(CC) $< -o $@
+
+.PHONY: asm
+asm: $(BIN_DIR)/asm-hello
+	@echo "ASM hello assembled: $(BIN_DIR)/asm-hello (source: src/asm/hello_arm.s)"
+
+.PHONY: asm-run
+asm-run: $(BIN_DIR)/asm-hello
+	$(BIN_DIR)/asm-hello
+
+# ==============================================================================
 # --- Sample Targets (hello-rust convention) ---
 # ==============================================================================
 # All _sample.c files are compiled into the single 'hello' binary via glob.
@@ -382,6 +401,8 @@ help:
 	@echo "  sample CHAPTER=<name>  Rebuild and run (all _sample.c files included)."
 	@echo "  sample-all             Same as 'run' — full tutorial suite."
 	@echo "  todo       Build the standalone TODO app (build/bin/todo, own main())."
+	@echo "  asm        Assemble the asm hello (build/bin/asm-hello, src/asm/hello_arm.s)."
+	@echo "  asm-run    Assemble + run the asm hello."
 	@echo "  clean      Removes all compiled objects and the executable."
 	@echo "  help       Displays this help message."
 	@echo ""

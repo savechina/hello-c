@@ -11,6 +11,13 @@ _main:
 
         bl      _printf                 ; Call the printf function
 
+        ; ⚠ 必须先刷 stdio 缓冲区, svc exit 才不会丢输出:
+        ;   TTY 下 stdout 是行缓冲所以"看得见", 管道/重定向下是全缓冲,
+        ;   svc 直接终止进程, 缓冲区里的 "Hello World" 会被整个丢掉
+        ;   （实测: 重定向到文件时零输出 —— 真实 bug, 已血泪验证）。
+        mov     x0, #0                  ; fflush(NULL): 刷全部缓冲区
+        bl      _fflush
+
         mov     w0, #0                  ; Set exit code to 0
 
         ; Call the exit system call
