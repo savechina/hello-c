@@ -43,6 +43,7 @@ int main_events_sample(void);
 int main_vfs_sample(void);
 int main_kernel_iface_sample(void);
 int main_todo_sample(void);
+int main_asm_sample(void);
 
 /* Coordinator entry point */
 int main_advance_sample(void);

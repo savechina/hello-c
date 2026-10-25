@@ -19,8 +19,9 @@
 | 工具链 | 🟢 | 25 min  | [tools](tools.md) |
 | 数据库 | 🟡 | 40 min  | [database](database.md) |
 | HTTP 服务器 | 🔴 | 50 min  | [web](web.md) |
-| Unix 环境与内核 | 🔴 | 60 min  | [unix](unix/unix.md) |
-| 阶段复习 | —  | 30 min  | [review](review.md) |
+| Unix 环境与内核 | 🔴 | 60 min | [unix](unix/unix.md) |
+| 内联汇编 | 🔴 | 45 min | [asm](asm.md) |
+| 阶段复习 | —  | 30 min | [review](review.md) |
 
 ## 下一步
 

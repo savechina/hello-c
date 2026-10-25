@@ -105,6 +105,8 @@
     - [VFS 与挂载点](./advance/unix/vfs.md)
     - [内核接口探测 (sysctl/kstat/procfs)](./advance/unix/kernel-interface.md)
 
+  - [内联汇编 (Inline Assembly)](./advance/asm.md) 🔴
+
   - [阶段复习](./advance/review.md) 📝
 
 # Algo

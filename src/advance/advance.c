@@ -124,6 +124,10 @@ int main_advance_sample(void) {
   main_todo_sample();
   printf("\n");
 
+  printf("--- 内联汇编 (Inline Assembly) ---\n");
+  main_asm_sample();
+  printf("\n");
+
   printf("进阶教程完毕。\n");
   return 0;
 }
