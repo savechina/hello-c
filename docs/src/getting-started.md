@@ -172,10 +172,31 @@ $ brew install mdbook  # macOS
 
 ## 编辑器推荐
 
-- **VS Code**: 免费的 C/C++ 插件提供语法高亮、智能补全和调试
-- **Neovim/Vim**: 轻量级，配合 LSP 插件体验优秀
-- **CLion**: JetBrains 出品，功能完善（付费）
-- **Sublime Text**: 简洁快速，适合快速编辑
+无论选哪个编辑器，核心都是同一套 LSP：**clangd**（语义补全、跳转、实时诊断）。
+
+```bash
+$ brew install clangd      # macOS
+$ sudo apt install clangd  # Ubuntu/Debian
+```
+
+- **VS Code**: 安装 `clangd` 插件（推荐，比微软 C/C++ 插件快），免费的语法高亮、智能补全和调试
+- **Neovim/Vim**: 轻量级，配合 LSP 插件体验优秀（nvim-lspconfig 的 `clangd`、vim 的 `LanguageClient`/Vim9 内置 LSP）
+- **CLion**: JetBrains 出品，功能完善（付费，自带 clangd 集成）
+- **Sublime Text**: 简洁快速，配合 LSP 插件
+
+### 格式化工具
+
+本项目已内置 `.clang-format`（LLVM 基底，`IndentPPDirectives: BeforeHash`——嵌套在 `#if` 内的预处理指令每层缩进 2 个空格，即 ` #include`）。
+
+- VS Code / Neovim / CLion：编辑器自带的「格式化文档」即可（clangd / clangFormat 均读取项目里同一份配置）
+- 命令行批量格式化：
+
+```bash
+$ brew install clang-format      # macOS（Ubuntu: sudo apt install clang-format）
+$ clang-format --style=file -i src/hello.c
+```
+
+`test/vendor/`（第三方测试框架）已通过 `.clang-format-ignore` 排除，不会被重排。
 
 ## 接下来
 
