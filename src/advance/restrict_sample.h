@@ -1,7 +1,7 @@
 #ifndef RESTRICT_SAMPLE_H
- #define RESTRICT_SAMPLE_H
+#define RESTRICT_SAMPLE_H
 
- #include <stddef.h>
+#include <stddef.h>
 
 /**
  * @brief restrict 指针契约章节 (Pointer Qualifier Contract).
@@ -32,6 +32,6 @@ int main_restrict_sample(void);
  * @param b   加数缓冲 (不得与 dst/a 重叠)
  * @param n   元素个数 (0 合法, 任何指针此时都不得解引用)
  */
-void add_arrays(double *dst, const double *a, const double *b, size_t n);
+void add_arrays(double* dst, const double* a, const double* b, size_t n);
 
 #endif /* RESTRICT_SAMPLE_H */

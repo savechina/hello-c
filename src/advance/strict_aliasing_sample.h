@@ -1,7 +1,7 @@
 #ifndef STRICT_ALIASING_SAMPLE_H
- #define STRICT_ALIASING_SAMPLE_H
+#define STRICT_ALIASING_SAMPLE_H
 
- #include <stdint.h>
+#include <stdint.h>
 
 /**
  * @brief 严格别名 (Strict Aliasing)、有效类型与合法类型双关章节.
@@ -18,7 +18,8 @@
 int main_strict_aliasing_sample(void);
 
 /**
- * @brief 把 uint32_t 的内存表示按原样复制到 4 字节 (合法双关, 非 static 供测试).
+ * @brief 把 uint32_t 的内存表示按原样复制到 4 字节 (合法双关, 非 static
+ * 供测试).
  *
  * @param v   待拆解的 32 位值
  * @param out 4 字节输出缓冲 (宿主端序, 不做端序转换)

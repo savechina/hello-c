@@ -4,28 +4,23 @@
  *
  * `make test`      → smoke only (no instrumentation).
  * `make test-asan` → UBSan aborts on signed overflow, so reverting the demo
- *                    to `int32_t max + 1` turns this red instead of teaching UB.
+ *                    to `int32_t max + 1` turns this red instead of teaching
+ * UB.
  */
 
-#include "unity.h"
 #include "basic/variables_sample.h"
+#include "unity.h"
 
-void setUp(void)
-{
+void setUp(void) {}
+
+void tearDown(void) {}
+
+void test_variables_sample_runs_without_undefined_behavior(void) {
+  TEST_ASSERT_EQUAL_INT(0, main_variables_sample());
 }
 
-void tearDown(void)
-{
-}
-
-void test_variables_sample_runs_without_undefined_behavior(void)
-{
-    TEST_ASSERT_EQUAL_INT(0, main_variables_sample());
-}
-
-int main(void)
-{
-    UNITY_BEGIN();
-    RUN_TEST(test_variables_sample_runs_without_undefined_behavior);
-    return UNITY_END();
+int main(void) {
+  UNITY_BEGIN();
+  RUN_TEST(test_variables_sample_runs_without_undefined_behavior);
+  return UNITY_END();
 }

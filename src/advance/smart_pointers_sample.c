@@ -1,9 +1,9 @@
-#include <stdio.h>
-#include <stdint.h>
+#include "advance/smart_pointers_sample.h"
 #include <inttypes.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "advance/smart_pointers_sample.h"
 
 /* ================================================================
  * smart-pointers 演示 (Opaque Pointers & RAII-style Patterns in C)
@@ -19,129 +19,130 @@
 #define SB_CAPACITY 256
 
 struct SmartBuffer_Internal {
-    uint8_t data[SB_CAPACITY];
-    size_t  len;
-    int     ref_count;
+  uint8_t data[SB_CAPACITY];
+  size_t len;
+  int ref_count;
 };
 
 typedef struct SmartBuffer_Internal SmartBuffer_Int;
 
 /* Forward declarations */
-static SmartBuffer_Int *smartbuffer_create(void);
-static void smartbuffer_destroy(SmartBuffer_Int *buf);
-static int smartbuffer_push(SmartBuffer_Int *buf, uint8_t byte);
-static size_t smartbuffer_len(const SmartBuffer_Int *buf);
-static const uint8_t *smartbuffer_data(const SmartBuffer_Int *buf);
+static SmartBuffer_Int* smartbuffer_create(void);
+static void smartbuffer_destroy(SmartBuffer_Int* buf);
+static int smartbuffer_push(SmartBuffer_Int* buf, uint8_t byte);
+static size_t smartbuffer_len(const SmartBuffer_Int* buf);
+static const uint8_t* smartbuffer_data(const SmartBuffer_Int* buf);
 
 /* ---------------------------------------------------------
    Demo 1: 错误优先 — 原始 malloc/free 导致内存泄漏
    --------------------------------------------------------- */
 
-static void smart_pointers_memory_leak_sample(void)
-{
-    printf("=== Demo 1: 原始指针的内存泄漏问题 ===\n");
+static void smart_pointers_memory_leak_sample(void) {
+  printf("=== Demo 1: 原始指针的内存泄漏问题 ===\n");
 
-    /* ❌ 典型的泄漏场景: malloc 但忘记 free */
-    char *leaky = malloc(128);
-    if (leaky == NULL) {
-        fprintf(stderr, "malloc failed\n");
-        return;
-    }
-    snprintf(leaky, 128, "I was allocated but never freed!");
-    printf("  泄漏指针: leaked buffer = \"%s\"\n", leaky);
-    /* 没有 free(leaky)! 每次调用 smart_pointers_memory_leak_sample 都泄漏 128 字节 */
+  /* ❌ 典型的泄漏场景: malloc 但忘记 free */
+  char* leaky = malloc(128);
+  if (leaky == NULL) {
+    fprintf(stderr, "malloc failed\n");
+    return;
+  }
+  snprintf(leaky, 128, "I was allocated but never freed!");
+  printf("  泄漏指针: leaked buffer = \"%s\"\n", leaky);
+  /* 没有 free(leaky)! 每次调用 smart_pointers_memory_leak_sample 都泄漏 128
+   * 字节 */
 
 #ifdef __SANITIZE_ADDRESS__
-    /* 仅 sanitizer 构建下释放 (仅当编译带 -fsanitize=address 时定义 __SANITIZE_ADDRESS__),
-       让 Linux LSan 门禁保持绿色; 正常构建保留上方「故意泄漏」的教学演示,
-       不生成任何额外代码, printf 输出逐字节不变 */
-    free(leaky);
-    leaky = NULL;
+  /* 仅 sanitizer 构建下释放 (仅当编译带 -fsanitize=address 时定义
+     __SANITIZE_ADDRESS__), 让 Linux LSan 门禁保持绿色;
+     正常构建保留上方「故意泄漏」的教学演示, 不生成任何额外代码, printf
+     输出逐字节不变 */
+  free(leaky);
+  leaky = NULL;
 #endif
 
-    printf("  ❌ 问题: malloc 后忘记 free → 内存泄漏\n");
-    printf("  ✅ 修复: 每条执行路径都必须配对 free\n\n");
+  printf("  ❌ 问题: malloc 后忘记 free → 内存泄漏\n");
+  printf("  ✅ 修复: 每条执行路径都必须配对 free\n\n");
 
-    /* 正确做法 */
-    char *safe = malloc(64);
-    if (safe == NULL) return;
-    snprintf(safe, 64, "allocated and freed");
-    printf("  安全指针: \"%s\"\n", safe);
-    free(safe);
-    safe = NULL;
-    printf("  ✅ free 后置 NULL, 防止悬垂指针\n\n");
+  /* 正确做法 */
+  char* safe = malloc(64);
+  if (safe == NULL)
+    return;
+  snprintf(safe, 64, "allocated and freed");
+  printf("  安全指针: \"%s\"\n", safe);
+  free(safe);
+  safe = NULL;
+  printf("  ✅ free 后置 NULL, 防止悬垂指针\n\n");
 }
 
 /* ---------------------------------------------------------
    Demo 2: 工厂模式 (Factory Pattern) — opaque pointer
    --------------------------------------------------------- */
 
-static SmartBuffer_Int *smartbuffer_create(void)
-{
-    SmartBuffer_Int *buf = malloc(sizeof(SmartBuffer_Int));
-    if (buf == NULL) return NULL;
+static SmartBuffer_Int* smartbuffer_create(void) {
+  SmartBuffer_Int* buf = malloc(sizeof(SmartBuffer_Int));
+  if (buf == NULL)
+    return NULL;
 
-    memset(buf->data, 0, SB_CAPACITY);
-    buf->len = 0;
-    buf->ref_count = 1;
-    return buf;
+  memset(buf->data, 0, SB_CAPACITY);
+  buf->len = 0;
+  buf->ref_count = 1;
+  return buf;
 }
 
-static void smartbuffer_destroy(SmartBuffer_Int *buf)
-{
-    if (buf == NULL) return;
+static void smartbuffer_destroy(SmartBuffer_Int* buf) {
+  if (buf == NULL)
+    return;
 
-    buf->ref_count--;
-    if (buf->ref_count <= 0) {
-        memset(buf->data, 0, SB_CAPACITY); /* 销毁前清零 */
-        free(buf);
-    }
+  buf->ref_count--;
+  if (buf->ref_count <= 0) {
+    memset(buf->data, 0, SB_CAPACITY); /* 销毁前清零 */
+    free(buf);
+  }
 }
 
-static int smartbuffer_push(SmartBuffer_Int *buf, uint8_t byte)
-{
-    if (buf == NULL || buf->len >= SB_CAPACITY) return -1;
+static int smartbuffer_push(SmartBuffer_Int* buf, uint8_t byte) {
+  if (buf == NULL || buf->len >= SB_CAPACITY)
+    return -1;
 
-    buf->data[buf->len] = byte;
-    buf->len++;
+  buf->data[buf->len] = byte;
+  buf->len++;
+  return 0;
+}
+
+static size_t smartbuffer_len(const SmartBuffer_Int* buf) {
+  if (buf == NULL)
     return 0;
+  return buf->len;
 }
 
-static size_t smartbuffer_len(const SmartBuffer_Int *buf)
-{
-    if (buf == NULL) return 0;
-    return buf->len;
+static const uint8_t* smartbuffer_data(const SmartBuffer_Int* buf) {
+  if (buf == NULL)
+    return NULL;
+  return buf->data;
 }
 
-static const uint8_t *smartbuffer_data(const SmartBuffer_Int *buf)
-{
-    if (buf == NULL) return NULL;
-    return buf->data;
-}
+static void smart_pointers_factory_pattern_sample(void) {
+  printf("=== Demo 2: 工厂模式 + 不透明指针 ===\n");
 
-static void smart_pointers_factory_pattern_sample(void)
-{
-    printf("=== Demo 2: 工厂模式 + 不透明指针 ===\n");
+  /* 调用者只能看见 SmartBuffer*, 看不见内部结构 */
+  SmartBuffer_Int* buf = smartbuffer_create();
+  if (buf == NULL) {
+    fprintf(stderr, "smartbuffer_create failed\n");
+    return;
+  }
 
-    /* 调用者只能看见 SmartBuffer*, 看不见内部结构 */
-    SmartBuffer_Int *buf = smartbuffer_create();
-    if (buf == NULL) {
-        fprintf(stderr, "smartbuffer_create failed\n");
-        return;
-    }
+  const char* msg = "Hello Opaque!";
+  for (size_t i = 0; i < strlen(msg); i++) {
+    smartbuffer_push(buf, (uint8_t)msg[i]);
+  }
 
-    const char *msg = "Hello Opaque!";
-    for (size_t i = 0; i < strlen(msg); i++) {
-        smartbuffer_push(buf, (uint8_t)msg[i]);
-    }
+  printf("  不透明指针缓冲区:\n");
+  printf("    长度 = %zu\n", smartbuffer_len(buf));
+  printf("    内容 = \"%.*s\"\n", (int)smartbuffer_len(buf),
+         (const char*)smartbuffer_data(buf));
 
-    printf("  不透明指针缓冲区:\n");
-    printf("    长度 = %zu\n", smartbuffer_len(buf));
-    printf("    内容 = \"%.*s\"\n", (int)smartbuffer_len(buf),
-           (const char *)smartbuffer_data(buf));
-
-    smartbuffer_destroy(buf);
-    printf("  ✅ 工厂创建 → 使用 → 销毁, 调用者从未接触内部结构\n\n");
+  smartbuffer_destroy(buf);
+  printf("  ✅ 工厂创建 → 使用 → 销毁, 调用者从未接触内部结构\n\n");
 }
 
 /* ---------------------------------------------------------
@@ -149,105 +150,109 @@ static void smart_pointers_factory_pattern_sample(void)
    --------------------------------------------------------- */
 
 /* 方式 A: for 循环宏。清理发生在 for 的第三个表达式。
-   ⚠️ 局限: 循环体里的 return / break / goto / continue 会跳过清理表达式 → 泄漏。 */
-#define WITH_FILE(var, path, mode) \
-    for (FILE *var = fopen(path, mode); \
-         var != NULL; \
-         fclose(var), var = NULL)
+   ⚠️ 局限: 循环体里的 return / break / goto / continue 会跳过清理表达式 → 泄漏。
+ */
+#define WITH_FILE(var, path, mode)                                             \
+  for (FILE* var = fopen(path, mode); var != NULL; fclose(var), var = NULL)
 
-#define WITH_MALLOC(ptr, type, count) \
-    for (type *ptr = calloc(count, sizeof(type)); \
-         ptr != NULL; \
-         (free(ptr), ptr = NULL))
+#define WITH_MALLOC(ptr, type, count)                                          \
+  for (type* ptr = calloc(count, sizeof(type)); ptr != NULL;                   \
+       (free(ptr), ptr = NULL))
 
 /* 方式 B: __attribute__((cleanup)) —— 由编译器在作用域退出时插入清理调用。
    ✅ 优势: return / break / goto 全部安全，无需依赖跳转纪律。
    注意属性写在【变量声明】上，写在函数上会触发 -Wignored-attributes。 */
-static void __attribute__((unused)) raii_close_file(FILE **fp)
-{
-    if (*fp != NULL) { fclose(*fp); *fp = NULL; }
+static void __attribute__((unused)) raii_close_file(FILE** fp) {
+  if (*fp != NULL) {
+    fclose(*fp);
+    *fp = NULL;
+  }
 }
 
-static void __attribute__((unused)) raii_free(void **p)
-{
-    if (*p != NULL) { free(*p); *p = NULL; }
+static void __attribute__((unused)) raii_free(void** p) {
+  if (*p != NULL) {
+    free(*p);
+    *p = NULL;
+  }
 }
 
 /* ⚠️ 常见陷阱: cleanup 函数收到的参数是【变量类型的指针】。
    变量声明为 void*  → 清理函数必须收 void**
    变量声明为 int32_t* → 清理函数必须收 int32_t**
    用错类型会报: 'cleanup' function parameter type is incompatible */
-static int raii_early_return_demo(int use_for_macro)
-{
-    if (use_for_macro) {
-        WITH_MALLOC(arr, int32_t, 4) {
-            arr[0] = 1;
-            printf("    (for 宏版本) 即将从循环体中间 return → 清理表达式被跳过\n");
-            free(arr);   /* 真实代码这里会泄漏；手动释放仅为让 ASan 门禁保持绿色 */
-            arr = NULL;
-            return 42;
-        }
-        return 0;
+static int raii_early_return_demo(int use_for_macro) {
+  if (use_for_macro) {
+    WITH_MALLOC(arr, int32_t, 4) {
+      arr[0] = 1;
+      printf("    (for 宏版本) 即将从循环体中间 return → 清理表达式被跳过\n");
+      free(arr); /* 真实代码这里会泄漏；手动释放仅为让 ASan 门禁保持绿色 */
+      arr = NULL;
+      return 42;
     }
+    return 0;
+  }
 
-    void *__attribute__((__cleanup__(raii_free))) raw = calloc(4, sizeof(int32_t));
-    if (raw == NULL) return -1;
-    int32_t *arr = (int32_t *)raw;
-    arr[0] = 1;
-    printf("    (cleanup 属性版本) 即将从函数中间 return → 编译器仍插入 free\n");
+  void* __attribute__((__cleanup__(raii_free))) raw =
+      calloc(4, sizeof(int32_t));
+  if (raw == NULL)
+    return -1;
+  int32_t* arr = (int32_t*)raw;
+  arr[0] = 1;
+  printf("    (cleanup 属性版本) 即将从函数中间 return → 编译器仍插入 free\n");
 #ifdef __clang_analyzer__
-    /* 仅静态分析路径 (analysis-only): clang --analyze 不建模 __attribute__((cleanup)),
-       会把 raw/arr 误报为泄漏; 在分析期显式释放以消除误报。
-       实际运行时由编译器在 return 前插入 raii_free(raw), 此代码永不编译。
-       注: WITH_MALLOC 宏路径 (:free+arr=NULL) 分析器可见, 无误报, 无需处理 */
-    raii_free(&raw);
+  /* 仅静态分析路径 (analysis-only): clang --analyze 不建模
+     __attribute__((cleanup)), 会把 raw/arr 误报为泄漏;
+     在分析期显式释放以消除误报。 实际运行时由编译器在 return 前插入
+     raii_free(raw), 此代码永不编译。 注: WITH_MALLOC 宏路径 (:free+arr=NULL)
+     分析器可见, 无误报, 无需处理 */
+  raii_free(&raw);
 #endif
-    return 42;
+  return 42;
 }
 
-static void smart_pointers_raii_macros_sample(void)
-{
-    printf("=== Demo 3: RAII-style 宏 ===\n");
+static void smart_pointers_raii_macros_sample(void) {
+  printf("=== Demo 3: RAII-style 宏 ===\n");
 
-    /* 1. 文件 RAII: for 循环结束时自动 fclose */
-    printf("  [文件 RAII]\n");
-    WITH_FILE(fp, "/tmp/smart_ptr_test.txt", "w") {
-        fprintf(fp, "This file will be auto-closed.\n");
-        printf("    写入完成, 文件在 for 作用域结束时自动关闭\n");
-    }
-    printf("  ✅ 文件已关闭 (无需手动 fclose)\n\n");
+  /* 1. 文件 RAII: for 循环结束时自动 fclose */
+  printf("  [文件 RAII]\n");
+  WITH_FILE(fp, "/tmp/smart_ptr_test.txt", "w") {
+    fprintf(fp, "This file will be auto-closed.\n");
+    printf("    写入完成, 文件在 for 作用域结束时自动关闭\n");
+  }
+  printf("  ✅ 文件已关闭 (无需手动 fclose)\n\n");
 
-    /* 2. 内存 RAII: for 循环结束时自动 free */
-    printf("  [内存 RAII]\n");
-    WITH_MALLOC(arr, int32_t, 5) {
-        arr[0] = 10;
-        arr[1] = 20;
-        arr[2] = 30;
-        printf("    arr[0]=%" PRId32 ", arr[1]=%" PRId32 ", arr[2]=%" PRId32 "\n",
-               arr[0], arr[1], arr[2]);
-        printf("    数组在 for 作用域结束时自动释放\n");
-    }
-    printf("  ✅ 内存已释放 (无需手动 free)\n\n");
+  /* 2. 内存 RAII: for 循环结束时自动 free */
+  printf("  [内存 RAII]\n");
+  WITH_MALLOC(arr, int32_t, 5) {
+    arr[0] = 10;
+    arr[1] = 20;
+    arr[2] = 30;
+    printf("    arr[0]=%" PRId32 ", arr[1]=%" PRId32 ", arr[2]=%" PRId32 "\n",
+           arr[0], arr[1], arr[2]);
+    printf("    数组在 for 作用域结束时自动释放\n");
+  }
+  printf("  ✅ 内存已释放 (无需手动 free)\n\n");
 
-    /* 解释 RAII 宏的原理 */
-    printf("  RAII 宏原理:\n");
-    printf("    for (T* p = alloc(); p != NULL; cleanup(p), p = NULL) {\n");
-    printf("        // 使用 p\n");
-    printf("    }\n");
-    printf("    // 退出 for 时, 第三个表达式 (cleanup) 自动执行\n");
-    printf("    // 等价于 Rust 的 drop / C++ 的 destructor\n\n");
+  /* 解释 RAII 宏的原理 */
+  printf("  RAII 宏原理:\n");
+  printf("    for (T* p = alloc(); p != NULL; cleanup(p), p = NULL) {\n");
+  printf("        // 使用 p\n");
+  printf("    }\n");
+  printf("    // 退出 for 时, 第三个表达式 (cleanup) 自动执行\n");
+  printf("    // 等价于 Rust 的 drop / C++ 的 destructor\n\n");
 
-    printf("  ⚠️  for 宏的局限: 循环体里 return / break / goto 会跳过清理\n");
-    printf("  ✅  __attribute__((cleanup)) 由编译器插入清理调用, 不受跳转影响\n\n");
+  printf("  ⚠️  for 宏的局限: 循环体里 return / break / goto 会跳过清理\n");
+  printf(
+      "  ✅  __attribute__((cleanup)) 由编译器插入清理调用, 不受跳转影响\n\n");
 
-    printf("  [作用域中途 return 对比]\n");
-    int r1 = raii_early_return_demo(1);
-    printf("    for 宏版本返回: %d\n", r1);
-    int r2 = raii_early_return_demo(0);
-    printf("    cleanup 属性版本返回: %d (内存已自动释放)\n\n", r2);
+  printf("  [作用域中途 return 对比]\n");
+  int r1 = raii_early_return_demo(1);
+  printf("    for 宏版本返回: %d\n", r1);
+  int r2 = raii_early_return_demo(0);
+  printf("    cleanup 属性版本返回: %d (内存已自动释放)\n\n", r2);
 
-    printf("  另外: exit() / _exit() / longjmp() 会【绕过】栈展开,\n");
-    printf("  只触发 atexit / __attribute__((destructor)), 不触发 cleanup。\n\n");
+  printf("  另外: exit() / _exit() / longjmp() 会【绕过】栈展开,\n");
+  printf("  只触发 atexit / __attribute__((destructor)), 不触发 cleanup。\n\n");
 }
 
 /* ---------------------------------------------------------
@@ -255,79 +260,81 @@ static void smart_pointers_raii_macros_sample(void)
    --------------------------------------------------------- */
 
 typedef struct {
-    void **items;
-    size_t  count;
-    size_t  capacity;
-    void (*free_item)(void *);  /* 自定义释放函数 */
+  void** items;
+  size_t count;
+  size_t capacity;
+  void (*free_item)(void*); /* 自定义释放函数 */
 } GenericArray;
 
-static GenericArray *generic_array_create(size_t capacity,
-                                           void (*free_fn)(void *))
-{
-    GenericArray *arr = malloc(sizeof(GenericArray));
-    if (arr == NULL) return NULL;
+static GenericArray* generic_array_create(size_t capacity,
+                                          void (*free_fn)(void*)) {
+  GenericArray* arr = malloc(sizeof(GenericArray));
+  if (arr == NULL)
+    return NULL;
 
-    arr->items = calloc(capacity, sizeof(void *));
-    if (arr->items == NULL) {
-        free(arr);
-        return NULL;
-    }
-    arr->capacity = capacity;
-    arr->count = 0;
-    arr->free_item = free_fn;
-    return arr;
-}
-
-static int generic_array_push(GenericArray *arr, void *item)
-{
-    if (arr == NULL || item == NULL) return -1;
-    if (arr->count >= arr->capacity) return -2;
-
-    arr->items[arr->count] = item;
-    arr->count++;
-    return 0;
-}
-
-static void generic_array_destroy(GenericArray *arr)
-{
-    if (arr == NULL) return;
-
-    for (size_t i = 0; i < arr->count; i++) {
-        if (arr->free_item != NULL) {
-            arr->free_item(arr->items[i]);
-        }
-    }
-    free(arr->items);
+  arr->items = calloc(capacity, sizeof(void*));
+  if (arr->items == NULL) {
     free(arr);
+    return NULL;
+  }
+  arr->capacity = capacity;
+  arr->count = 0;
+  arr->free_item = free_fn;
+  return arr;
 }
 
-static void smart_pointers_generic_array_sample(void)
-{
-    printf("=== Demo 4: void* 通用容器 ===\n");
+static int generic_array_push(GenericArray* arr, void* item) {
+  if (arr == NULL || item == NULL)
+    return -1;
+  if (arr->count >= arr->capacity)
+    return -2;
 
-    /* 创建整型通用数组 */
-    GenericArray *arr = generic_array_create(4, free);
-    if (arr == NULL) return;
+  arr->items[arr->count] = item;
+  arr->count++;
+  return 0;
+}
 
-    for (int32_t i = 0; i < 4; i++) {
-        int32_t *val = malloc(sizeof(int32_t));
-        if (val == NULL) break;
-        *val = i * 10;
-        /* push 失败时容器未接管所有权，val 必须自行释放否则泄漏 */
-        if (generic_array_push(arr, val) != 0) {
-            free(val);
-            break;
-        }
+static void generic_array_destroy(GenericArray* arr) {
+  if (arr == NULL)
+    return;
+
+  for (size_t i = 0; i < arr->count; i++) {
+    if (arr->free_item != NULL) {
+      arr->free_item(arr->items[i]);
     }
+  }
+  free(arr->items);
+  free(arr);
+}
 
-    printf("  通用数组 (void* 类型擦除):\n");
-    for (size_t i = 0; i < arr->count; i++) {
-        int32_t *v = (int32_t *)arr->items[i];
-        printf("    [%zu] = %" PRId32 "\n", i, *v);
+static void smart_pointers_generic_array_sample(void) {
+  printf("=== Demo 4: void* 通用容器 ===\n");
+
+  /* 创建整型通用数组 */
+  GenericArray* arr = generic_array_create(4, free);
+  if (arr == NULL)
+    return;
+
+  for (int32_t i = 0; i < 4; i++) {
+    int32_t* val = malloc(sizeof(int32_t));
+    if (val == NULL)
+      break;
+    *val = i * 10;
+    /* push 失败时容器未接管所有权，val 必须自行释放否则泄漏 */
+    if (generic_array_push(arr, val) != 0) {
+      free(val);
+      break;
     }
+  }
 
-    generic_array_destroy(arr);
-    printf("  ✅ destroy 内部依次调用 free_item 和 free(arr)\n\n");
+  printf("  通用数组 (void* 类型擦除):\n");
+  for (size_t i = 0; i < arr->count; i++) {
+    int32_t* v = (int32_t*)arr->items[i];
+    printf("    [%zu] = %" PRId32 "\n", i, *v);
+  }
+
+  generic_array_destroy(arr);
+  printf("  ✅ destroy 内部依次调用 free_item 和 free(arr)\n\n");
 }
 
 /* ---------------------------------------------------------
@@ -335,156 +342,153 @@ static void smart_pointers_generic_array_sample(void)
    --------------------------------------------------------- */
 
 typedef struct {
-    /* 公开结构体: 所有字段都可见 */
-    int x;
-    int y;
-    char label[64];
+  /* 公开结构体: 所有字段都可见 */
+  int x;
+  int y;
+  char label[64];
 } PublicPoint;
 
 /* 不透明结构体: 在头文件中只有 typedef, 定义在 .c 中 */
 typedef struct SmartBuffer_Internal SmartBuffer_Int;
 
-static void smart_pointers_public_vs_opaque_sample(void)
-{
-    printf("=== Demo 5: 公开结构体 vs 不透明结构体 ===\n");
+static void smart_pointers_public_vs_opaque_sample(void) {
+  printf("=== Demo 5: 公开结构体 vs 不透明结构体 ===\n");
 
-    /* 公开结构体: 调用者可以直接篡改内部字段 */
-    PublicPoint pt = {10, 20, "公开点"};
-    printf("  [公开结构体 PublicPoint]\n");
-    printf("    pt.x = %d, pt.y = %d\n", pt.x, pt.y);
-    pt.x = 999;  /* ❌ 调用者随意修改, 破坏不变量 */
-    printf("    篡改后 pt.x = %d (破坏了封装!)\n", pt.x);
+  /* 公开结构体: 调用者可以直接篡改内部字段 */
+  PublicPoint pt = {10, 20, "公开点"};
+  printf("  [公开结构体 PublicPoint]\n");
+  printf("    pt.x = %d, pt.y = %d\n", pt.x, pt.y);
+  pt.x = 999; /* ❌ 调用者随意修改, 破坏不变量 */
+  printf("    篡改后 pt.x = %d (破坏了封装!)\n", pt.x);
 
-    /* 不透明结构体: 调用者无法直接访问内部数据 */
-    SmartBuffer_Int *buf = smartbuffer_create();
-    if (buf != NULL) {
-        printf("\n  [不透明结构体 SmartBuffer*]\n");
-        printf("    buf->len = %zu (只能通过函数访问)\n",
-               smartbuffer_len(buf));
-        /* buf->data[0] = 42; ❌ 编译错误! 看不到内部结构 */
-        printf("    调用者无法 buf->data = X —— 编译失败!\n");
-        printf("    只能通过 smartbuffer_push/pop 等接口修改\n");
-        smartbuffer_destroy(buf);
-    }
+  /* 不透明结构体: 调用者无法直接访问内部数据 */
+  SmartBuffer_Int* buf = smartbuffer_create();
+  if (buf != NULL) {
+    printf("\n  [不透明结构体 SmartBuffer*]\n");
+    printf("    buf->len = %zu (只能通过函数访问)\n", smartbuffer_len(buf));
+    /* buf->data[0] = 42; ❌ 编译错误! 看不到内部结构 */
+    printf("    调用者无法 buf->data = X —— 编译失败!\n");
+    printf("    只能通过 smartbuffer_push/pop 等接口修改\n");
+    smartbuffer_destroy(buf);
+  }
 
-    printf("\n  对比表:\n");
-    printf("  +------------------+------------------+------------------+\n");
-    printf("  | 特性              | 公开结构体        | 不透明结构体      |\n");
-    printf("  +------------------+------------------+------------------+\n");
-    printf("  | 字段可见性       | ✅ 完全可见       | ❌ 不可见         |\n");
-    printf("  | 直接修改字段     | ✅ 可以           | ❌ 编译错误       |\n");
-    printf("  | 二进制兼容       | ❌ 改结构=ABI破裂  | ✅ 改内部不影响   |\n");
-    printf("  | API 稳定性       | 低                | 高               |\n");
-    printf("  | 适用场景         | 数据传递 (POD)   | 库/模块 API      |\n");
-    printf("  +------------------+------------------+------------------+\n\n");
+  printf("\n  对比表:\n");
+  printf("  +------------------+------------------+------------------+\n");
+  printf("  | 特性              | 公开结构体        | 不透明结构体      |\n");
+  printf("  +------------------+------------------+------------------+\n");
+  printf("  | 字段可见性       | ✅ 完全可见       | ❌ 不可见         |\n");
+  printf("  | 直接修改字段     | ✅ 可以           | ❌ 编译错误       |\n");
+  printf("  | 二进制兼容       | ❌ 改结构=ABI破裂  | ✅ 改内部不影响   |\n");
+  printf("  | API 稳定性       | 低                | 高               |\n");
+  printf("  | 适用场景         | 数据传递 (POD)   | 库/模块 API      |\n");
+  printf("  +------------------+------------------+------------------+\n\n");
 }
 
 /* ---------------------------------------------------------
    Demo 6: RAII + 错误优先 — 资源安全模式
    --------------------------------------------------------- */
 
-static void smart_pointers_raii_safety_sample(void)
-{
-    printf("=== Demo 6: RAII 安全模式 vs 原始模式 ===\n");
+static void smart_pointers_raii_safety_sample(void) {
+  printf("=== Demo 6: RAII 安全模式 vs 原始模式 ===\n");
 
-    /* 原始模式: 手动管理资源 */
-    printf("  [原始模式 — 手动管理]\n");
-    char *buf1 = malloc(64);
-    if (buf1 == NULL) return;
-    snprintf(buf1, 64, "manual management");
-    printf("    创建: \"%s\"\n", buf1);
-    free(buf1);
-    buf1 = NULL;
-    printf("    手动 free, 手动置 NULL\n\n");
+  /* 原始模式: 手动管理资源 */
+  printf("  [原始模式 — 手动管理]\n");
+  char* buf1 = malloc(64);
+  if (buf1 == NULL)
+    return;
+  snprintf(buf1, 64, "manual management");
+  printf("    创建: \"%s\"\n", buf1);
+  free(buf1);
+  buf1 = NULL;
+  printf("    手动 free, 手动置 NULL\n\n");
 
-    /* RAII 模式: 自动管理资源 */
-    printf("  [RAII 模式 — 自动管理]\n");
-    WITH_MALLOC(buf2, char, 64) {
-        if (buf2 == NULL) return;
-        snprintf(buf2, 64, "RAII management");
-        printf("    创建: \"%s\"\n", buf2);
-        printf("    离开 for 作用域时自动 free\n");
-    }  /* buf2 自动释放 */
-    printf("  ✅ 无需手动 free\n\n");
+  /* RAII 模式: 自动管理资源 */
+  printf("  [RAII 模式 — 自动管理]\n");
+  WITH_MALLOC(buf2, char, 64) {
+    if (buf2 == NULL)
+      return;
+    snprintf(buf2, 64, "RAII management");
+    printf("    创建: \"%s\"\n", buf2);
+    printf("    离开 for 作用域时自动 free\n");
+  } /* buf2 自动释放 */
+  printf("  ✅ 无需手动 free\n\n");
 
-    printf("  嵌套 RAII 宏: 同时管理多个资源\n");
-    WITH_MALLOC(a, int32_t, 3) {
-        WITH_MALLOC(b, int32_t, 3) {
-            a[0] = 1;
-            b[0] = 2;
-            printf("    a[0]=%" PRId32 ", b[0]=%" PRId32 "\n", a[0], b[0]);
-            printf("    两个资源在各自 for 结束时都自动释放\n");
-        }
+  printf("  嵌套 RAII 宏: 同时管理多个资源\n");
+  WITH_MALLOC(a, int32_t, 3) {
+    WITH_MALLOC(b, int32_t, 3) {
+      a[0] = 1;
+      b[0] = 2;
+      printf("    a[0]=%" PRId32 ", b[0]=%" PRId32 "\n", a[0], b[0]);
+      printf("    两个资源在各自 for 结束时都自动释放\n");
     }
-    printf("  ✅ 嵌套 RAII 安全释放\n\n");
+  }
+  printf("  ✅ 嵌套 RAII 安全释放\n\n");
 }
 
 /* ---------------------------------------------------------
    Demo 7: 不透明指针的内存布局
    --------------------------------------------------------- */
 
-static void smart_pointers_opaque_layout_sample(void)
-{
-    printf("=== Demo 7: 不透明指针的内存布局 ===\n");
+static void smart_pointers_opaque_layout_sample(void) {
+  printf("=== Demo 7: 不透明指针的内存布局 ===\n");
 
-    SmartBuffer_Int *buf = smartbuffer_create();
-    if (buf == NULL) return;
-
-    printf("  调用者视角 (头文件中):\n");
-    printf("    typedef struct SmartBuffer_Int SmartBuffer_Int;\n");
-    printf("    sizeof(SmartBuffer_Int*) = %zu 字节 (指针大小)\n",
-           sizeof(buf));
-    printf("    sizeof(SmartBuffer_Int)  = 未知! (在 .c 外编译时)\n");
-
-    printf("\n  实现者视角 (本 .c 文件中):\n");
-    printf("    内部结构大小: %zu 字节\n",
-           (size_t)sizeof(struct SmartBuffer_Internal));
-    printf("    布局: [data:%u 字节][len:%zu 字节][ref_count:%zu 字节]\n",
-           (unsigned)SB_CAPACITY, sizeof(size_t), sizeof(int));
-
-    printf("\n  内存图:\n");
-    printf("    栈:    buf ─────→ 堆: SmartBuffer_Internal\n");
-#ifdef __clang_analyzer__
-    /* 仅静态分析路径 (analysis-only): 下一行 printf 的 "%p" 把 &buf 和 buf
-       传进可变参数后, 分析器把 printf 当作「未知外部函数」——
-       认为它可能改写了整个栈帧和堆内容, buf 随后变成未知值,
-       后面所有代码连同 smartbuffer_destroy() 的 free 全部失去分析价值,
-       于是误报 "Potential leak"。运行时 ref_count 恒为 1, destroy 必然 free,
-       不存在真实泄漏路径。在分析期提前释放并返回以消除误报;
-       工厂模式/公开对比两处调用点不经可变参数, 仍完整分析 destroy。 */
-    free(buf);
+  SmartBuffer_Int* buf = smartbuffer_create();
+  if (buf == NULL)
     return;
-#endif
-    printf("    %p           %p\n", (void *)&buf, (void *)buf);
-    printf("                     ┌────────────────────────┐\n");
-    printf("                     │ data[256] bytes        │\n");
-    printf("                     │ len = %zu              │\n",
-           smartbuffer_len(buf));
-    printf("                     │ ref_count = %d         │\n", 1);
-    printf("                     └────────────────────────┘\n");
 
-    smartbuffer_destroy(buf);
-    printf("\n");
+  printf("  调用者视角 (头文件中):\n");
+  printf("    typedef struct SmartBuffer_Int SmartBuffer_Int;\n");
+  printf("    sizeof(SmartBuffer_Int*) = %zu 字节 (指针大小)\n", sizeof(buf));
+  printf("    sizeof(SmartBuffer_Int)  = 未知! (在 .c 外编译时)\n");
+
+  printf("\n  实现者视角 (本 .c 文件中):\n");
+  printf("    内部结构大小: %zu 字节\n",
+         (size_t)sizeof(struct SmartBuffer_Internal));
+  printf("    布局: [data:%u 字节][len:%zu 字节][ref_count:%zu 字节]\n",
+         (unsigned)SB_CAPACITY, sizeof(size_t), sizeof(int));
+
+  printf("\n  内存图:\n");
+  printf("    栈:    buf ─────→ 堆: SmartBuffer_Internal\n");
+#ifdef __clang_analyzer__
+  /* 仅静态分析路径 (analysis-only): 下一行 printf 的 "%p" 把 &buf 和 buf
+     传进可变参数后, 分析器把 printf 当作「未知外部函数」——
+     认为它可能改写了整个栈帧和堆内容, buf 随后变成未知值,
+     后面所有代码连同 smartbuffer_destroy() 的 free 全部失去分析价值,
+     于是误报 "Potential leak"。运行时 ref_count 恒为 1, destroy 必然 free,
+     不存在真实泄漏路径。在分析期提前释放并返回以消除误报;
+     工厂模式/公开对比两处调用点不经可变参数, 仍完整分析 destroy。 */
+  free(buf);
+  return;
+#endif
+  printf("    %p           %p\n", (void*)&buf, (void*)buf);
+  printf("                     ┌────────────────────────┐\n");
+  printf("                     │ data[256] bytes        │\n");
+  printf("                     │ len = %zu              │\n",
+         smartbuffer_len(buf));
+  printf("                     │ ref_count = %d         │\n", 1);
+  printf("                     └────────────────────────┘\n");
+
+  smartbuffer_destroy(buf);
+  printf("\n");
 }
 
 /* ---------------------------------------------------------
    入口函数
    --------------------------------------------------------- */
 
-int main_smart_pointers_sample(void)
-{
-    printf("========================================\n");
-    printf("  smart-pointers 透明指针 & RAII 模式\n");
-    printf("========================================\n\n");
+int main_smart_pointers_sample(void) {
+  printf("========================================\n");
+  printf("  smart-pointers 透明指针 & RAII 模式\n");
+  printf("========================================\n\n");
 
-    smart_pointers_memory_leak_sample();        /* 错误优先: 展示内存泄漏 */
-    smart_pointers_factory_pattern_sample();    /* 工厂模式 + 不透明指针 */
-    smart_pointers_raii_macros_sample();        /* RAII-style 宏 */
-    smart_pointers_generic_array_sample();      /* void* 通用容器 */
-    smart_pointers_public_vs_opaque_sample();   /* 公开 vs 不透明 */
-    smart_pointers_raii_safety_sample();        /* RAII 安全对比 */
-    smart_pointers_opaque_layout_sample();      /* 内存布局可视化 */
+  smart_pointers_memory_leak_sample();      /* 错误优先: 展示内存泄漏 */
+  smart_pointers_factory_pattern_sample();  /* 工厂模式 + 不透明指针 */
+  smart_pointers_raii_macros_sample();      /* RAII-style 宏 */
+  smart_pointers_generic_array_sample();    /* void* 通用容器 */
+  smart_pointers_public_vs_opaque_sample(); /* 公开 vs 不透明 */
+  smart_pointers_raii_safety_sample();      /* RAII 安全对比 */
+  smart_pointers_opaque_layout_sample();    /* 内存布局可视化 */
 
-    printf("smart-pointers 演示完毕.\n");
-    return 0;
+  printf("smart-pointers 演示完毕.\n");
+  return 0;
 }

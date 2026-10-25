@@ -1,5 +1,5 @@
 #ifndef ASYNC_POOL_SAMPLE_H
- #define ASYNC_POOL_SAMPLE_H
+#define ASYNC_POOL_SAMPLE_H
 
 /**
  * @brief Sub-chapter 3: Thread Pool Pattern

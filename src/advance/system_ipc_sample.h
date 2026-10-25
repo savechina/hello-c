@@ -1,5 +1,5 @@
 #ifndef SYSTEM_IPC_SAMPLE_H
- #define SYSTEM_IPC_SAMPLE_H
+#define SYSTEM_IPC_SAMPLE_H
 
 /**
  * @brief Inter-Process Communication (pipe, socketpair) — 管道与进程间通信

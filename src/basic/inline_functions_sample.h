@@ -1,5 +1,5 @@
 #ifndef INLINE_FUNCTIONS_SAMPLE_H
- #define INLINE_FUNCTIONS_SAMPLE_H
+#define INLINE_FUNCTIONS_SAMPLE_H
 
 /**
  * @brief Entry of the C99 inline functions chapter.
@@ -12,9 +12,8 @@ int main_inline_functions_sample(void);
 /* Header-style static inline: lives in this .h, every including TU gets
  * its own internal-linkage copy. Proof that inline is only a hint: taking
  * the address forces the compiler to emit a real out-of-line body. */
-static inline int inl_clamp(int v, int lo, int hi)
-{
-    return v < lo ? lo : (v > hi ? hi : v);
+static inline int inl_clamp(int v, int lo, int hi) {
+  return v < lo ? lo : (v > hi ? hi : v);
 }
 
 /* Returns the clamped value — computed proof the inline helper works. */

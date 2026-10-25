@@ -12,34 +12,27 @@
  * whole point of this chapter is that inline is only an optimization hint.
  */
 
-#include "unity.h"
 #include "basic/inline_functions_sample.h"
+#include "unity.h"
 
-void setUp(void)
-{
+void setUp(void) {}
+
+void tearDown(void) {}
+
+void test_inl_clamp_via_call_returns_computed_value(void) {
+  TEST_ASSERT_EQUAL_INT(5, inl_clamp_via_call(5, 0, 10));
+  TEST_ASSERT_EQUAL_INT(0, inl_clamp_via_call(-3, 0, 10));
+  TEST_ASSERT_EQUAL_INT(10, inl_clamp_via_call(99, 0, 10));
+  TEST_ASSERT_EQUAL_INT(7, inl_clamp_via_call(7, 7, 7));
 }
 
-void tearDown(void)
-{
+void test_inl_same_result_via_address_proves_inline_is_hint(void) {
+  TEST_ASSERT_EQUAL_INT(1, inl_same_result_via_address());
 }
 
-void test_inl_clamp_via_call_returns_computed_value(void)
-{
-    TEST_ASSERT_EQUAL_INT(5, inl_clamp_via_call(5, 0, 10));
-    TEST_ASSERT_EQUAL_INT(0, inl_clamp_via_call(-3, 0, 10));
-    TEST_ASSERT_EQUAL_INT(10, inl_clamp_via_call(99, 0, 10));
-    TEST_ASSERT_EQUAL_INT(7, inl_clamp_via_call(7, 7, 7));
-}
-
-void test_inl_same_result_via_address_proves_inline_is_hint(void)
-{
-    TEST_ASSERT_EQUAL_INT(1, inl_same_result_via_address());
-}
-
-int main(void)
-{
-    UNITY_BEGIN();
-    RUN_TEST(test_inl_clamp_via_call_returns_computed_value);
-    RUN_TEST(test_inl_same_result_via_address_proves_inline_is_hint);
-    return UNITY_END();
+int main(void) {
+  UNITY_BEGIN();
+  RUN_TEST(test_inl_clamp_via_call_returns_computed_value);
+  RUN_TEST(test_inl_same_result_via_address_proves_inline_is_hint);
+  return UNITY_END();
 }

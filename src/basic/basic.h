@@ -1,5 +1,5 @@
 #ifndef BASIC_H
- #define BASIC_H
+#define BASIC_H
 
 /**
  * @brief Basic C tutorial coordinator
@@ -67,7 +67,7 @@ int main_designated_init_sample(void);
 int main_cli_args_sample(void);
 int main_stdlib_sample(void);
 
- /* Coordinator entry point */
+/* Coordinator entry point */
 int main_basic_sample(void);
 
 #endif /* BASIC_H */

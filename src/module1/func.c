@@ -1,6 +1,4 @@
-#include <stdio.h>
 #include "func.h"
+#include <stdio.h>
 
-void print_hello() {
-    printf("Hello from module1!\n");
-}
+void print_hello() { printf("Hello from module1!\n"); }

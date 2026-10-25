@@ -1,17 +1,18 @@
 #ifndef ADVANCE_H
- #define ADVANCE_H
+#define ADVANCE_H
 
 /**
 
  * @brief Advance C tutorial coordinator
  *
- * Declares all main_<topic>_sample() functions for the advance tutorial section.
+ * Declares all main_<topic>_sample() functions for the advance tutorial
+ section.
  * Each function demonstrates an advanced C concept with runnable code examples.
  *
  * Called from hello.c (main_hello) after main_basic_sample().
  */
 
- #include "calc.h"
+#include "calc.h"
 
 int main_error_handling_sample(void);
 int main_volatile_sample(void);
@@ -38,7 +39,7 @@ int main_strict_aliasing_sample(void);
 int main_restrict_sample(void);
 int main_raii_sample(void);
 
- /* Coordinator entry point */
+/* Coordinator entry point */
 int main_advance_sample(void);
 
 #endif /* ADVANCE_H */

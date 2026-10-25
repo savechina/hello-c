@@ -1,7 +1,7 @@
 #ifndef VLA_FLEXIBLE_SAMPLE_H
- #define VLA_FLEXIBLE_SAMPLE_H
+#define VLA_FLEXIBLE_SAMPLE_H
 
- #include <stddef.h>
+#include <stddef.h>
 
 /**
  * @brief Entry of the VLA + flexible array member chapter.

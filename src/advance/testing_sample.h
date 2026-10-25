@@ -1,5 +1,5 @@
 #ifndef TESTING_SAMPLE_H
- #define TESTING_SAMPLE_H
+#define TESTING_SAMPLE_H
 
 /**
  * @brief Testing chapter for the advance tutorial.

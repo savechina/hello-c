@@ -7,25 +7,19 @@
  * `make asan` is the gate for that bug; this test only catches crashes here.
  */
 
-#include "unity.h"
 #include "advance/async_thread_sample.h"
+#include "unity.h"
 
-void setUp(void)
-{
+void setUp(void) {}
+
+void tearDown(void) {}
+
+void test_async_thread_sample_runs_without_memory_errors(void) {
+  TEST_ASSERT_EQUAL_INT(0, main_async_thread_sample());
 }
 
-void tearDown(void)
-{
-}
-
-void test_async_thread_sample_runs_without_memory_errors(void)
-{
-    TEST_ASSERT_EQUAL_INT(0, main_async_thread_sample());
-}
-
-int main(void)
-{
-    UNITY_BEGIN();
-    RUN_TEST(test_async_thread_sample_runs_without_memory_errors);
-    return UNITY_END();
+int main(void) {
+  UNITY_BEGIN();
+  RUN_TEST(test_async_thread_sample_runs_without_memory_errors);
+  return UNITY_END();
 }

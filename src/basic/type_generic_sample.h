@@ -1,5 +1,5 @@
 #ifndef TYPE_GENERIC_SAMPLE_H
- #define TYPE_GENERIC_SAMPLE_H
+#define TYPE_GENERIC_SAMPLE_H
 
 /**
  * @brief Entry of the _Generic type-generic selection chapter.

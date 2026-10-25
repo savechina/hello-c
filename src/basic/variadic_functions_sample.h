@@ -1,5 +1,5 @@
 #ifndef VARIADIC_FUNCTIONS_SAMPLE_H
- #define VARIADIC_FUNCTIONS_SAMPLE_H
+#define VARIADIC_FUNCTIONS_SAMPLE_H
 
 /**
  * @brief 可变参数函数 (Variadic Functions)

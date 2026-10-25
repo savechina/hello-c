@@ -1,5 +1,5 @@
 #ifndef CLI_ARGS_SAMPLE_H
- #define CLI_ARGS_SAMPLE_H
+#define CLI_ARGS_SAMPLE_H
 
 /**
  * @brief CLI arguments and I/O redirection: argc/argv parsing,

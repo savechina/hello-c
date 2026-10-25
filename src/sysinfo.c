@@ -3,26 +3,26 @@
 #include <string.h>
 #include <sys/utsname.h>
 #if defined(__APPLE__)
- #include <mach/mach.h>  // macOS 特有的头文件，用于获取系统信息
- #include <sys/sysctl.h> // macOS 和 Linux 都可能有，但具体用法可能不同
- #define OS_NAME "macOS"
+  #include <mach/mach.h>  // macOS 特有的头文件，用于获取系统信息
+  #include <sys/sysctl.h> // macOS 和 Linux 都可能有，但具体用法可能不同
+  #define OS_NAME "macOS"
 #elif defined(__linux__)
- #include <sys/sysinfo.h> // Linux 特有的头文件，用于获取系统信息
- #define OS_NAME "Linux"
+  #include <sys/sysinfo.h> // Linux 特有的头文件，用于获取系统信息
+  #define OS_NAME "Linux"
 #elif defined(__sun__)
 // #elif defined(__illumos__)
- #include <kstat.h>
- #include <stdio.h>
- #include <sys/sysinfo.h> // Solaris特有的头文件，用于获取系统信息
- #include <sys/time.h>
- #include <sys/types.h>
- #include <unistd.h>
- #define OS_NAME "sunOS"
+  #include <kstat.h>
+  #include <stdio.h>
+  #include <sys/sysinfo.h> // Solaris特有的头文件，用于获取系统信息
+  #include <sys/time.h>
+  #include <sys/types.h>
+  #include <unistd.h>
+  #define OS_NAME "sunOS"
 #elif defined(__FreeBSD__)
- #include <sys/sysctl.h>
- #define OS_NAME "FreeBSD"
+  #include <sys/sysctl.h>
+  #define OS_NAME "FreeBSD"
 #else
- #define OS_NAME "Unknown"
+  #define OS_NAME "Unknown"
 // 对于其他系统，可能需要添加更多宏判断和头文件
 // 例如 Windows: #include <windows.h>
 #endif
@@ -105,10 +105,10 @@ void get_system_info() {
 
 void get_info() {
   // Get system architecture
-  char *arch = NULL;
+  char* arch = NULL;
   size_t size = 0;
   if (sysctlbyname("hw.machine", NULL, &size, NULL, 0) == 0) {
-    arch = (char *)malloc(size);
+    arch = (char*)malloc(size);
     if (arch != NULL) {
       if (sysctlbyname("hw.machine", arch, &size, NULL, 0) == 0) {
         printf("System Architecture: %s\n", arch);
@@ -166,12 +166,12 @@ void get_system_info() {
 
   // 获取操作系统版本（例如 Ubuntu 22.04
   // LTS） 通常从 /etc/os-release 文件中获取
-  FILE *fp = fopen("/etc/os-release", "r");
+  FILE* fp = fopen("/etc/os-release", "r");
   if (fp) {
     char line[256];
     while (fgets(line, sizeof(line), fp)) {
       if (strstr(line, "PRETTY_NAME=")) {
-        char *value = line + strlen("PRETTY_NAME=");
+        char* value = line + strlen("PRETTY_NAME=");
         // 先去掉换行符，再去掉首尾引号
         value[strcspn(value, "\r\n")] = '\0';
         if (*value == '"')
@@ -236,11 +236,11 @@ void get_system_info() {
   }
 
   // --- Process Count (kstat) ---
-  kstat_ctl_t *kc = kstat_open();
+  kstat_ctl_t* kc = kstat_open();
   if (kc != NULL) {
-    kstat_t *ksp = kstat_lookup(kc, "unix", 0, "system_misc");
+    kstat_t* ksp = kstat_lookup(kc, "unix", 0, "system_misc");
     if (ksp != NULL && kstat_read(kc, ksp, NULL) != -1) {
-      kstat_named_t *kn = (kstat_named_t *)kstat_data_lookup(ksp, "nproc");
+      kstat_named_t* kn = (kstat_named_t*)kstat_data_lookup(ksp, "nproc");
       if (kn != NULL) {
         printf("Processes: %u\n", kn->value.ui32);
       }
@@ -265,54 +265,51 @@ void get_system_info() {
   } else {
     perror("uname failed");
   }
-
 }
 
 // FreeBSD 平台获取系统信息
 #elif defined(__FreeBSD__)
 void get_system_info() {
-    printf("\n--- FreeBSD System Information ---\n");
+  printf("\n--- FreeBSD System Information ---\n");
 
+  // 获取系统名称 (例如 "FreeBSD")
+  char os_type[256];
+  size_t os_type_len = sizeof(os_type);
+  if (sysctlbyname("kern.ostype", os_type, &os_type_len, NULL, 0) == 0) {
+    printf("OS Type: %s\n", os_type);
+  } else {
+    perror("Failed to get kern.ostype");
+  }
 
-    // 获取系统名称 (例如 "FreeBSD")
-    char os_type[256];
-    size_t os_type_len = sizeof(os_type);
-    if (sysctlbyname("kern.ostype", os_type, &os_type_len, NULL, 0) == 0) {
-      printf("OS Type: %s\n", os_type);
+  // 获取系统版本 (例如 "15")
+  char os_release[256];
+  size_t os_release_len = sizeof(os_release);
+  if (sysctlbyname("kern.osrelease", os_release, &os_release_len, NULL, 0) ==
+      0) {
+    printf("OS Release: %s\n", os_release);
+  } else {
+    perror("Failed to get kern.osrelease");
+  }
+
+  // 获取 CPU 信息 (例如 "arm64", "x86_64")
+  char cpu_type[256];
+  size_t cpu_type_len = sizeof(cpu_type);
+  if (sysctlbyname("machdep.cpu.brand_string", cpu_type, &cpu_type_len, NULL,
+                   0) == 0) {
+    printf("CPU Type: %s\n", cpu_type);
+  } else {
+    //   simpler CPU info
+    int mib[2];
+    mib[0] = CTL_HW;
+    mib[1] = HW_MACHINE;
+    char arch_name[256];
+    size_t arch_name_len = sizeof(arch_name);
+    if (sysctl(mib, 2, arch_name, &arch_name_len, NULL, 0) == 0) {
+      printf("CPU Architecture: %s\n", arch_name);
     } else {
-      perror("Failed to get kern.ostype");
+      perror("Failed to get CPU type");
     }
-
-    // 获取系统版本 (例如 "15")
-    char os_release[256];
-    size_t os_release_len = sizeof(os_release);
-    if (sysctlbyname("kern.osrelease", os_release, &os_release_len, NULL, 0) ==
-        0) {
-      printf("OS Release: %s\n", os_release);
-    } else {
-      perror("Failed to get kern.osrelease");
-    }
-
-    // 获取 CPU 信息 (例如 "arm64", "x86_64")
-    char cpu_type[256];
-    size_t cpu_type_len = sizeof(cpu_type);
-    if (sysctlbyname("machdep.cpu.brand_string", cpu_type, &cpu_type_len, NULL,
-                     0) == 0) {
-      printf("CPU Type: %s\n", cpu_type);
-    } else {
-      //   simpler CPU info
-      int mib[2];
-      mib[0] = CTL_HW;
-      mib[1] = HW_MACHINE;
-      char arch_name[256];
-      size_t arch_name_len = sizeof(arch_name);
-      if (sysctl(mib, 2, arch_name, &arch_name_len, NULL, 0) == 0) {
-        printf("CPU Architecture: %s\n", arch_name);
-      } else {
-        perror("Failed to get CPU type");
-      }
-    }
-
+  }
 }
 #else // Unknown OS
 void get_system_info() {

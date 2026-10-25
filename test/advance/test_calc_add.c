@@ -5,26 +5,22 @@
  * Tests basic addition, edge cases (zero), and negative number scenarios.
  */
 
-#include "unity.h"
 #include "advance/calc.h"
+#include "unity.h"
 
 /**
  * @brief Setup function called before each test.
  *
  * Currently unused — no test-specific setup required.
  */
-void setUp(void)
-{
-}
+void setUp(void) {}
 
 /**
  * @brief Teardown function called after each test.
  *
  * Currently unused — no cleanup required.
  */
-void tearDown(void)
-{
-}
+void tearDown(void) {}
 
 /**
  * @brief Test basic calc_add functionality.
@@ -34,11 +30,10 @@ void tearDown(void)
  * - Zero addition:  calc_add(0, 0) == 0
  * - Sign neutralization: calc_add(-1, 1) == 0
  */
-void test_calc_add_basic(void)
-{
-    TEST_ASSERT_EQUAL_INT(5, calc_add(2, 3));
-    TEST_ASSERT_EQUAL_INT(0, calc_add(0, 0));
-    TEST_ASSERT_EQUAL_INT(0, calc_add(-1, 1));
+void test_calc_add_basic(void) {
+  TEST_ASSERT_EQUAL_INT(5, calc_add(2, 3));
+  TEST_ASSERT_EQUAL_INT(0, calc_add(0, 0));
+  TEST_ASSERT_EQUAL_INT(0, calc_add(-1, 1));
 }
 
 /**
@@ -48,10 +43,9 @@ void test_calc_add_basic(void)
  * - Mixed sign: calc_add(-2, 1) == -1
  * - Both negative: calc_add(-2, -3) == -5
  */
-void test_calc_add_negative(void)
-{
-    TEST_ASSERT_EQUAL_INT(-1, calc_add(-2, 1));
-    TEST_ASSERT_EQUAL_INT(-5, calc_add(-2, -3));
+void test_calc_add_negative(void) {
+  TEST_ASSERT_EQUAL_INT(-1, calc_add(-2, 1));
+  TEST_ASSERT_EQUAL_INT(-5, calc_add(-2, -3));
 }
 
 /**
@@ -61,10 +55,9 @@ void test_calc_add_negative(void)
  *
  * @return int Unity test result (0 = all passed, non-zero = failures)
  */
-int main(void)
-{
-    UNITY_BEGIN();
-    RUN_TEST(test_calc_add_basic);
-    RUN_TEST(test_calc_add_negative);
-    return UNITY_END();
+int main(void) {
+  UNITY_BEGIN();
+  RUN_TEST(test_calc_add_basic);
+  RUN_TEST(test_calc_add_negative);
+  return UNITY_END();
 }

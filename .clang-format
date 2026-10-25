@@ -1,0 +1,8 @@
+---
+BasedOnStyle: LLVM
+IndentWidth: 2
+IndentPPDirectives: BeforeHash
+Standard: c++17
+Language: Cpp
+DerivePointerAlignment: false
+PointerAlignment: Left

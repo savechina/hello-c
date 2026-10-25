@@ -1,5 +1,5 @@
 #ifndef C11_STORAGE_SAMPLE_H
- #define C11_STORAGE_SAMPLE_H
+#define C11_STORAGE_SAMPLE_H
 
 /**
  * @brief Entry of the C11 storage-class specifier chapter
@@ -14,7 +14,8 @@ int main_c11_storage_sample(void);
  * Must be 0 — _Alignas promises the stronger alignment. */
 int c11s_cache_line_mod64(void);
 
-/* _Alignof queries — cross-ref: struct_memory_layout chapter owns the deep dive */
+/* _Alignof queries — cross-ref: struct_memory_layout chapter owns the deep dive
+ */
 int c11s_alignof_int32(void);
 int c11s_alignof_int64(void);
 

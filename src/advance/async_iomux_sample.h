@@ -1,5 +1,5 @@
 #ifndef ASYNC_IOMUX_SAMPLE_H
- #define ASYNC_IOMUX_SAMPLE_H
+#define ASYNC_IOMUX_SAMPLE_H
 
 /**
  * @brief Sub-chapter 4: I/O Multiplexing

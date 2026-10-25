@@ -1,5 +1,5 @@
 #ifndef CALC_H
- #define CALC_H
+#define CALC_H
 
 /**
  * @brief Calculator utility functions for the advance tutorial.

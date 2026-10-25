@@ -9,12 +9,12 @@
  *   4. Practical: pool processing an array (sum, max, square)
  */
 
-#include <stdio.h>
-#include <stdint.h>
 #include <inttypes.h>
+#include <pthread.h>
+#include <stdint.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <pthread.h>
 
 #include "advance/async_pool_sample.h"
 
@@ -24,168 +24,164 @@
 
 #define POOL_MAX_TASKS 64
 
-typedef void (*TaskFunc)(void *arg);
+typedef void (*TaskFunc)(void* arg);
 
 typedef struct {
-    TaskFunc func;
-    void *arg;
+  TaskFunc func;
+  void* arg;
 } Task;
 
 typedef struct {
-    pthread_t *workers;
-    Task *queue;
-    int queue_head;
-    int queue_tail;
-    int queue_count;
-    int max_queue;
-    int shutdown;
+  pthread_t* workers;
+  Task* queue;
+  int queue_head;
+  int queue_tail;
+  int queue_count;
+  int max_queue;
+  int shutdown;
 
-    pthread_mutex_t mutex;
-    pthread_cond_t  not_empty;
-    pthread_cond_t  not_full;
+  pthread_mutex_t mutex;
+  pthread_cond_t not_empty;
+  pthread_cond_t not_full;
 } ThreadPool;
 
-static void *worker_loop(void *arg);
-static int  pool_init(ThreadPool *pool, int num_workers, int max_queue);
+static void* worker_loop(void* arg);
+static int pool_init(ThreadPool* pool, int num_workers, int max_queue);
 
-static int pool_init(ThreadPool *pool, int num_workers, int max_queue)
-{
-    pool->workers = calloc((size_t)num_workers, sizeof(pthread_t));
-    pool->queue = calloc((size_t)max_queue, sizeof(Task));
-    /* 内存安全: 必须在下面 pthread_create 解引用 workers[] 之前检查，
-     * 否则 NULL 会被当作数组首地址传入 → 空指针解引用 (undefined behavior)。 */
-    if (pool->workers == NULL || pool->queue == NULL) {
-        fprintf(stderr, "  [Error] pool_init: calloc 失败\n");
-        free(pool->workers);
-        free(pool->queue);
-        pool->workers = NULL;
-        pool->queue = NULL;
-        return -1;
-    }
-    pool->queue_head = 0;
-    pool->queue_tail = 0;
-    pool->queue_count = 0;
-    pool->max_queue = max_queue;
-    pool->shutdown = 0;
-    pthread_mutex_init(&pool->mutex, NULL);
-    pthread_cond_init(&pool->not_empty, NULL);
-    pthread_cond_init(&pool->not_full, NULL);
-
-    for (int i = 0; i < num_workers; i++) {
-        if (pthread_create(&pool->workers[i], NULL, worker_loop, pool) != 0) {
-            /* 失败处理 (failure handling): 先置 shutdown 并唤醒已启动的 worker
-             * (否则它们阻塞在 not_empty 上, join 会永久挂起), join 回收 0..i-1,
-             * 销毁已初始化的 mutex/cond (与 pool_shutdown 一致), 再按 calloc
-             * 失败路径释放, 避免零句柄被 pool_shutdown 误 join。 */
-            pthread_mutex_lock(&pool->mutex);
-            pool->shutdown = 1;
-            pthread_cond_broadcast(&pool->not_empty);
-            pthread_mutex_unlock(&pool->mutex);
-            for (int j = 0; j < i; j++) {
-                pthread_join(pool->workers[j], NULL);
-            }
-            pthread_mutex_destroy(&pool->mutex);
-            pthread_cond_destroy(&pool->not_empty);
-            pthread_cond_destroy(&pool->not_full);
-            fprintf(stderr, "  [Error] pool_init: pthread_create 失败\n");
-            free(pool->workers);
-            free(pool->queue);
-            pool->workers = NULL;
-            pool->queue = NULL;
-            return -1;
-        }
-    }
-    return 0;
-}
-
-static void *worker_loop(void *arg)
-{
-    ThreadPool *pool = (ThreadPool *)arg;
-
-    while (1) {
-        pthread_mutex_lock(&pool->mutex);
-
-        while (pool->queue_count == 0 && !pool->shutdown) {
-            pthread_cond_wait(&pool->not_empty, &pool->mutex);
-        }
-
-        if (pool->shutdown && pool->queue_count == 0) {
-            pthread_mutex_unlock(&pool->mutex);
-            break;
-        }
-
-        Task task = pool->queue[pool->queue_head];
-        pool->queue_head = (pool->queue_head + 1) % pool->max_queue;
-        pool->queue_count--;
-
-        pthread_cond_signal(&pool->not_full);
-        pthread_mutex_unlock(&pool->mutex);
-
-        task.func(task.arg);
-    }
-
-    return NULL;
-}
-
-static int pool_submit(ThreadPool *pool, TaskFunc func, void *arg)
-{
-    pthread_mutex_lock(&pool->mutex);
-
-    while (pool->queue_count == pool->max_queue && !pool->shutdown) {
-        pthread_cond_wait(&pool->not_full, &pool->mutex);
-    }
-
-    if (pool->shutdown) {
-        pthread_mutex_unlock(&pool->mutex);
-        return -1;
-    }
-
-    pool->queue[pool->queue_tail].func = func;
-    pool->queue[pool->queue_tail].arg = arg;
-    pool->queue_tail = (pool->queue_tail + 1) % pool->max_queue;
-    pool->queue_count++;
-
-    pthread_cond_signal(&pool->not_empty);
-    pthread_mutex_unlock(&pool->mutex);
-    return 0;
-}
-
-static void pool_shutdown(ThreadPool *pool, int num_workers)
-{
-    pthread_mutex_lock(&pool->mutex);
-    pool->shutdown = 1;
-    pthread_cond_broadcast(&pool->not_empty);
-    pthread_mutex_unlock(&pool->mutex);
-
-    for (int i = 0; i < num_workers; i++) {
-        pthread_join(pool->workers[i], NULL);
-    }
-
-    pthread_mutex_destroy(&pool->mutex);
-    pthread_cond_destroy(&pool->not_empty);
-    pthread_cond_destroy(&pool->not_full);
+static int pool_init(ThreadPool* pool, int num_workers, int max_queue) {
+  pool->workers = calloc((size_t)num_workers, sizeof(pthread_t));
+  pool->queue = calloc((size_t)max_queue, sizeof(Task));
+  /* 内存安全: 必须在下面 pthread_create 解引用 workers[] 之前检查，
+   * 否则 NULL 会被当作数组首地址传入 → 空指针解引用 (undefined behavior)。 */
+  if (pool->workers == NULL || pool->queue == NULL) {
+    fprintf(stderr, "  [Error] pool_init: calloc 失败\n");
     free(pool->workers);
     free(pool->queue);
+    pool->workers = NULL;
+    pool->queue = NULL;
+    return -1;
+  }
+  pool->queue_head = 0;
+  pool->queue_tail = 0;
+  pool->queue_count = 0;
+  pool->max_queue = max_queue;
+  pool->shutdown = 0;
+  pthread_mutex_init(&pool->mutex, NULL);
+  pthread_cond_init(&pool->not_empty, NULL);
+  pthread_cond_init(&pool->not_full, NULL);
+
+  for (int i = 0; i < num_workers; i++) {
+    if (pthread_create(&pool->workers[i], NULL, worker_loop, pool) != 0) {
+      /* 失败处理 (failure handling): 先置 shutdown 并唤醒已启动的 worker
+       * (否则它们阻塞在 not_empty 上, join 会永久挂起), join 回收 0..i-1,
+       * 销毁已初始化的 mutex/cond (与 pool_shutdown 一致), 再按 calloc
+       * 失败路径释放, 避免零句柄被 pool_shutdown 误 join。 */
+      pthread_mutex_lock(&pool->mutex);
+      pool->shutdown = 1;
+      pthread_cond_broadcast(&pool->not_empty);
+      pthread_mutex_unlock(&pool->mutex);
+      for (int j = 0; j < i; j++) {
+        pthread_join(pool->workers[j], NULL);
+      }
+      pthread_mutex_destroy(&pool->mutex);
+      pthread_cond_destroy(&pool->not_empty);
+      pthread_cond_destroy(&pool->not_full);
+      fprintf(stderr, "  [Error] pool_init: pthread_create 失败\n");
+      free(pool->workers);
+      free(pool->queue);
+      pool->workers = NULL;
+      pool->queue = NULL;
+      return -1;
+    }
+  }
+  return 0;
+}
+
+static void* worker_loop(void* arg) {
+  ThreadPool* pool = (ThreadPool*)arg;
+
+  while (1) {
+    pthread_mutex_lock(&pool->mutex);
+
+    while (pool->queue_count == 0 && !pool->shutdown) {
+      pthread_cond_wait(&pool->not_empty, &pool->mutex);
+    }
+
+    if (pool->shutdown && pool->queue_count == 0) {
+      pthread_mutex_unlock(&pool->mutex);
+      break;
+    }
+
+    Task task = pool->queue[pool->queue_head];
+    pool->queue_head = (pool->queue_head + 1) % pool->max_queue;
+    pool->queue_count--;
+
+    pthread_cond_signal(&pool->not_full);
+    pthread_mutex_unlock(&pool->mutex);
+
+    task.func(task.arg);
+  }
+
+  return NULL;
+}
+
+static int pool_submit(ThreadPool* pool, TaskFunc func, void* arg) {
+  pthread_mutex_lock(&pool->mutex);
+
+  while (pool->queue_count == pool->max_queue && !pool->shutdown) {
+    pthread_cond_wait(&pool->not_full, &pool->mutex);
+  }
+
+  if (pool->shutdown) {
+    pthread_mutex_unlock(&pool->mutex);
+    return -1;
+  }
+
+  pool->queue[pool->queue_tail].func = func;
+  pool->queue[pool->queue_tail].arg = arg;
+  pool->queue_tail = (pool->queue_tail + 1) % pool->max_queue;
+  pool->queue_count++;
+
+  pthread_cond_signal(&pool->not_empty);
+  pthread_mutex_unlock(&pool->mutex);
+  return 0;
+}
+
+static void pool_shutdown(ThreadPool* pool, int num_workers) {
+  pthread_mutex_lock(&pool->mutex);
+  pool->shutdown = 1;
+  pthread_cond_broadcast(&pool->not_empty);
+  pthread_mutex_unlock(&pool->mutex);
+
+  for (int i = 0; i < num_workers; i++) {
+    pthread_join(pool->workers[i], NULL);
+  }
+
+  pthread_mutex_destroy(&pool->mutex);
+  pthread_cond_destroy(&pool->not_empty);
+  pthread_cond_destroy(&pool->not_full);
+  free(pool->workers);
+  free(pool->queue);
 }
 
 /* ============================================================
  * Demo 1: 创建线程池 (Pool Creation)
  * ============================================================ */
 
-static void async_pool_create_sample(void)
-{
-    printf("--- 1. 创建线程池 (ThreadPool Creation) ---\n");
+static void async_pool_create_sample(void) {
+  printf("--- 1. 创建线程池 (ThreadPool Creation) ---\n");
 
-    ThreadPool pool;
-    const int num_workers = 2;
-    const int max_queue = POOL_MAX_TASKS;
+  ThreadPool pool;
+  const int num_workers = 2;
+  const int max_queue = POOL_MAX_TASKS;
 
-    /* 只是创建 — 不提交任务，演示后立即关闭 */
-    if (pool_init(&pool, num_workers, max_queue) != 0) return;
-    printf("  线程池已创建: %d 个 worker, 队列容量 %d\n", num_workers, max_queue);
+  /* 只是创建 — 不提交任务，演示后立即关闭 */
+  if (pool_init(&pool, num_workers, max_queue) != 0)
+    return;
+  printf("  线程池已创建: %d 个 worker, 队列容量 %d\n", num_workers, max_queue);
 
-    pool_shutdown(&pool, num_workers);
-    printf("  线程池已关闭。\n\n");
+  pool_shutdown(&pool, num_workers);
+  printf("  线程池已关闭。\n\n");
 }
 
 /* ============================================================
@@ -193,58 +189,58 @@ static void async_pool_create_sample(void)
  * ============================================================ */
 
 typedef struct {
-    int32_t id;
-    int32_t value;
-    int32_t result;
+  int32_t id;
+  int32_t value;
+  int32_t result;
 } IntTask;
 
-static void task_print_square(void *arg)
-{
-    IntTask *t = (IntTask *)arg;
-    t->result = t->value * t->value;
-    printf("  [task %" PRId32 "] %d^2 = %d\n", t->id, (int)t->value, (int)t->result);
+static void task_print_square(void* arg) {
+  IntTask* t = (IntTask*)arg;
+  t->result = t->value * t->value;
+  printf("  [task %" PRId32 "] %d^2 = %d\n", t->id, (int)t->value,
+         (int)t->result);
 }
 
-static void task_add_one(void *arg)
-{
-    IntTask *t = (IntTask *)arg;
-    t->result = t->value + 1;
-    printf("  [task %" PRId32 "] %d + 1 = %d\n", t->id, (int)t->value, (int)t->result);
+static void task_add_one(void* arg) {
+  IntTask* t = (IntTask*)arg;
+  t->result = t->value + 1;
+  printf("  [task %" PRId32 "] %d + 1 = %d\n", t->id, (int)t->value,
+         (int)t->result);
 }
 
-static void async_pool_submit_sample(void)
-{
-    printf("--- 2. 提交任务到线程池 (Task Submission) ---\n");
+static void async_pool_submit_sample(void) {
+  printf("--- 2. 提交任务到线程池 (Task Submission) ---\n");
 
-    ThreadPool pool;
-    const int num_workers = 2;
-    if (pool_init(&pool, num_workers, POOL_MAX_TASKS) != 0) return;
+  ThreadPool pool;
+  const int num_workers = 2;
+  if (pool_init(&pool, num_workers, POOL_MAX_TASKS) != 0)
+    return;
 
-    IntTask tasks[6];
-    for (int32_t i = 0; i < 6; i++) {
-        tasks[i].id = i;
-        tasks[i].value = 10 + (int)i;
-        tasks[i].result = 0;
-    }
+  IntTask tasks[6];
+  for (int32_t i = 0; i < 6; i++) {
+    tasks[i].id = i;
+    tasks[i].value = 10 + (int)i;
+    tasks[i].result = 0;
+  }
 
-    /* 提交 6 个任务 — 2 个做平方，4 个做加一 */
-    pool_submit(&pool, task_print_square, &tasks[0]);
-    pool_submit(&pool, task_print_square, &tasks[1]);
-    pool_submit(&pool, task_add_one, &tasks[2]);
-    pool_submit(&pool, task_add_one, &tasks[3]);
-    pool_submit(&pool, task_add_one, &tasks[4]);
-    pool_submit(&pool, task_add_one, &tasks[5]);
+  /* 提交 6 个任务 — 2 个做平方，4 个做加一 */
+  pool_submit(&pool, task_print_square, &tasks[0]);
+  pool_submit(&pool, task_print_square, &tasks[1]);
+  pool_submit(&pool, task_add_one, &tasks[2]);
+  pool_submit(&pool, task_add_one, &tasks[3]);
+  pool_submit(&pool, task_add_one, &tasks[4]);
+  pool_submit(&pool, task_add_one, &tasks[5]);
 
-    pool_shutdown(&pool, num_workers);
+  pool_shutdown(&pool, num_workers);
 
-    printf("  所有任务完成，结果:\n");
-    for (int i = 0; i < 2; i++) {
-        printf("    square(%d) = %d\n", (int)tasks[i].value, (int)tasks[i].result);
-    }
-    for (int i = 2; i < 6; i++) {
-        printf("    add_one(%d) = %d\n", (int)tasks[i].value, (int)tasks[i].result);
-    }
-    printf("\n");
+  printf("  所有任务完成，结果:\n");
+  for (int i = 0; i < 2; i++) {
+    printf("    square(%d) = %d\n", (int)tasks[i].value, (int)tasks[i].result);
+  }
+  for (int i = 2; i < 6; i++) {
+    printf("    add_one(%d) = %d\n", (int)tasks[i].value, (int)tasks[i].result);
+  }
+  printf("\n");
 }
 
 /* ============================================================
@@ -252,59 +248,57 @@ static void async_pool_submit_sample(void)
  * ============================================================ */
 
 typedef struct {
-    int32_t id;
-    const char *label;
+  int32_t id;
+  const char* label;
 } LabelTask;
 
-static void task_labels(void *arg)
-{
-    LabelTask *t = (LabelTask *)arg;
-    printf("  [task %" PRId32 "] 执行: %s\n", t->id, t->label);
+static void task_labels(void* arg) {
+  LabelTask* t = (LabelTask*)arg;
+  printf("  [task %" PRId32 "] 执行: %s\n", t->id, t->label);
 }
 
-static void async_pool_shutdown_sample(void)
-{
-    printf("--- 3. 优雅关闭 (Graceful Shutdown) ---\n");
+static void async_pool_shutdown_sample(void) {
+  printf("--- 3. 优雅关闭 (Graceful Shutdown) ---\n");
 
-    ThreadPool pool;
-    const int num_workers = 2;
-    if (pool_init(&pool, num_workers, POOL_MAX_TASKS) != 0) return;
+  ThreadPool pool;
+  const int num_workers = 2;
+  if (pool_init(&pool, num_workers, POOL_MAX_TASKS) != 0)
+    return;
 
-    LabelTask labels[] = {
-        {0, "准备数据"},
-        {1, "处理数据"},
-        {2, "写入文件"},
-    };
+  LabelTask labels[] = {
+      {0, "准备数据"},
+      {1, "处理数据"},
+      {2, "写入文件"},
+  };
 
-    pool_submit(&pool, task_labels, &labels[0]);
-    pool_submit(&pool, task_labels, &labels[1]);
-    pool_submit(&pool, task_labels, &labels[2]);
+  pool_submit(&pool, task_labels, &labels[0]);
+  pool_submit(&pool, task_labels, &labels[1]);
+  pool_submit(&pool, task_labels, &labels[2]);
 
-    /* shutdown 会:
-     *   1. 设置 shutdown 标志
-     *   2. broadcast 唤醒所有 worker
-     *   3. worker 处理完队列后退出
-     *   4. join 回收所有线程
-     */
-    pool_shutdown(&pool, num_workers);
+  /* shutdown 会:
+   *   1. 设置 shutdown 标志
+   *   2. broadcast 唤醒所有 worker
+   *   3. worker 处理完队列后退出
+   *   4. join 回收所有线程
+   */
+  pool_shutdown(&pool, num_workers);
 
-    printf("  线程池已优雅关闭: 所有待处理任务都执行完了。\n\n");
+  printf("  线程池已优雅关闭: 所有待处理任务都执行完了。\n\n");
 }
 
 /* ============================================================
  * Coordinator
  * ============================================================ */
 
-int main_async_pool_sample(void)
-{
-    printf("========================================\n");
-    printf("  线程池模式 (Thread Pool Pattern)\n");
-    printf("========================================\n\n");
+int main_async_pool_sample(void) {
+  printf("========================================\n");
+  printf("  线程池模式 (Thread Pool Pattern)\n");
+  printf("========================================\n\n");
 
-    async_pool_create_sample();
-    async_pool_submit_sample();
-    async_pool_shutdown_sample();
+  async_pool_create_sample();
+  async_pool_submit_sample();
+  async_pool_shutdown_sample();
 
-    printf("线程池模式演示完毕。\n");
-    return 0;
+  printf("线程池模式演示完毕。\n");
+  return 0;
 }
