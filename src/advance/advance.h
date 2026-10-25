@@ -38,6 +38,11 @@ int main_web_concurrent_sample(void);
 int main_strict_aliasing_sample(void);
 int main_restrict_sample(void);
 int main_raii_sample(void);
+int main_unix_env_sample(void);
+int main_events_sample(void);
+int main_vfs_sample(void);
+int main_kernel_iface_sample(void);
+int main_todo_sample(void);
 
 /* Coordinator entry point */
 int main_advance_sample(void);

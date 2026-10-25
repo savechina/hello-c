@@ -99,6 +99,13 @@
     - [原始 Socket + HTTP 解析](./advance/web/socket.md)
     - [并发服务器模型](./advance/web/concurrent.md)
 
+  - [Unix 环境与内核 (Unix & Kernel)](./advance/unix/unix.md) 🔴
+    - [Unix 环境编程](./advance/unix/env.md)
+    - [多平台事件模型 (kqueue/epoll/ports)](./advance/unix/event-models.md)
+    - [VFS 与挂载点](./advance/unix/vfs.md)
+    - [内核接口探测 (sysctl/kstat/procfs)](./advance/unix/kernel-interface.md)
+    - [真实项目: 终端 TODO](./advance/unix/todo-project.md)
+
   - [阶段复习](./advance/review.md) 📝
 
 # Algo

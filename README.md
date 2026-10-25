@@ -63,6 +63,7 @@ Production-grade C topics, each with a runnable sample and a walkthrough chapter
 - **Concurrency** — [threads, sync, thread pools, select/poll](docs/src/advance/async.md), [atomics](docs/src/advance/atomic-types.md), [volatile](docs/src/advance/volatile.md)
 - **System programming** — [file/signal/mmap/fork/IPC/CLI](docs/src/advance/system.md)
 - **Web servers** — [raw-socket HTTP parsing](docs/src/advance/web/socket.md), [concurrent server model](docs/src/advance/web/concurrent.md)
+- **Unix environment & kernel** — [Unix env (environ/getopt/passwd)](docs/src/advance/unix/env.md), [kqueue/epoll/ports event models](docs/src/advance/unix/event-models.md), [VFS & mount points](docs/src/advance/unix/vfs.md), [kernel interfaces (sysctl/kstat/procfs)](docs/src/advance/unix/kernel-interface.md), [real project: terminal TODO](docs/src/advance/unix/todo-project.md)
 - **Engineering practice** — [error handling](docs/src/advance/error-handling.md), [SQLite](docs/src/advance/database.md), [Unity testing](docs/src/advance/testing.md), [sanitizer toolchain](docs/src/advance/tools.md)
 
 **Complete chapter list**: [advance/overview.md](docs/src/advance/overview.md)

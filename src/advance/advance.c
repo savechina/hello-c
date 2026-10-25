@@ -104,6 +104,26 @@ int main_advance_sample(void) {
   main_raii_sample();
   printf("\n");
 
+  printf("--- Unix 环境编程 (Unix Environment) ---\n");
+  main_unix_env_sample();
+  printf("\n");
+
+  printf("--- 多平台事件模型 (Event Models) ---\n");
+  main_events_sample();
+  printf("\n");
+
+  printf("--- VFS 与挂载点 (VFS & Mounts) ---\n");
+  main_vfs_sample();
+  printf("\n");
+
+  printf("--- 内核接口探测 (Kernel Interfaces) ---\n");
+  main_kernel_iface_sample();
+  printf("\n");
+
+  printf("--- 终端 TODO 项目 (Todo Project) ---\n");
+  main_todo_sample();
+  printf("\n");
+
   printf("进阶教程完毕。\n");
   return 0;
 }
