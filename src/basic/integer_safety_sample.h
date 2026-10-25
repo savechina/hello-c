@@ -1,7 +1,7 @@
 #ifndef INTEGER_SAFETY_SAMPLE_H
-#define INTEGER_SAFETY_SAMPLE_H
+ #define INTEGER_SAFETY_SAMPLE_H
 
-#include <stdint.h>
+ #include <stdint.h>
 
 /**
  * @brief Entry of the integer-safety chapter (CERT INT30/31/33-C flavor).

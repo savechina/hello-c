@@ -36,13 +36,13 @@ static void demo_printf_family(void) {
    故在此处局部关闭该警告 —— push/pop 保证不影响文件其他部分。
    GCC 不弃用 sprintf，故用 __clang__ 保护避免未知 pragma 警告。 */
 #if defined(__clang__)
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wdeprecated-declarations"
+ #pragma clang diagnostic push
+ #pragma clang diagnostic ignored "-Wdeprecated-declarations"
 #endif
     char buf_sprintf[32];
     sprintf(buf_sprintf, "Hello, %s! Score: %d", "Alice", 95);
 #if defined(__clang__)
-#pragma clang diagnostic pop
+ #pragma clang diagnostic pop
 #endif
     printf("[INFO] sprintf: %s\n", buf_sprintf);
 
@@ -108,7 +108,7 @@ static void demo_variadic(void) {
 
 /* 模拟日志级别：通过编译期宏控制 */
 #ifndef LOG_LEVEL
-#define LOG_LEVEL 3  /* 0=OFF, 1=ERROR, 2=WARN, 3=INFO, 4=DEBUG */
+ #define LOG_LEVEL 3  /* 0=OFF, 1=ERROR, 2=WARN, 3=INFO, 4=DEBUG */
 #endif
 
 #define LOG_ERROR(fmt, ...) \

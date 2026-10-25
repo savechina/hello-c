@@ -1,5 +1,5 @@
 #ifndef C11_STORAGE_SAMPLE_H
-#define C11_STORAGE_SAMPLE_H
+ #define C11_STORAGE_SAMPLE_H
 
 /**
  * @brief Entry of the C11 storage-class specifier chapter

@@ -108,9 +108,9 @@ static void demo_const_correctness(void) {
 
 #pragma GCC diagnostic push
 #ifdef __clang__
-#pragma GCC diagnostic ignored "-Wreturn-stack-address"
+ #pragma GCC diagnostic ignored "-Wreturn-stack-address"
 #else
-#pragma GCC diagnostic ignored "-Wreturn-local-addr"
+ #pragma GCC diagnostic ignored "-Wreturn-local-addr"
 #endif
 static int *return_local_address(void) {
     int x = 42;
@@ -211,7 +211,7 @@ static void demo_lifetime_comparison(void) {
 
 #pragma GCC diagnostic push
 #if !defined(__clang__) && defined(__GNUC__) && __GNUC__ >= 12
-#pragma GCC diagnostic ignored "-Wdangling-pointer"
+ #pragma GCC diagnostic ignored "-Wdangling-pointer"
 #endif
 static void demo_dangling_pointer_explained(void) {
     printf("\n==== [sample] Dangling Pointer — Explained ====\n");
@@ -235,7 +235,7 @@ static void demo_dangling_pointer_explained(void) {
 
 #pragma GCC diagnostic push
 #if !defined(__clang__) && defined(__GNUC__) && __GNUC__ >= 12
-#pragma GCC diagnostic ignored "-Wuse-after-free"
+ #pragma GCC diagnostic ignored "-Wuse-after-free"
 #endif
 static void demo_use_after_free_explained(void) {
     printf("\n==== [sample] Use-After-Free — Explained ====\n");

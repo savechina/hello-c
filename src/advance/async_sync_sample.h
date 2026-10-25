@@ -1,5 +1,5 @@
 #ifndef ASYNC_SYNC_SAMPLE_H
-#define ASYNC_SYNC_SAMPLE_H
+ #define ASYNC_SYNC_SAMPLE_H
 
 /**
  * @brief Sub-chapter 2: Synchronization Primitives

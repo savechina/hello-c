@@ -1,7 +1,7 @@
 #ifndef STRICT_ALIASING_SAMPLE_H
-#define STRICT_ALIASING_SAMPLE_H
+ #define STRICT_ALIASING_SAMPLE_H
 
-#include <stdint.h>
+ #include <stdint.h>
 
 /**
  * @brief 严格别名 (Strict Aliasing)、有效类型与合法类型双关章节.

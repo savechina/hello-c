@@ -1,5 +1,5 @@
 #ifndef STRING_PROCESSING_SAMPLE_H
-#define STRING_PROCESSING_SAMPLE_H
+ #define STRING_PROCESSING_SAMPLE_H
 
 /**
  * @brief String Processing: strtok, strstr, strchr, string parsing,

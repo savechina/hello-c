@@ -1,5 +1,5 @@
 #ifndef HEADERS_SAMPLE_H
-#define HEADERS_SAMPLE_H
+ #define HEADERS_SAMPLE_H
 
 /**
  * @file headers_sample.h

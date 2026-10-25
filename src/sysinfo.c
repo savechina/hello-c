@@ -3,26 +3,26 @@
 #include <string.h>
 #include <sys/utsname.h>
 #if defined(__APPLE__)
-#include <mach/mach.h>  // macOS 特有的头文件，用于获取系统信息
-#include <sys/sysctl.h> // macOS 和 Linux 都可能有，但具体用法可能不同
-#define OS_NAME "macOS"
+ #include <mach/mach.h>  // macOS 特有的头文件，用于获取系统信息
+ #include <sys/sysctl.h> // macOS 和 Linux 都可能有，但具体用法可能不同
+ #define OS_NAME "macOS"
 #elif defined(__linux__)
-#include <sys/sysinfo.h> // Linux 特有的头文件，用于获取系统信息
-#define OS_NAME "Linux"
+ #include <sys/sysinfo.h> // Linux 特有的头文件，用于获取系统信息
+ #define OS_NAME "Linux"
 #elif defined(__sun__)
 // #elif defined(__illumos__)
-#include <kstat.h>
-#include <stdio.h>
-#include <sys/sysinfo.h> // Solaris特有的头文件，用于获取系统信息
-#include <sys/time.h>
-#include <sys/types.h>
-#include <unistd.h>
-#define OS_NAME "sunOS"
+ #include <kstat.h>
+ #include <stdio.h>
+ #include <sys/sysinfo.h> // Solaris特有的头文件，用于获取系统信息
+ #include <sys/time.h>
+ #include <sys/types.h>
+ #include <unistd.h>
+ #define OS_NAME "sunOS"
 #elif defined(__FreeBSD__)
-#include <sys/sysctl.h>
-#define OS_NAME "FreeBSD"
+ #include <sys/sysctl.h>
+ #define OS_NAME "FreeBSD"
 #else
-#define OS_NAME "Unknown"
+ #define OS_NAME "Unknown"
 // 对于其他系统，可能需要添加更多宏判断和头文件
 // 例如 Windows: #include <windows.h>
 #endif

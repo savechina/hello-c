@@ -7,7 +7,7 @@
 #include <sys/wait.h>
 
 #if !defined(_WIN32)
-#include <sys/socket.h>
+ #include <sys/socket.h>
 #endif
 
 #include "advance/system_ipc_sample.h"

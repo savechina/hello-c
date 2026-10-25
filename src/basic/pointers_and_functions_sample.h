@@ -1,7 +1,7 @@
 #ifndef POINTERS_AND_FUNCTIONS_SAMPLE_H
-#define POINTERS_AND_FUNCTIONS_SAMPLE_H
+ #define POINTERS_AND_FUNCTIONS_SAMPLE_H
 
-#include <stdint.h>
+ #include <stdint.h>
 
 int main_pointers_and_functions_sample(void);
 

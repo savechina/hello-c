@@ -37,7 +37,7 @@ void preprocessor_ifdef_sample(void) {
 
 #ifndef CUSTOM_FLAG
     printf("  CUSTOM_FLAG 未定义: 使用默认配置。\n");
-#define CUSTOM_FLAG 1
+ #define CUSTOM_FLAG 1
 #endif
 
 #if CUSTOM_FLAG == 1

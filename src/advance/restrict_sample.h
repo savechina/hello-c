@@ -1,7 +1,7 @@
 #ifndef RESTRICT_SAMPLE_H
-#define RESTRICT_SAMPLE_H
+ #define RESTRICT_SAMPLE_H
 
-#include <stddef.h>
+ #include <stddef.h>
 
 /**
  * @brief restrict 指针契约章节 (Pointer Qualifier Contract).

@@ -1,5 +1,5 @@
 #ifndef ERROR_HANDLING_SAMPLE_H
-#define ERROR_HANDLING_SAMPLE_H
+ #define ERROR_HANDLING_SAMPLE_H
 
 /**
  * @brief Error handling chapter for the advance tutorial.

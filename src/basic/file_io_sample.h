@@ -1,5 +1,5 @@
 #ifndef FILE_IO_SAMPLE_H
-#define FILE_IO_SAMPLE_H
+ #define FILE_IO_SAMPLE_H
 
 /**
  * @brief File I/O: FILE* operations, fopen/fclose, fread/fwrite,

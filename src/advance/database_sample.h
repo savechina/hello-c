@@ -1,5 +1,5 @@
 #ifndef DATABASE_SAMPLE_H
-#define DATABASE_SAMPLE_H
+ #define DATABASE_SAMPLE_H
 
 /**
  * @brief Database chapter — SQLite3 C API demo (in-memory)

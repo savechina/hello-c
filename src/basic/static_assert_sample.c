@@ -9,7 +9,7 @@
 #if defined(__STDC_VERSION__) && __STDC_VERSION__ >= 201112L
 /* 本项目 -std=c17, 门常开 */
 #else
-#error "_Static_assert requires C11 or later (use -std=c11 / -std=c17)"
+ #error "_Static_assert requires C11 or later (use -std=c11 / -std=c17)"
 #endif
 
 /* ---- 文件作用域断言: 把平台假设写成编译期契约 ---- */

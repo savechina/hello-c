@@ -1,5 +1,5 @@
 #ifndef ASYNC_THREAD_SAMPLE_H
-#define ASYNC_THREAD_SAMPLE_H
+ #define ASYNC_THREAD_SAMPLE_H
 
 /**
  * @brief Sub-chapter 1: Thread Creation & Lifecycle

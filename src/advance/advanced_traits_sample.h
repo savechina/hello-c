@@ -1,5 +1,5 @@
 #ifndef ADVANCED_TRAITS_SAMPLE_H
-#define ADVANCED_TRAITS_SAMPLE_H
+ #define ADVANCED_TRAITS_SAMPLE_H
 
 /**
  * @brief Advanced Traits chapter — 高级多态（Function Pointer VTable）

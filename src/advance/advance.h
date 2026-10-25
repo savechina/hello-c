@@ -1,5 +1,5 @@
 #ifndef ADVANCE_H
-#define ADVANCE_H
+ #define ADVANCE_H
 
 /**
 
@@ -11,7 +11,7 @@
  * Called from hello.c (main_hello) after main_basic_sample().
  */
 
-#include "calc.h"
+ #include "calc.h"
 
 int main_error_handling_sample(void);
 int main_volatile_sample(void);

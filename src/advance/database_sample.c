@@ -28,18 +28,18 @@
 #include "advance/database_sample.h"
 
 #ifdef __has_include
-#if __has_include(<sqlite3.h>)
-#define DB_HAVE_SQLITE3 1
+ #if __has_include(<sqlite3.h>)
+  #define DB_HAVE_SQLITE3 1
+ #else
+  #define DB_HAVE_SQLITE3 0
+ #endif
 #else
-#define DB_HAVE_SQLITE3 0
-#endif
-#else
-#define DB_HAVE_SQLITE3 0
+ #define DB_HAVE_SQLITE3 0
 #endif
 
 #if DB_HAVE_SQLITE3
 
-#include <sqlite3.h>
+ #include <sqlite3.h>
 
 /* ====================================================================
  *  Global database handle for demo convenience

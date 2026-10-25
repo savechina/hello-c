@@ -1,5 +1,5 @@
 #ifndef WEB_CONCURRENT_SAMPLE_H
-#define WEB_CONCURRENT_SAMPLE_H
+ #define WEB_CONCURRENT_SAMPLE_H
 
 /**
  * @brief Web Concurrent chapter — concurrent server models demo

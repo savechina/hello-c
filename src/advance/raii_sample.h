@@ -1,9 +1,9 @@
 #ifndef RAII_SAMPLE_H
-#define RAII_SAMPLE_H
+ #define RAII_SAMPLE_H
 
-#include <stdbool.h>
-#include <stddef.h>
-#include <stdint.h>
+ #include <stdbool.h>
+ #include <stddef.h>
+ #include <stdint.h>
 
 int main_raii_sample(void);
 
@@ -33,7 +33,7 @@ raii_opt_int_t raii_none(void);
 bool           raii_value(raii_opt_int_t o, int *out);
 
 /* --- Fixed-capacity buffer (Demo 5) --- */
-#define RAII_BUF_CAP 64
+ #define RAII_BUF_CAP 64
 
 typedef struct {
     unsigned char data[RAII_BUF_CAP];

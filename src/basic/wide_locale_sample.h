@@ -1,8 +1,8 @@
 #ifndef WIDE_LOCALE_SAMPLE_H
-#define WIDE_LOCALE_SAMPLE_H
+ #define WIDE_LOCALE_SAMPLE_H
 
-#include <stddef.h>
-#include <wchar.h>
+ #include <stddef.h>
+ #include <wchar.h>
 
 /**
  * @brief Entry of the wide-character / locale chapter

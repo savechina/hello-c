@@ -23,21 +23,21 @@
 #include <string.h>
 
 #if !defined(_WIN32)
-#define POSIX_AVAILABLE 1
+ #define POSIX_AVAILABLE 1
 #endif
 
 #include "advance/web_concurrent_sample.h"
 
 #ifdef POSIX_AVAILABLE
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <sys/select.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <sys/wait.h>
-#include <pthread.h>
-#include <signal.h>
+ #include <unistd.h>
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+ #include <sys/select.h>
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <sys/wait.h>
+ #include <pthread.h>
+ #include <signal.h>
 #endif
 
 /* ====================================================================
@@ -69,7 +69,7 @@ static void web_concurrent_fork_server_sample(void)
 
     printf("    核心结构:\n\n");
 
-#ifdef DEMO_ACTUAL_SERVER
+ #ifdef DEMO_ACTUAL_SERVER
     /* 只在显式开启时真实运行 */
 
     /* fork 前忽略 SIGCHLD — 自动回收子进程 */
@@ -125,7 +125,7 @@ static void web_concurrent_fork_server_sample(void)
             close(client_fd);  /* 父进程不需要客户端 fd */
         }
     }
-#else
+ #else
     printf("    int server_fd = socket(AF_INET, SOCK_STREAM, 0);\n");
     printf("    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, ...);\n");
     printf("    bind(server_fd, ...);\n");
@@ -162,7 +162,7 @@ static void web_concurrent_fork_server_sample(void)
     printf("      ✅ 父进程 accept 后立即 close(client_fd)\n");
     printf("      ❌ 不处理 SIGCHLD → 僵尸进程堆积\n");
     printf("      ✅ signal(SIGCHLD, SIG_IGN) 或 waitpid 回调\n");
-#endif
+ #endif
 
     printf("\n");
 }
@@ -198,7 +198,7 @@ static void web_concurrent_thread_per_connection_sample(void)
     printf("  [2] 线程并发服务器 (Thread Per Connection):\n");
     printf("    类比: 每位客人配服务员，共享厨房 (线程共享内存)\n\n");
 
-#ifdef DEMO_ACTUAL_SERVER
+ #ifdef DEMO_ACTUAL_SERVER
 
     int server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_fd < 0) {
@@ -249,7 +249,7 @@ static void web_concurrent_thread_per_connection_sample(void)
         /* 主线程 detached — 不用 pthread_join */
     }
 
-#else
+ #else
 
     printf("    pthread_t tid;\n");
     printf("    int *arg = malloc(sizeof(int));\n");
@@ -280,7 +280,7 @@ static void web_concurrent_thread_per_connection_sample(void)
     printf("      ✅ 用 pthread_mutex 或 __atomic 保护共享状态\n");
     printf("      ❌ pthread_create 失败时泄漏 fd → 客户端 hang\n");
     printf("      ✅ create 失败时 close(client_fd) + free(arg)\n");
-#endif
+ #endif
 
     printf("\n");
 }
@@ -305,7 +305,7 @@ static void web_concurrent_iomux_server_sample(void)
     printf("  [3] I/O 多路复用服务器 (select Multiplexing):\n");
     printf("    类比: 一位服务员但手脚麻利，同时服务所有客人\n\n");
 
-#ifdef DEMO_ACTUAL_SERVER
+ #ifdef DEMO_ACTUAL_SERVER
 
     int server_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (server_fd < 0) return;
@@ -357,7 +357,7 @@ static void web_concurrent_iomux_server_sample(void)
         /* (实际实现遍历 fd 数组) */
     }
 
-#else
+ #else
 
     printf("    fd_set read_set;\n");
     printf("    int maxfd = server_fd;\n\n");
@@ -399,7 +399,7 @@ static void web_concurrent_iomux_server_sample(void)
     printf("      ✅ 每次 connect 后 maxfd = MAX(maxfd, client_fd)\n");
     printf("      ❌ FD_SET 不加边界检查 → FD_SETSIZE 溢出 → 内存破坏\n");
     printf("      ✅ client_fd < FD_SETSIZE 才 FD_SET\n");
-#endif
+ #endif
 
     printf("\n");
 }

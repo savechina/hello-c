@@ -1,5 +1,5 @@
 #ifndef INLINE_FUNCTIONS_SAMPLE_H
-#define INLINE_FUNCTIONS_SAMPLE_H
+ #define INLINE_FUNCTIONS_SAMPLE_H
 
 /**
  * @brief Entry of the C99 inline functions chapter.

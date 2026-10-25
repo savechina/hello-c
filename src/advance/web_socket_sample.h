@@ -1,5 +1,5 @@
 #ifndef WEB_SOCKET_SAMPLE_H
-#define WEB_SOCKET_SAMPLE_H
+ #define WEB_SOCKET_SAMPLE_H
 
 /**
  * @brief Web Socket chapter — POSIX sockets + HTTP parsing demo

@@ -1,5 +1,5 @@
 #ifndef DESIGNATED_INIT_SAMPLE_H
-#define DESIGNATED_INIT_SAMPLE_H
+ #define DESIGNATED_INIT_SAMPLE_H
 
 /**
  * @brief Entry of the designated initializer / compound literal chapter.

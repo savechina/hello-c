@@ -6,7 +6,7 @@
 
 /* ── const vs #define demo ── */
 #ifndef SAMPLE_BUFFER_SIZE
-#define SAMPLE_BUFFER_SIZE 256
+ #define SAMPLE_BUFFER_SIZE 256
 #endif
 
 /* ── global counter for demo visibility ── */

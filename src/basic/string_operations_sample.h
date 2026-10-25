@@ -1,7 +1,7 @@
 #ifndef STRING_OPERATIONS_SAMPLE_H
-#define STRING_OPERATIONS_SAMPLE_H
+ #define STRING_OPERATIONS_SAMPLE_H
 
-#include <stddef.h>
+ #include <stddef.h>
 
 /**
  * @brief String Operations: strlen, strcpy, strcat, strcmp — core

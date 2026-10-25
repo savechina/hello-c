@@ -1,5 +1,5 @@
 #ifndef SYSTEM_SIGNAL_SAMPLE_H
-#define SYSTEM_SIGNAL_SAMPLE_H
+ #define SYSTEM_SIGNAL_SAMPLE_H
 
 /**
  * @brief POSIX Signal Handling — POSIX 信号处理

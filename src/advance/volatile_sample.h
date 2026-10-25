@@ -1,5 +1,5 @@
 #ifndef VOLATILE_SAMPLE_H
-#define VOLATILE_SAMPLE_H
+ #define VOLATILE_SAMPLE_H
 
 /**
  * @brief volatile 章节 (volatile — 正确用法与危险误解).

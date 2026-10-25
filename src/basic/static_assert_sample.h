@@ -1,5 +1,5 @@
 #ifndef STATIC_ASSERT_SAMPLE_H
-#define STATIC_ASSERT_SAMPLE_H
+ #define STATIC_ASSERT_SAMPLE_H
 
 /**
  * @brief Entry of the _Static_assert compile-time invariants chapter.

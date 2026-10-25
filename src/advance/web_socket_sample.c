@@ -19,12 +19,12 @@
 #include <string.h>
 
 #if !defined(_WIN32)
-#define POSIX_SOCKETS 1
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-#include <arpa/inet.h>
-#include <errno.h>
+ #define POSIX_SOCKETS 1
+ #include <unistd.h>
+ #include <sys/socket.h>
+ #include <netinet/in.h>
+ #include <arpa/inet.h>
+ #include <errno.h>
 #endif
 
 #include "advance/web_socket_sample.h"

@@ -1,5 +1,5 @@
 #ifndef SYSTEM_CLI_SAMPLE_H
-#define SYSTEM_CLI_SAMPLE_H
+ #define SYSTEM_CLI_SAMPLE_H
 
 /**
  * @brief CLI Development Patterns — CLI 开发模式

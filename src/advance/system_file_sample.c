@@ -9,7 +9,7 @@
 #include <dirent.h>
 
 #if defined(__linux__)
-#include <sys/sysmacros.h>
+ #include <sys/sysmacros.h>
 #endif
 
 #include "advance/system_file_sample.h"

@@ -1,5 +1,5 @@
 #ifndef SAFE_STRINGS_SAMPLE_H
-#define SAFE_STRINGS_SAMPLE_H
+ #define SAFE_STRINGS_SAMPLE_H
 
 /**
  * @brief Safe Strings: strncpy, snprintf, bounds checking, overflow
