@@ -112,7 +112,9 @@ static void unix_env_getopt_sample(void) {
   const char* output = NULL;
   int bad_input = 0;
 
-  /* 重置解析器状态 (BSD 另有 optreset 变量; 本程序只解析一次) */
+  /* 重置解析器状态 (本程序只解析一次, 仅为卫生习惯):
+   * glibc/BSD/macOS 用 optind = 1; illumos AT&T getopt 完整重置用 0;
+   * BSD 另有 optreset 变量可用。三者此场景等价。 */
   optind = 1;
 
   int ch;

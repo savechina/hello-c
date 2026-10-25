@@ -88,7 +88,10 @@
 
 完整代码见 `src/advance/events_sample.c`。四个分支讲的是**同一个故事**，我们逐段拆解。
 
-### 故事骨架：self-pipe 两轮
+### 故事骨架：self-pipe 两轮（+ kqueue 定时器加轮）
+
+四个后端都跑这两轮；kqueue 额外演示一轮 `EVFILT_TIMER`（50ms 单发定时器）——
+BSD 事件模型里**定时器也是事件**，这是其它后端没有的能力，故只加在 kqueue 路径：
 
 ```c
 #define EVENTS_WAIT_MS 200   /* 两轮统一 200ms — 超时路径必须能跑到 */

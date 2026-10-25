@@ -28,8 +28,11 @@
 
 ## 平台兼容性
 
-本集群所有 sample 均支持 macOS / Linux / FreeBSD / illumos 四平台编译运行；
+本集群所有 sample 均支持 macOS / Linux / FreeBSD / illumos 四平台编译；
 平台专属 API 均以 `#if defined(...)` 分叉，兜底路径保证「总有输出、退出码 0」。
+
+> **验证状态**：macOS（clang `-Werror` + ASan）已实测；Linux / FreeBSD / illumos
+> 分支按 API 文档人工编写，待 CI 矩阵落实后自动验证（见 kernel-interface.md 的驱动指引）。
 
 ## 下一步
 

@@ -10,6 +10,7 @@
  *
  * 每个后端两轮: 第一轮写 1 字节 → 200ms 内就绪 → 读 1 字节;
  * 第二轮不写数据 → 故意超时, 打印 "timeout re/arm"。全程无阻塞死循环。
+ * (kqueue 额外追加一轮 EVFILT_TIMER, 演示定时器也是事件。)
  */
 
 #include <errno.h>
