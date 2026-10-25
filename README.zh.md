@@ -63,6 +63,7 @@ make test    # 编译并运行 Unity 测试
 - **并发编程** — [线程、同步、线程池、select/poll](docs/src/advance/async.md)、[原子类型](docs/src/advance/atomic-types.md)、[volatile](docs/src/advance/volatile.md)
 - **系统编程** — [文件/信号/mmap/fork/IPC/CLI](docs/src/advance/system.md)
 - **Web 服务器** — [原始 Socket HTTP 解析](docs/src/advance/web/socket.md)、[并发服务器模型](docs/src/advance/web/concurrent.md)
+- **Unix 环境与内核** — [Unix 环境编程 (environ/getopt/passwd)](docs/src/advance/unix/env.md)、[多平台事件模型 (kqueue/epoll/ports)](docs/src/advance/unix/event-models.md)、[VFS 与挂载点](docs/src/advance/unix/vfs.md)、[内核接口探测 (sysctl/kstat/procfs)](docs/src/advance/unix/kernel-interface.md)、[真实项目：终端 TODO](docs/src/advance/unix/todo-project.md)
 - **工程实践** — [错误处理](docs/src/advance/error-handling.md)、[SQLite](docs/src/advance/database.md)、[Unity 测试](docs/src/advance/testing.md)、[Sanitizer 工具链](docs/src/advance/tools.md)
 
 **完整章节列表**：[advance/overview.md](docs/src/advance/overview.md)
@@ -95,7 +96,7 @@ hello-c/
 │   ├── hello.c/.h          # 演示协调器
 │   ├── sysinfo.c/.h        # 多平台操作系统检测
 │   ├── basic/              # 45 个教程章节 (_sample.c + _sample.h)
-│   ├── advance/            # 24 章：线程、系统、Web、内存安全
+│   ├── advance/            # 29 章：线程、系统、Web、Unix/内核、内存安全
 │   ├── algo/               # 算法演示
 │   └── awesome/            # 精选资源骨架
 ├── test/
