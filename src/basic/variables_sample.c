@@ -130,7 +130,7 @@ static void variables_safe_string_sample(void) {
 }
 
 /* ── public entry ── */
-void variables_all_samples(void) {
+static void variables_all_samples(void) {
   variables_type_sample();
   variables_arith_sample();
   variables_scope_sample();

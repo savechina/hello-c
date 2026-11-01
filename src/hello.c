@@ -2,13 +2,13 @@
 #include "basic/basic.h"
 #include <stdio.h>
 /**
- * factorial
+ * hello_factorial
  */
-unsigned long long factorial(int n) {
+static unsigned long long hello_factorial(int n) {
   if (n == 0 || n == 1)
     return 1;
 
-  return n * factorial(n - 1);
+  return n * hello_factorial(n - 1);
 }
 
 /**
@@ -19,7 +19,7 @@ int main_hello() {
   printf("Hello, x = %d\n", x);
 
   int num = 20;
-  printf("Factorial of %d is %llu\n", num, factorial(num));
+  printf("Factorial of %d is %llu\n", num, hello_factorial(num));
 
   // basic sample entry
   main_basic_sample();

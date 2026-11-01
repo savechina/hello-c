@@ -6,7 +6,7 @@
  * 数组样例: 一维数组的声明、初始化、遍历与常用算法。
  */
 
-void arrays_decl_init_sample(void) {
+static void arrays_decl_init_sample(void) {
   printf("----basic ... arrays_decl_init_sample.....start ----\n");
 
   int32_t scores[5] = {85, 92, 78, 96, 88};
@@ -25,7 +25,7 @@ void arrays_decl_init_sample(void) {
   printf("----basic ... arrays_decl_init_sample.....done ----\n");
 }
 
-void arrays_algorithm_sample(void) {
+static void arrays_algorithm_sample(void) {
   printf("----basic ... arrays_algorithm_sample.....start ----\n");
 
   int32_t data[] = {64, 34, 25, 12, 22, 11, 90};
@@ -52,11 +52,6 @@ void arrays_algorithm_sample(void) {
   printf("最小值: %d, 最大值: %d\n", min_val, max_val);
 
   printf("----basic ... arrays_algorithm_sample.....done ----\n");
-}
-
-void arrays_sample(void) {
-  arrays_decl_init_sample();
-  arrays_algorithm_sample();
 }
 
 void main_arrays_sample(void) {

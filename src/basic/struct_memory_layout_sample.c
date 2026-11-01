@@ -18,7 +18,7 @@ struct PaddedGood {
   char c;    /* 1 byte + 2 trailing padding */
 };
 
-static void demo_field_order(void) {
+static void struct_memory_layout_field_order(void) {
   printf("  struct PaddedBad:\n");
   printf("    field sizes: 1 + 4 + 1 = 6 (actual data)\n");
   printf("    sizeof      = %zu (has internal + trailing padding)\n",
@@ -41,7 +41,7 @@ struct WithInt64 {
   int64_t value; /* 8 bytes — needs 8-byte alignment → 7 padding */
 };
 
-static void demo_64bit_alignment(void) {
+static void struct_memory_layout_64bit_alignment(void) {
   printf("  struct WithInt64:\n");
   printf("    data: 1 + 8 = 9 bytes\n");
   printf("    sizeof = %zu\n", sizeof(struct WithInt64));
@@ -59,7 +59,7 @@ struct __attribute__((packed)) Packed {
   char c;
 };
 
-static void demo_packed(void) {
+static void struct_memory_layout_packed(void) {
   struct Packed p = {.a = 'X', .b = 12345, .c = 'Y'};
 
   printf("  struct Packed (no padding):\n");
@@ -75,7 +75,7 @@ static void demo_packed(void) {
 
 /* ---- Section 4: alignment of fundamental types ---- */
 
-static void demo_type_alignment(void) {
+static void struct_memory_layout_type_alignment(void) {
   printf("  _Alignof(int8_t)  = %zu\n", _Alignof(int8_t));
   printf("  _Alignof(int16_t) = %zu\n", _Alignof(int16_t));
   printf("  _Alignof(int32_t) = %zu\n", _Alignof(int32_t));
@@ -98,7 +98,7 @@ struct Outer {
   int64_t y;
 };
 
-static void demo_nested_layout(void) {
+static void struct_memory_layout_nested_layout(void) {
   printf("  struct Inner:\n");
   printf("    sizeof = %zu  offsetof(a)=%zu, offsetof(b)=%zu\n",
          sizeof(struct Inner), offsetof(struct Inner, a),
@@ -117,19 +117,19 @@ static void demo_nested_layout(void) {
 
 int main_struct_memory_layout_sample(void) {
   printf("-- field order affects padding --\n");
-  demo_field_order();
+  struct_memory_layout_field_order();
 
   printf("-- 64-bit type alignment --\n");
-  demo_64bit_alignment();
+  struct_memory_layout_64bit_alignment();
 
   printf("-- packed struct (no padding) --\n");
-  demo_packed();
+  struct_memory_layout_packed();
 
   printf("-- type alignment values --\n");
-  demo_type_alignment();
+  struct_memory_layout_type_alignment();
 
   printf("-- nested struct layout --\n");
-  demo_nested_layout();
+  struct_memory_layout_nested_layout();
 
   return 0;
 }

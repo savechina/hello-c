@@ -7,7 +7,7 @@
  * 指针算术运算 (Pointer Arithmetic) 演示
  * ============================================================ */
 
-static void demo_out_of_bounds(void) {
+static void pointer_arith_out_of_bounds(void) {
   printf("-- [错误演示] 指针越界 --\n");
 
   int32_t arr[4] = {10, 20, 30, 40};
@@ -25,7 +25,7 @@ static void demo_out_of_bounds(void) {
   printf("  -- [错误演示结束] --\n");
 }
 
-static void demo_ptr_increment(void) {
+static void pointer_arith_ptr_increment(void) {
   printf("-- 指针自增自减 (ptr++, ptr--) --\n");
 
   int32_t nums[5] = {1, 2, 3, 4, 5};
@@ -43,7 +43,7 @@ static void demo_ptr_increment(void) {
          sizeof(int32_t), sizeof(int32_t));
 }
 
-static void demo_ptr_add_sub(void) {
+static void pointer_arith_ptr_add_sub(void) {
   printf("-- 指针加减整数 (ptr+n, ptr-n) --\n");
 
   int32_t data[6] = {100, 200, 300, 400, 500, 600};
@@ -60,7 +60,7 @@ static void demo_ptr_add_sub(void) {
   printf("  sizeof(int32_t) = %zu 字节\n", sizeof(int32_t));
 }
 
-static void demo_array_equivalence(void) {
+static void pointer_arith_array_equivalence(void) {
   printf("-- 数组与指针的等价性 --\n");
 
   int32_t a[4] = {7, 14, 21, 28};
@@ -80,7 +80,7 @@ static void demo_array_equivalence(void) {
   printf("\n");
 }
 
-static void demo_sizeof_ptr_vs_arr(void) {
+static void pointer_arith_sizeof_ptr_vs_arr(void) {
   printf("-- sizeof: 数组 vs 指针 --\n");
 
   int32_t arr[8] = {0};
@@ -101,7 +101,7 @@ static void demo_sizeof_ptr_vs_arr(void) {
   printf("  ⚠️  对指针用 sizeof 陷阱 → 结果不是 8！\n");
 }
 
-static void demo_ptr_subtraction(void) {
+static void pointer_arith_ptr_subtraction(void) {
   printf("-- 指针相减：计算距离 --\n");
 
   int32_t nums[6] = {10, 20, 30, 40, 50, 60};
@@ -118,7 +118,7 @@ static void demo_ptr_subtraction(void) {
   printf("  end   - mid = %td\n", end - mid);
 }
 
-static void demo_ptr_comparison(void) {
+static void pointer_arith_ptr_comparison(void) {
   printf("-- 指针比较 (> < == !=) --\n");
 
   int32_t vals[5] = {50, 40, 30, 20, 10};
@@ -157,19 +157,19 @@ int main_pointer_arith_sample(void) {
   printf("  指针算术 (Pointer Arithmetic)\n");
   printf("========================================\n");
 
-  demo_out_of_bounds();
+  pointer_arith_out_of_bounds();
   printf("\n");
-  demo_ptr_increment();
+  pointer_arith_ptr_increment();
   printf("\n");
-  demo_ptr_add_sub();
+  pointer_arith_ptr_add_sub();
   printf("\n");
-  demo_array_equivalence();
+  pointer_arith_array_equivalence();
   printf("\n");
-  demo_sizeof_ptr_vs_arr();
+  pointer_arith_sizeof_ptr_vs_arr();
   printf("\n");
-  demo_ptr_subtraction();
+  pointer_arith_ptr_subtraction();
   printf("\n");
-  demo_ptr_comparison();
+  pointer_arith_ptr_comparison();
 
   printf("\n========================================\n");
   printf("  指针算术演示完毕\n");

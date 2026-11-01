@@ -12,7 +12,7 @@ int g_global_value =
  * Section 1: Local vs Global variables + shadowing
  * ============================================================ */
 
-static void demo_local_global_variables(void) {
+static void function_scope_local_global_variables(void) {
   printf("==== [sample] Local Variable vs Global Variable ====\n");
 
   printf("  global_value = %d (defined at file scope)\n", g_global_value);
@@ -28,14 +28,14 @@ static void demo_local_global_variables(void) {
 }
 
 /* Shadowing demo: local variable hides global variable of same name */
-static int shadow_demo(int input) {
+static int function_scope_shadow_demo(int input) {
   int shadow_var = 42; /* local */
   printf("  inside function: shadow_var = %d (local, hides global)\n",
          shadow_var);
   return shadow_var + input;
 }
 
-static void demo_variable_shadowing(void) {
+static void function_scope_variable_shadowing(void) {
   printf("\n==== [sample] Variable Shadowing ====\n");
 
   int shadow_var = 100; /* local scope 1 */
@@ -48,7 +48,7 @@ static void demo_variable_shadowing(void) {
   printf("  after inner block: shadow_var = %d (back to outer)\n", shadow_var);
 
   /* Call function — it has its own local shadow_var */
-  int result = shadow_demo(10);
+  int result = function_scope_shadow_demo(10);
   printf("  function returned: %d (its own local shadow_var = 42)\n", result);
 }
 
@@ -57,7 +57,7 @@ static void demo_variable_shadowing(void) {
  * ============================================================ */
 
 /* These static helpers are only visible within this .c file */
-static int clamp_value(int value, int min, int max) {
+static int function_scope_clamp_value(int value, int min, int max) {
   if (value < min)
     return min;
   if (value > max)
@@ -65,16 +65,20 @@ static int clamp_value(int value, int min, int max) {
   return value;
 }
 
-static int double_value(int x) { return x * 2; }
+static int function_scope_double_value(int x) { return x * 2; }
 
-static void demo_static_functions(void) {
+static void function_scope_static_functions(void) {
   printf("\n==== [sample] static Functions (Internal Linkage) ====\n");
 
-  printf("  clamp_value(-5, 0, 100) = %d\n", clamp_value(-5, 0, 100));
-  printf("  clamp_value(150, 0, 100) = %d\n", clamp_value(150, 0, 100));
-  printf("  clamp_value(50, 0, 100) = %d\n", clamp_value(50, 0, 100));
+  printf("  function_scope_clamp_value(-5, 0, 100) = %d\n",
+         function_scope_clamp_value(-5, 0, 100));
+  printf("  function_scope_clamp_value(150, 0, 100) = %d\n",
+         function_scope_clamp_value(150, 0, 100));
+  printf("  function_scope_clamp_value(50, 0, 100) = %d\n",
+         function_scope_clamp_value(50, 0, 100));
 
-  printf("  double_value(7) = %d\n", double_value(7));
+  printf("  function_scope_double_value(7) = %d\n",
+         function_scope_double_value(7));
 
   printf("  These static functions are invisible to other .c files!\n");
 }
@@ -83,7 +87,7 @@ static void demo_static_functions(void) {
  * Section 3: Extern keyword & cross-file visibility
  * ============================================================ */
 
-static void demo_extern_keyword(void) {
+static void function_scope_extern_keyword(void) {
   printf("\n==== [sample] extern Keyword & Cross-File Visibility ====\n");
 
   /* g_global_value is defined at file scope above (external linkage) */
@@ -102,25 +106,28 @@ static void demo_extern_keyword(void) {
  * Section 4: Forward declarations
  * ============================================================ */
 
-/* Forward declaration: compute_mean is defined AFTER use_computed_mean */
-static int compute_mean(int a, int b, int c);
+/* Forward declaration: function_scope_compute_mean is defined AFTER
+ * function_scope_use_computed_mean */
+static int function_scope_compute_mean(int a, int b, int c);
 
-static void use_computed_mean(void) {
-  int mean = compute_mean(10, 20, 30);
+static void function_scope_use_computed_mean(void) {
+  int mean = function_scope_compute_mean(10, 20, 30);
   printf("  mean of (10, 20, 30) = %d\n", mean);
 }
 
 /* Actual definition appears after the forward declaration + usage */
-static int compute_mean(int a, int b, int c) { return (a + b + c) / 3; }
+static int function_scope_compute_mean(int a, int b, int c) {
+  return (a + b + c) / 3;
+}
 
-static void demo_forward_declaration(void) {
+static void function_scope_forward_declaration(void) {
   printf("\n==== [sample] Forward Declaration ====\n");
 
-  printf("  compute_mean is declared above but defined after "
-         "use_computed_mean.\n");
+  printf("  function_scope_compute_mean is declared above but defined after "
+         "function_scope_use_computed_mean.\n");
   printf("  Without the forward declaration, compile would fail.\n\n");
 
-  use_computed_mean();
+  function_scope_use_computed_mean();
 }
 
 /* ============================================================
@@ -128,11 +135,11 @@ static void demo_forward_declaration(void) {
  * ============================================================ */
 
 int main_function_scope_sample(void) {
-  demo_local_global_variables();
-  demo_variable_shadowing();
-  demo_static_functions();
-  demo_extern_keyword();
-  demo_forward_declaration();
+  function_scope_local_global_variables();
+  function_scope_variable_shadowing();
+  function_scope_static_functions();
+  function_scope_extern_keyword();
+  function_scope_forward_declaration();
 
   printf("\nfunction_scope sample done.\n");
   return 0;

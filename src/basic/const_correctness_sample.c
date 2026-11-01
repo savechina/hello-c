@@ -9,7 +9,7 @@
  * const 是你对编译器的承诺：这块数据不应被修改。
  */
 
-static void demo_pointer_to_const(void) {
+static void const_correctness_pointer_to_const(void) {
   const int32_t pi = 314;
   const int32_t* ptr = &pi;
 
@@ -25,7 +25,7 @@ static void demo_pointer_to_const(void) {
   printf("  新目标: *ptr = %" PRId32 "\n\n", *ptr);
 }
 
-static void demo_const_pointer(void) {
+static void const_correctness_const_pointer(void) {
   int32_t vals[2] = {10, 20};
   int32_t* const ptr = &vals[0];
 
@@ -39,7 +39,7 @@ static void demo_const_pointer(void) {
   printf("  ❌ ptr = &vals[1] → 编译错误 (指针是 const, 不能改指向)\n\n");
 }
 
-static void demo_const_pointer_to_const(void) {
+static void const_correctness_const_pointer_to_const(void) {
   const int32_t secret = 777;
   const int32_t* const ptr = &secret;
 
@@ -54,7 +54,7 @@ static void demo_const_pointer_to_const(void) {
   printf("  值不可改 + 指向不可改 = 完全只读\n\n");
 }
 
-static void demo_const_in_functions(void) {
+static void const_correctness_const_in_functions(void) {
   printf("=== const 在函数签名中的意义 ===\n\n");
 
   printf("  void print_string(const char *s);\n");
@@ -79,10 +79,10 @@ int main_const_correctness_sample(void) {
   printf("  「const 是你对编译器的承诺。」\n");
   printf("========================================\n\n");
 
-  demo_pointer_to_const();
-  demo_const_pointer();
-  demo_const_pointer_to_const();
-  demo_const_in_functions();
+  const_correctness_pointer_to_const();
+  const_correctness_const_pointer();
+  const_correctness_const_pointer_to_const();
+  const_correctness_const_in_functions();
 
   printf("const 正确性演示完毕。\n");
   return 0;

@@ -11,7 +11,7 @@
 #define SAFE_XLARGE 128
 
 /* ── 1. strncpy 安全复制 — 始终 null-terminate ── */
-static void demo_strncpy_safe_pattern(void) {
+static void safe_strings_strncpy_safe_pattern(void) {
   printf("=== 1. strncpy 安全复制模式 ===\n\n");
 
   char dest[SAFE_SMALL];
@@ -40,7 +40,7 @@ static void demo_strncpy_safe_pattern(void) {
 }
 
 /* ── 2. snprintf 安全格式化 ── */
-static void demo_snprintf_safe_pattern(void) {
+static void safe_strings_snprintf_safe_pattern(void) {
   printf("=== 2. snprintf — 永远比 sprintf 安全 ===\n\n");
 
   char buf[SAFE_MED];
@@ -85,7 +85,7 @@ static void demo_snprintf_safe_pattern(void) {
 }
 
 /* ── 3. 边界检查模式 ── */
-static void demo_bounds_checking(void) {
+static void safe_strings_bounds_checking(void) {
   printf("=== 3. 边界检查模式 ===\n\n");
 
   char name[16];
@@ -125,7 +125,7 @@ static void demo_bounds_checking(void) {
 }
 
 /* ── 4. 缓冲区溢出防御 ── */
-static void demo_overflow_prevention(void) {
+static void safe_strings_overflow_prevention(void) {
   printf("=== 4. 缓冲区溢出防御 ===\n\n");
 
   printf("  溢出三件套 (每次字符串操作都要检查):\n\n");
@@ -162,7 +162,7 @@ static void demo_overflow_prevention(void) {
 }
 
 /* ── 5. 安全函数的组合使用 ── */
-static void demo_safe_function_combo(void) {
+static void safe_strings_safe_function_combo(void) {
   printf("=== 5. 安全函数组合使用 ===\n\n");
 
   /* 模拟: 从外部输入构建消息 */
@@ -210,11 +210,11 @@ int main_safe_strings_sample(void) {
   printf("║         strncpy, snprintf, 边界检查, 溢出预防            ║\n");
   printf("╚══════════════════════════════════════════════════════════╝\n\n");
 
-  demo_strncpy_safe_pattern();
-  demo_snprintf_safe_pattern();
-  demo_bounds_checking();
-  demo_overflow_prevention();
-  demo_safe_function_combo();
+  safe_strings_strncpy_safe_pattern();
+  safe_strings_snprintf_safe_pattern();
+  safe_strings_bounds_checking();
+  safe_strings_overflow_prevention();
+  safe_strings_safe_function_combo();
 
   printf("safe_strings_sample 演示完毕。\n");
   return 0;

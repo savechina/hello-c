@@ -20,7 +20,7 @@ typedef struct {
  * Section 1: fopen — Opening a Text File for Writing
  * ============================================================ */
 
-static void demo_fopen_write(void) {
+static void file_io_fopen_write(void) {
   printf("==== [1] fopen — 写入文本文件 ====\n\n");
 
   FILE* fp = fopen(TEXT_DEMO_FILE, "w");
@@ -44,7 +44,7 @@ static void demo_fopen_write(void) {
 
 #define READ_BUFFER_SIZE 256
 
-static void demo_fgets_read(void) {
+static void file_io_fgets_read(void) {
   printf("==== [2] fgets — 逐行读取文本文件 ====\n\n");
 
   /* First, ensure the file exists (write it if needed) */
@@ -77,7 +77,7 @@ static void demo_fgets_read(void) {
  * Section 3: fopen Error Handling — File Does Not Exist
  * ============================================================ */
 
-static void demo_fopen_error_handling(void) {
+static void file_io_fopen_error_handling(void) {
   printf("==== [3] fopen 错误处理 — 文件不存在 ====\n\n");
 
   /* ── ❌ 危险做法：不检查 NULL 直接写入 ── */
@@ -105,7 +105,7 @@ static void demo_fopen_error_handling(void) {
  * Section 4: fprintf + fscanf — Formatted I/O
  * ============================================================ */
 
-static void demo_formatted_io(void) {
+static void file_io_formatted_io(void) {
   printf("==== [4] fprintf + fscanf — 格式化输入输出 ====\n\n");
 
   /* ── Write: fprintf to file ── */
@@ -152,7 +152,7 @@ static void demo_formatted_io(void) {
  * Section 5: fgets vs gets — Safety Comparison
  * ============================================================ */
 
-static void demo_fgets_vs_gets(void) {
+static void file_io_fgets_vs_gets(void) {
   printf("==== [5] fgets vs gets — 安全对比 ====\n\n");
 
   /* ── ❌ gets() 已被 C11 标准废弃 ── */
@@ -194,7 +194,7 @@ static void demo_fgets_vs_gets(void) {
  * Section 6: fwrite + fread — Binary I/O
  * ============================================================ */
 
-static void demo_binary_io(void) {
+static void file_io_binary_io(void) {
   printf("==== [6] fwrite + fread — 二进制文件读写 ====\n\n");
 
   /* ── Prepare test data ── */
@@ -246,7 +246,7 @@ static void demo_binary_io(void) {
  * Section 7: Text vs Binary Mode
  * ============================================================ */
 
-static void demo_text_vs_binary(void) {
+static void file_io_text_vs_binary(void) {
   printf("==== [7] 文本模式 vs 二进制模式 ====\n\n");
 
   printf("  ┌── fopen 模式对比 ─────────────────────────┐\n");
@@ -297,7 +297,7 @@ static void demo_text_vs_binary(void) {
  * Section 8: fseek + ftell — File Positioning
  * ============================================================ */
 
-static void demo_file_positioning(void) {
+static void file_io_file_positioning(void) {
   printf("==== [8] fseek + ftell — 文件定位 ====\n\n");
 
   /* Create a test file */
@@ -364,7 +364,7 @@ static void demo_file_positioning(void) {
  * Section 9: ferror — Error Checking
  * ============================================================ */
 
-static void demo_error_checking(void) {
+static void file_io_error_checking(void) {
   printf("==== [9] ferror — 文件操作错误检测 ====\n\n");
 
   /* ── Write valid file ── */
@@ -422,7 +422,7 @@ static void demo_error_checking(void) {
  * Section 10: fclose — Resource Management
  * ============================================================ */
 
-static void demo_close_and_cleanup(void) {
+static void file_io_close_and_cleanup(void) {
   printf("==== [10] fclose — 关闭文件与资源清理 ====\n\n");
 
   FILE* fp_write = fopen(TEXT_DEMO_FILE, "w");
@@ -441,7 +441,7 @@ static void demo_close_and_cleanup(void) {
  * Section 11: 常见错误总结
  * ============================================================ */
 
-static void demo_common_errors(void) {
+static void file_io_common_errors(void) {
   printf("\n==== [11] 常见错误总结 ====\n\n");
 
   printf("  ❌ 错误 1: 不检查 fopen 返回值\n");
@@ -479,17 +479,17 @@ int main_file_io_sample(void) {
   printf("║         fopen/fclose, fread/fwrite, fgets, fseek         ║\n");
   printf("╚══════════════════════════════════════════════════════════╝\n\n");
 
-  demo_fopen_write();          /* Section 1 */
-  demo_fopen_error_handling(); /* Section 3 (error-first) */
-  demo_fgets_read();           /* Section 2 */
-  demo_formatted_io();         /* Section 4 */
-  demo_fgets_vs_gets();        /* Section 5 */
-  demo_binary_io();            /* Section 6 */
-  demo_text_vs_binary();       /* Section 7 */
-  demo_file_positioning();     /* Section 8 */
-  demo_error_checking();       /* Section 9 */
-  demo_close_and_cleanup();    /* Section 10 */
-  demo_common_errors();        /* Section 11 */
+  file_io_fopen_write();          /* Section 1 */
+  file_io_fopen_error_handling(); /* Section 3 (error-first) */
+  file_io_fgets_read();           /* Section 2 */
+  file_io_formatted_io();         /* Section 4 */
+  file_io_fgets_vs_gets();        /* Section 5 */
+  file_io_binary_io();            /* Section 6 */
+  file_io_text_vs_binary();       /* Section 7 */
+  file_io_file_positioning();     /* Section 8 */
+  file_io_error_checking();       /* Section 9 */
+  file_io_close_and_cleanup();    /* Section 10 */
+  file_io_common_errors();        /* Section 11 */
 
   /* ── Cleanup temp files ── */
   remove(TEXT_DEMO_FILE);

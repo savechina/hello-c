@@ -19,70 +19,70 @@
 
 /* ---- Section 1: 基本位运算 AND/OR/XOR/NOT ---- */
 
-static uint32_t print_bits8(uint8_t v) {
+static uint32_t bit_ops_print_bits8(uint8_t v) {
   for (int32_t k = 7; k >= 0; k--) {
     printf("%d", (v >> k) & 1);
   }
   return 0;
 }
 
-static uint32_t print_bits32(uint32_t v) {
+static uint32_t bit_ops_print_bits32(uint32_t v) {
   for (int32_t k = 31; k >= 0; k--) {
     printf("%d", (v >> k) & 1);
   }
   return 0;
 }
 
-static void demo_basic_bitwise(void) {
+static void bit_ops_basic_bitwise(void) {
   uint8_t a = 0b11001010;
   uint8_t b = 0b10100101;
 
   printf("=== 基本位运算 ===\n");
   printf("  a = ");
-  print_bits8(a);
+  bit_ops_print_bits8(a);
   printf("  (0x%02" PRIx8 ")\n", a);
   printf("  b = ");
-  print_bits8(b);
+  bit_ops_print_bits8(b);
   printf("  (0x%02" PRIx8 ")\n", b);
   printf("\n");
   printf("  a & b = ");
-  print_bits8(a & b);
+  bit_ops_print_bits8(a & b);
   printf("  (AND: 同 1 为 1)\n");
   printf("  a | b = ");
-  print_bits8(a | b);
+  bit_ops_print_bits8(a | b);
   printf("  (OR:  有 1 为 1)\n");
   printf("  a ^ b = ");
-  print_bits8(a ^ b);
+  bit_ops_print_bits8(a ^ b);
   printf("  (XOR: 不同为 1)\n");
   printf("  ~a    = ");
-  print_bits8((uint8_t)~a);
+  bit_ops_print_bits8((uint8_t)~a);
   printf("  (NOT: 逐位取反)\n");
   printf("\n");
 }
 
 /* ---- Section 2: 移位运算与溢出错误 ---- */
 
-static void demo_shifts(void) {
+static void bit_ops_shifts(void) {
   uint32_t val = 0x00000001;
 
   printf("=== 移位运算 ===\n");
   printf("  原始: ");
-  print_bits32(val);
+  bit_ops_print_bits32(val);
   printf("  (0x%08" PRIx32 ")\n", val);
 
   val = val << 8;
   printf("  << 8: ");
-  print_bits32(val);
+  bit_ops_print_bits32(val);
   printf("  (0x%08" PRIx32 ")\n", val);
 
   val = val << 8;
   printf("  << 8: ");
-  print_bits32(val);
+  bit_ops_print_bits32(val);
   printf("  (0x%08" PRIx32 ")\n", val);
 
   val = 0xFF000000;
   printf("  >> 8: ");
-  print_bits32(val >> 8);
+  bit_ops_print_bits32(val >> 8);
   printf(" (0x%08" PRIx32 ")\n", val >> 8);
 
   printf("\n");
@@ -108,32 +108,32 @@ static void demo_shifts(void) {
 #define FLAG_EXECUTE (1u << 2)
 #define FLAG_DELETE (1u << 3)
 
-static void demo_bitmask_patterns(void) {
+static void bit_ops_bitmask_patterns(void) {
   uint32_t flags = 0;
 
   printf("=== Bitmask 模式 (权限系统) ===\n");
   printf("  初始标志: ");
-  print_bits32(flags);
+  bit_ops_print_bits32(flags);
   printf("  (无权限)\n");
 
   flags |= FLAG_READ;
   printf("  添加 READ:        ");
-  print_bits32(flags);
+  bit_ops_print_bits32(flags);
   printf("\n");
 
   flags |= FLAG_WRITE;
   printf("  添加 WRITE:       ");
-  print_bits32(flags);
+  bit_ops_print_bits32(flags);
   printf("\n");
 
   flags &= ~FLAG_READ;
   printf("  清除 READ:        ");
-  print_bits32(flags);
+  bit_ops_print_bits32(flags);
   printf("\n");
 
   flags ^= FLAG_EXECUTE;
   printf("  翻转 EXECUTE:     ");
-  print_bits32(flags);
+  bit_ops_print_bits32(flags);
   printf("\n");
 
   if (flags & FLAG_WRITE) {
@@ -145,7 +145,7 @@ static void demo_bitmask_patterns(void) {
 
   flags &= ~(FLAG_READ | FLAG_WRITE | FLAG_EXECUTE | FLAG_DELETE);
   printf("  全部清除:         ");
-  print_bits32(flags);
+  bit_ops_print_bits32(flags);
   printf("\n\n");
 }
 
@@ -160,7 +160,7 @@ struct Permissions {
   uint32_t user_id : 16;
 };
 
-static void demo_bit_fields(void) {
+static void bit_ops_bit_fields(void) {
   printf("=== Struct bit fields ===\n");
 
   struct Permissions p;
@@ -182,7 +182,7 @@ static void demo_bit_fields(void) {
 
 /* ---- Section 5: memcpy / memmove / memset ---- */
 
-static void demo_memory_ops(void) {
+static void bit_ops_memory_ops(void) {
   uint8_t src[8] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08};
   uint8_t dst[8] = {0};
   uint8_t overlap[8];
@@ -214,7 +214,7 @@ static void demo_memory_ops(void) {
 
 /* ---- Section 6: Endianness 检测 ---- */
 
-static void demo_endianness(void) {
+static void bit_ops_endianness(void) {
   uint32_t val = 0x01020304;
   uint8_t* bytes = (uint8_t*)&val;
 
@@ -239,26 +239,27 @@ static void demo_endianness(void) {
 
 /* ---- Section 7: 字节打包与解包 ---- */
 
-static uint32_t pack_bytes(uint8_t b3, uint8_t b2, uint8_t b1, uint8_t b0) {
+static uint32_t bit_ops_pack_bytes(uint8_t b3, uint8_t b2, uint8_t b1,
+                                   uint8_t b0) {
   return ((uint32_t)b3 << 24) | ((uint32_t)b2 << 16) | ((uint32_t)b1 << 8) |
          (uint32_t)b0;
 }
 
-static void unpack_bytes(uint32_t val, uint8_t* out) {
+static void bit_ops_unpack_bytes(uint32_t val, uint8_t* out) {
   out[0] = (uint8_t)val;
   out[1] = (uint8_t)(val >> 8);
   out[2] = (uint8_t)(val >> 16);
   out[3] = (uint8_t)(val >> 24);
 }
 
-static void demo_pack_unpack(void) {
+static void bit_ops_pack_unpack(void) {
   printf("=== 字节打包/解包 ===\n");
 
-  uint32_t packed = pack_bytes(0xDE, 0xAD, 0xBE, 0xEF);
+  uint32_t packed = bit_ops_pack_bytes(0xDE, 0xAD, 0xBE, 0xEF);
   printf("  pack(0xDE, 0xAD, 0xBE, 0xEF) = 0x%08" PRIx32 "\n", packed);
 
   uint8_t unpacked[4];
-  unpack_bytes(packed, unpacked);
+  bit_ops_unpack_bytes(packed, unpacked);
   printf("  unpack = [0x%02" PRIx8 ", 0x%02" PRIx8 ", 0x%02" PRIx8
          ", 0x%02" PRIx8 "]\n",
          unpacked[0], unpacked[1], unpacked[2], unpacked[3]);
@@ -267,44 +268,44 @@ static void demo_pack_unpack(void) {
 
 /* ---- Section 8: 实用 bitmask 模式 ---- */
 
-static void demo_practical_bitmasks(void) {
+static void bit_ops_practical_bitmasks(void) {
   printf("=== 实用 bitmask 模式 ===\n");
 
   uint8_t color = 0;
 
   color |= (1u << 0) | (1u << 2);
   printf("  设置 bit 0 和 2: ");
-  print_bits8(color);
+  bit_ops_print_bits8(color);
   printf("\n");
 
   color &= ~(1u << 0);
   printf("  清除 bit 0:       ");
-  print_bits8(color);
+  bit_ops_print_bits8(color);
   printf("\n");
 
   color ^= (1u << 0) | (1u << 1);
   printf("  翻转 bit 0 和 1:  ");
-  print_bits8(color);
+  bit_ops_print_bits8(color);
   printf("\n");
 
   uint32_t mask = 0b11110000000000000000000000000000u;
   uint32_t bits32 = 0b10100000000000000000000000000000u;
   uint32_t result = bits32 & mask;
   printf("  高4位掩码提取:     ");
-  print_bits32(bits32);
+  bit_ops_print_bits32(bits32);
   printf("\n");
   printf("                   & ");
-  print_bits32(mask);
+  bit_ops_print_bits32(mask);
   printf("\n");
   printf("                   = ");
-  print_bits32(result);
+  bit_ops_print_bits32(result);
   printf("\n");
   printf("\n");
 }
 
 /* ---- Section 9: Python int.bit_length() vs C 位操作 ---- */
 
-static void demo_vs_python_bitlength(void) {
+static void bit_ops_vs_python_bitlength(void) {
   uint32_t val = 1023;
 
   printf("=== Python int.bit_length() vs C 位操作 ===\n");
@@ -325,14 +326,14 @@ static void demo_vs_python_bitlength(void) {
 
   printf("\n  Python:          bin(1023)  # '0b1111111111'\n");
   printf("  C (打印二进制):   ");
-  print_bits32(val);
+  bit_ops_print_bits32(val);
   printf("\n");
   printf("\n");
 }
 
 /* ---- Section 10: ASCII 位图演示 ---- */
 
-static void demo_ascii_bit_diagram(void) {
+static void bit_ops_ascii_bit_diagram(void) {
   printf("=== ASCII 位图演示 ===\n");
   printf("\n");
   printf("  位运算 AND (0b1100 & 0b1010 = 0b1000):\n");
@@ -360,16 +361,16 @@ int main_bit_ops_sample(void) {
   printf("  位运算与内存操作\n");
   printf("========================================\n\n");
 
-  demo_basic_bitwise();
-  demo_shifts();
-  demo_bitmask_patterns();
-  demo_bit_fields();
-  demo_memory_ops();
-  demo_endianness();
-  demo_pack_unpack();
-  demo_practical_bitmasks();
-  demo_vs_python_bitlength();
-  demo_ascii_bit_diagram();
+  bit_ops_basic_bitwise();
+  bit_ops_shifts();
+  bit_ops_bitmask_patterns();
+  bit_ops_bit_fields();
+  bit_ops_memory_ops();
+  bit_ops_endianness();
+  bit_ops_pack_unpack();
+  bit_ops_practical_bitmasks();
+  bit_ops_vs_python_bitlength();
+  bit_ops_ascii_bit_diagram();
 
   printf("位运算与内存操作演示完毕。\n");
   return 0;

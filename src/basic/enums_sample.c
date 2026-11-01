@@ -7,7 +7,7 @@
 
 enum Weekday { MON, TUE, WED, THU, FRI, SAT, SUN };
 
-static void enum_basic(void) {
+static void enums_enum_basic(void) {
   printf("==== [sample] Basic Enum Definition ====\n");
 
   enum Weekday today = MON;
@@ -28,7 +28,7 @@ enum ErrorCode {
   ERR_IO
 };
 
-static void enum_explicit_values(void) {
+static void enums_enum_explicit_values(void) {
   printf("\n==== [sample] Enum Explicit Values ====\n");
 
   printf("  ERR_OK           = %d\n", ERR_OK);
@@ -43,7 +43,7 @@ static void enum_explicit_values(void) {
 
 typedef enum LogLevel { LOG_DEBUG, LOG_INFO, LOG_WARN, LOG_ERROR } LogLevel;
 
-static void log_message(LogLevel level, const char* msg) {
+static void enums_log_message(LogLevel level, const char* msg) {
   const char* prefix = "";
   switch (level) {
   case LOG_DEBUG:
@@ -65,32 +65,32 @@ static void log_message(LogLevel level, const char* msg) {
   printf("  [%s] %s\n", prefix, msg);
 }
 
-static void enum_as_parameter(void) {
+static void enums_enum_as_parameter(void) {
   printf("\n==== [sample] Enum as Function Parameter ====\n");
 
-  log_message(LOG_INFO, "Program starting");
-  log_message(LOG_DEBUG, "Debug info (visible only if level permits)");
-  log_message(LOG_WARN, "Disk space is low");
-  log_message(LOG_ERROR, "Failed to open file");
+  enums_log_message(LOG_INFO, "Program starting");
+  enums_log_message(LOG_DEBUG, "Debug info (visible only if level permits)");
+  enums_log_message(LOG_WARN, "Disk space is low");
+  enums_log_message(LOG_ERROR, "Failed to open file");
 }
 
 /* ---- Section 4: Enum validation (error-first) ---- */
 
-static bool is_valid_log_level(LogLevel level) {
+static bool enums_is_valid_log_level(LogLevel level) {
   return level >= LOG_DEBUG && level <= LOG_ERROR;
 }
 
-static void enum_validation(void) {
+static void enums_enum_validation(void) {
   printf("\n==== [sample] Enum Validation ====\n");
 
   LogLevel safe_level = LOG_WARN;
   printf("  Valid level %d: %s\n", safe_level,
-         is_valid_log_level(safe_level) ? "OK" : "INVALID");
+         enums_is_valid_log_level(safe_level) ? "OK" : "INVALID");
 
   /* Demonstrate what happens with an out-of-range value */
   LogLevel bad_level = (LogLevel)99;
   printf("  Out-of-range level %d: %s\n", bad_level,
-         is_valid_log_level(bad_level) ? "OK" : "INVALID");
+         enums_is_valid_log_level(bad_level) ? "OK" : "INVALID");
   printf("  <-- C allows casting any int to enum; validation catches it!\n");
 }
 
@@ -109,28 +109,28 @@ struct Variant {
   union VariantData data;
 };
 
-static struct Variant variant_int(int32_t val) {
+static struct Variant enums_variant_int(int32_t val) {
   struct Variant v;
   v.tag = VK_INT;
   v.data.i = val;
   return v;
 }
 
-static struct Variant variant_double(double val) {
+static struct Variant enums_variant_double(double val) {
   struct Variant v;
   v.tag = VK_DOUBLE;
   v.data.d = val;
   return v;
 }
 
-static struct Variant variant_string(const char* val) {
+static struct Variant enums_variant_string(const char* val) {
   struct Variant v;
   v.tag = VK_STRING;
   v.data.s = val;
   return v;
 }
 
-static void print_variant(const struct Variant* v) {
+static void enums_print_variant(const struct Variant* v) {
   switch (v->tag) {
   case VK_INT:
     printf("    int:    %d\n", v->data.i);
@@ -147,19 +147,19 @@ static void print_variant(const struct Variant* v) {
   }
 }
 
-static void tagged_union_demo(void) {
+static void enums_tagged_union_demo(void) {
   printf("\n==== [sample] Tagged Union (enum + union) ====\n");
 
-  struct Variant a = variant_int(42);
-  struct Variant b = variant_double(3.14);
-  struct Variant c = variant_string("hello");
+  struct Variant a = enums_variant_int(42);
+  struct Variant b = enums_variant_double(3.14);
+  struct Variant c = enums_variant_string("hello");
 
   printf("  a: ");
-  print_variant(&a);
+  enums_print_variant(&a);
   printf("  b: ");
-  print_variant(&b);
+  enums_print_variant(&b);
   printf("  c: ");
-  print_variant(&c);
+  enums_print_variant(&c);
 
   printf("\n  sizeof(VariantData)      = %zu\n", sizeof(VariantData));
   printf("  sizeof(struct Variant)    = %zu (tag + union, with padding)\n",
@@ -170,7 +170,7 @@ static void tagged_union_demo(void) {
 
 typedef enum LightState { STATE_OFF, STATE_DIM, STATE_BRIGHT } LightState;
 
-static LightState next_light_state(LightState current) {
+static LightState enums_next_light_state(LightState current) {
   switch (current) {
   case STATE_OFF:
     return STATE_DIM;
@@ -183,7 +183,7 @@ static LightState next_light_state(LightState current) {
   }
 }
 
-static const char* light_name(LightState s) {
+static const char* enums_light_name(LightState s) {
   switch (s) {
   case STATE_OFF:
     return "OFF";
@@ -196,15 +196,15 @@ static const char* light_name(LightState s) {
   }
 }
 
-static void state_machine_demo(void) {
+static void enums_state_machine_demo(void) {
   printf("\n==== [sample] State Machine (Light Switch) ====\n");
 
   LightState state = STATE_OFF;
   for (int i = 0; i < 5; i++) {
-    printf("  current: %s\n", light_name(state));
-    state = next_light_state(state);
+    printf("  current: %s\n", enums_light_name(state));
+    state = enums_next_light_state(state);
   }
-  printf("  final: %s\n", light_name(state));
+  printf("  final: %s\n", enums_light_name(state));
 }
 
 /* ---- Section 7: Bit flags using enum ---- */
@@ -215,7 +215,7 @@ typedef enum FileAccess {
   ACCESS_EXECUTE = 1 << 2
 } FileAccess;
 
-static void bit_flags_demo(void) {
+static void enums_bit_flags_demo(void) {
   printf("\n==== [sample] Bit Flags (enum with powers of 2) ====\n");
 
   FileAccess permissions = ACCESS_READ | ACCESS_WRITE;
@@ -233,13 +233,13 @@ static void bit_flags_demo(void) {
 /* ---- Public entry ---- */
 
 int main_enums_sample(void) {
-  enum_basic();
-  enum_explicit_values();
-  enum_as_parameter();
-  enum_validation();
-  tagged_union_demo();
-  state_machine_demo();
-  bit_flags_demo();
+  enums_enum_basic();
+  enums_enum_explicit_values();
+  enums_enum_as_parameter();
+  enums_enum_validation();
+  enums_tagged_union_demo();
+  enums_state_machine_demo();
+  enums_bit_flags_demo();
 
   printf("\nenums sample done.\n");
   return 0;

@@ -18,7 +18,7 @@ void test_swap_by_pointer_exchanges_caller_values(void) {
   int32_t x = 10;
   int32_t y = 20;
 
-  swap_by_pointer(&x, &y);
+  pf_swap_by_pointer(&x, &y);
 
   TEST_ASSERT_EQUAL_INT32(20, x);
   TEST_ASSERT_EQUAL_INT32(10, y);
@@ -28,7 +28,7 @@ void test_swap_by_value_leaves_caller_values_unchanged(void) {
   int32_t x = 10;
   int32_t y = 20;
 
-  swap_by_value(x, y);
+  pf_swap_by_value(x, y);
 
   TEST_ASSERT_EQUAL_INT32(10, x);
   TEST_ASSERT_EQUAL_INT32(20, y);

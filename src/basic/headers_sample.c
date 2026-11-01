@@ -23,7 +23,7 @@
  * 即使其他文件用 extern 声明也无法链接到它。
  * 这就是「隐藏实现细节」的核心手段。
  */
-static int internal_helper(int x) {
+static int headers_internal_helper(int x) {
   /* 仅本文件可用的内部工具函数 */
   return x * x + 2 * x + 1; /* (x+1)^2 */
 }
@@ -31,7 +31,7 @@ static int internal_helper(int x) {
 /**
  * 另一个内部工具：验证输入范围
  */
-static int validate_input(int value) {
+static int headers_validate_input(int value) {
   if (value < 0 || value > 1000) {
     return 0; /* invalid */
   }
@@ -49,11 +49,11 @@ static int validate_input(int value) {
  * 但它的可见性是 extern（因为没加 static）。
  */
 int compute_result(int n) {
-  if (!validate_input(n)) {
+  if (!headers_validate_input(n)) {
     printf("  [compute_result] 输入 %d 超出有效范围 [0-1000]\n", n);
     return -1;
   }
-  return internal_helper(n);
+  return headers_internal_helper(n);
 }
 
 /* ============================================================
@@ -66,7 +66,7 @@ int compute_result(int n) {
  * 每个 .c 文件独立编译为 .o，然后链接器把它们拼到一起。
  * 理解翻译单元是理解 include guard 和多文件编译的基础。
  */
-static void demo_translation_unit(void) {
+static void headers_translation_unit(void) {
   printf("  [translation unit] 当前文件: %s\n", __FILE__);
   printf("  [translation unit] 编译时间: %s %s\n", __DATE__, __TIME__);
   printf("  [translation unit] 每个 .c = 一个翻译单元\n");
@@ -90,8 +90,8 @@ static void demo_translation_unit(void) {
 /* 前向声明：声明但暂不定义 */
 void process_data(void);
 
-static void init_config(void) {
-  printf("  [forward decl] init_config() 调用 process_data()...\n");
+static void headers_init_config(void) {
+  printf("  [forward decl] headers_init_config() 调用 process_data()...\n");
   process_data(); /* 合法：前面已前向声明 */
 }
 
@@ -120,7 +120,7 @@ void process_data(void) {
  *
  * 这里我们用实际输出演示 guard 的效果。
  */
-static void demo_include_guard(void) {
+static void headers_include_guard(void) {
   printf("  [include guard] 这个演示通过实际编译体现\n");
   printf("  [include guard] 本文件头部已包含 headers_sample.h\n");
   printf("  [include guard] 如果再次 #include \"basic/headers_sample.h\"\n");
@@ -146,11 +146,13 @@ static void demo_include_guard(void) {
  */
 #define MODULE_VERSION 1 /* 模块版本：仅本文件用，所以 #define 在 .c */
 
-static void demo_header_organization(void) {
+static void headers_header_organization(void) {
   printf("  [organization] 本模块版本: %d\n", MODULE_VERSION);
   printf("  [organization] public API: compute_result() → 在 .h 中声明\n");
-  printf("  [organization]   internal: internal_helper() → static 在 .c 中\n");
-  printf("  [organization]   internal: validate_input()  → static 在 .c 中\n");
+  printf("  [organization]   internal: headers_internal_helper() → static 在 "
+         ".c 中\n");
+  printf("  [organization]   internal: headers_validate_input()  → static 在 "
+         ".c 中\n");
   printf("  [organization] \n");
   printf("  [organization] 头文件只暴露「需要什么」，隐藏「怎么实现」。\n");
   printf("  [organization] 这就是 C 语言的「信息隐藏」哲学。\n");
@@ -165,26 +167,26 @@ int main_headers_sample(void) {
 
   /* Section 1: static vs extern visibility */
   printf("--- static vs extern 可见性 ---\n");
-  printf("  internal_helper() 是 static，只能在本文件调用：\n");
-  printf("  internal_helper(4) = %d\n", internal_helper(4));
+  printf("  headers_internal_helper() 是 static，只能在本文件调用：\n");
+  printf("  headers_internal_helper(4) = %d\n", headers_internal_helper(4));
   printf("  compute_result(5) = %d\n", compute_result(5));
   printf("  compute_result(-1) = %d (超出范围检测)\n", compute_result(-1));
 
   /* Section 2: translation unit */
   printf("\n--- 翻译单元 (Translation Unit) ---\n");
-  demo_translation_unit();
+  headers_translation_unit();
 
   /* Section 3: include guard */
   printf("\n--- 头文件卫士 (Include Guard) ---\n");
-  demo_include_guard();
+  headers_include_guard();
 
   /* Section 4: forward declaration */
   printf("\n--- 前向声明 (Forward Declaration) ---\n");
-  init_config();
+  headers_init_config();
 
   /* Section 5: header organization */
   printf("\n--- 头文件组织最佳实践 ---\n");
-  demo_header_organization();
+  headers_header_organization();
 
   printf("\nheaders sample done.\n");
   return 0;

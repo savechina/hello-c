@@ -39,7 +39,7 @@ int checked_shl_uint(uint32_t value, unsigned shift, uint32_t* out) {
 }
 
 /* 先在宽类型里验证范围, 再显式转换 — 顺序不能反过来 (CERT INT31-C) */
-static int narrow_to_int(long long v, int* out) {
+static int integer_safety_narrow_to_int(long long v, int* out) {
   if (v < (long long)INT_MIN || v > (long long)INT_MAX) {
     return 0;
   }
@@ -47,7 +47,7 @@ static int narrow_to_int(long long v, int* out) {
   return 1;
 }
 
-static void demo_unsigned_wraparound(void) {
+static void integer_safety_unsigned_wraparound(void) {
   uint32_t u = UINT32_MAX;
   int32_t s = -42;
 
@@ -61,7 +61,7 @@ static void demo_unsigned_wraparound(void) {
   printf("  PRId32 打印 int32_t: s = %" PRId32 " (平台无关的格式宏)\n\n", s);
 }
 
-static void demo_checked_add(void) {
+static void integer_safety_checked_add(void) {
   int out = 0;
 
   printf("=== 检查后再加 (checked_add_int) ===\n");
@@ -81,14 +81,14 @@ static void demo_checked_add(void) {
   printf("\n");
 }
 
-static void demo_safe_narrowing(void) {
+static void integer_safety_safe_narrowing(void) {
   int out = 0;
 
   printf("=== 安全窄化: 先验证, 再显式转换 ===\n");
-  if (narrow_to_int(123456789LL, &out)) {
+  if (integer_safety_narrow_to_int(123456789LL, &out)) {
     printf("  123456789LL → (int) %d ✓\n", out);
   }
-  if (!narrow_to_int(5000000000LL, &out)) {
+  if (!integer_safety_narrow_to_int(5000000000LL, &out)) {
     printf("  5000000000LL → 拒绝: 超出 int 范围, 不截断不回绕\n");
   }
   /* 反面教材: 跳过验证的显式转换不报错也不 UB, 但结果已被截断 (实现定义,
@@ -98,7 +98,7 @@ static void demo_safe_narrowing(void) {
          (int)5000000000LL);
 }
 
-static void demo_shift_guard(void) {
+static void integer_safety_shift_guard(void) {
   uint32_t out = 0;
 
   printf("=== 移位前检查宽度 (checked_shl_uint) ===\n");
@@ -119,10 +119,10 @@ int main_integer_safety_sample(void) {
   printf("CERT INT30/31/33-C: 有符号溢出绝不执行, 回绕只用无符号, "
          "移位先查宽度.\n\n");
 
-  demo_unsigned_wraparound();
-  demo_checked_add();
-  demo_safe_narrowing();
-  demo_shift_guard();
+  integer_safety_unsigned_wraparound();
+  integer_safety_checked_add();
+  integer_safety_safe_narrowing();
+  integer_safety_shift_guard();
 
   printf("整数安全演示完毕.\n");
   return 0;

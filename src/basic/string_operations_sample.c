@@ -19,7 +19,7 @@ size_t my_strlen(const char* str) {
   return len;
 }
 
-static void demo_strlen(void) {
+static void string_operations_strlen(void) {
   printf("=== 1. strlen — 字符串有多长？ ===\n\n");
 
   const char* tests[] = {"Hello", "", "C Programming", "🌏", NULL};
@@ -39,7 +39,7 @@ static void demo_strlen(void) {
 }
 
 /* ── 2. strcpy vs strncpy 安全对比 ── */
-static void demo_strcpy_vs_strncpy(void) {
+static void string_operations_strcpy_vs_strncpy(void) {
   printf("=== 2. strcpy 的危险 vs strncpy 的安全 ===\n\n");
 
   char buf[BUF_SMALL];
@@ -66,7 +66,7 @@ static void demo_strcpy_vs_strncpy(void) {
 }
 
 /* ── 3. strcat — 字符串拼接 ── */
-static void demo_strcat(void) {
+static void string_operations_strcat(void) {
   printf("=== 3. strcat — 拼接字符串 ===\n\n");
 
   char greeting[BUF_MED];
@@ -99,7 +99,7 @@ static void demo_strcat(void) {
 }
 
 /* ── 4. strcmp — 字典序比较 ── */
-static void demo_strcmp(void) {
+static void string_operations_strcmp(void) {
   printf("=== 4. strcmp — 字符串怎么比较？ ===\n\n");
 
   struct cmp_pair {
@@ -137,7 +137,7 @@ static void demo_strcmp(void) {
 }
 
 /* ── 5. strchr — 字符搜索 ── */
-static void demo_strchr(void) {
+static void string_operations_strchr(void) {
   printf("=== 5. strchr — 找字符在哪里 ===\n\n");
 
   const char* text = "Hello, C Programming!";
@@ -161,7 +161,7 @@ static void demo_strchr(void) {
 }
 
 /* ── 6. 综合演示: 构建路径 ── */
-static void demo_build_path(void) {
+static void string_operations_build_path(void) {
   printf("=== 6. 实战: 安全拼接文件路径 ===\n\n");
 
   char path[BUF_LARGE];
@@ -192,12 +192,12 @@ int main_string_operations_sample(void) {
   printf("║         strlen, strcpy, strcat, strcmp, strchr          ║\n");
   printf("╚══════════════════════════════════════════════════════════╝\n\n");
 
-  demo_strlen();
-  demo_strcpy_vs_strncpy();
-  demo_strcat();
-  demo_strcmp();
-  demo_strchr();
-  demo_build_path();
+  string_operations_strlen();
+  string_operations_strcpy_vs_strncpy();
+  string_operations_strcat();
+  string_operations_strcmp();
+  string_operations_strchr();
+  string_operations_build_path();
 
   printf("string_operations_sample 演示完毕。\n");
   return 0;

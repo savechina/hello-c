@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void print_usage(void) {
+static void print_usage(void) {
   printf("Usage: hello [subcommand]\n");
   printf("  basic     Run all basic chapters\n");
   printf("  advance   Run all advance chapters\n");

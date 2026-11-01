@@ -22,7 +22,7 @@ int32_t fp_sub(int32_t a, int32_t b) { return a - b; }
 
 int32_t fp_mul(int32_t a, int32_t b) { return a * b; }
 
-static void demo_basic_function_pointer(void) {
+static void function_pointers_basic_function_pointer(void) {
   printf("=== 1. 基本函数指针声明与调用 ===\n");
 
   /* 声明函数指针: int32_t (*fp)(int32_t, int32_t) */
@@ -53,7 +53,7 @@ static void demo_basic_function_pointer(void) {
 /* 用 typedef 简化函数指针类型 */
 typedef int32_t (*binary_op_t)(int32_t, int32_t);
 
-static void demo_dispatch_table(void) {
+static void function_pointers_dispatch_table(void) {
   printf("=== 2. 函数指针数组: Dispatch Table ===\n");
 
   /* 函数指针数组 */
@@ -76,7 +76,7 @@ static void demo_dispatch_table(void) {
 /* ── 3. 函数指针作为参数 (高阶函数) ── */
 
 /* apply: 接受一个二元操作函数指针 */
-int32_t apply_op(int32_t a, int32_t b, binary_op_t op) { return op(a, b); }
+int32_t fp_apply_op(int32_t a, int32_t b, binary_op_t op) { return op(a, b); }
 
 /* map_op: 对数组每个元素应用一个一元操作函数指针 */
 typedef int32_t (*unary_op_t)(int32_t);
@@ -85,33 +85,34 @@ int32_t fp_square(int32_t x) { return x * x; }
 
 int32_t fp_negate(int32_t x) { return -x; }
 
-void apply_unary_to_array(int32_t arr[], int32_t len, unary_op_t op) {
+void fp_apply_unary_to_array(int32_t arr[], int32_t len, unary_op_t op) {
   for (int32_t i = 0; i < len; i++) {
     arr[i] = op(arr[i]);
   }
 }
 
-static void demo_higher_order_function(void) {
+static void function_pointers_higher_order_function(void) {
   printf("=== 3. 函数指针作为参数 (高阶函数) ===\n");
 
-  /* 二元操作: apply_op */
-  printf("  apply_op(6, 7, mul) = %" PRId32 "\n", apply_op(6, 7, fp_mul));
-  printf("  apply_op(100, 37, sub) = %" PRId32 "\n", apply_op(100, 37, fp_sub));
+  /* 二元操作: fp_apply_op */
+  printf("  fp_apply_op(6, 7, mul) = %" PRId32 "\n", fp_apply_op(6, 7, fp_mul));
+  printf("  fp_apply_op(100, 37, sub) = %" PRId32 "\n",
+         fp_apply_op(100, 37, fp_sub));
 
-  /* 一元操作: apply_unary_to_array */
+  /* 一元操作: fp_apply_unary_to_array */
   int32_t nums[5] = {1, 2, 3, 4, 5};
   printf("  原数组: ");
   for (int32_t i = 0; i < 5; i++)
     printf("%" PRId32 " ", nums[i]);
   printf("\n");
 
-  apply_unary_to_array(nums, 5, fp_square);
+  fp_apply_unary_to_array(nums, 5, fp_square);
   printf("  square 后: ");
   for (int32_t i = 0; i < 5; i++)
     printf("%" PRId32 " ", nums[i]);
   printf("\n");
 
-  apply_unary_to_array(nums, 5, fp_negate);
+  fp_apply_unary_to_array(nums, 5, fp_negate);
   printf("  negate 后: ");
   for (int32_t i = 0; i < 5; i++)
     printf("%" PRId32 " ", nums[i]);
@@ -128,14 +129,14 @@ typedef struct Point2D_t {
   double (*length)(const struct Point2D_t* self);
 } Point2D;
 
-static double point2d_length(const Point2D* self) {
+static double function_pointers_point2d_length(const Point2D* self) {
   return sqrt(self->x * self->x + self->y * self->y);
 }
 
-static void point2d_init(Point2D* p, double px, double py) {
+static void function_pointers_point2d_init(Point2D* p, double px, double py) {
   p->x = px;
   p->y = py;
-  p->length = point2d_length;
+  p->length = function_pointers_point2d_length;
 }
 
 /* 带名称的 Shape 接口模拟 */
@@ -150,20 +151,20 @@ typedef struct {
   double radius;
 } Circle;
 
-static double circle_area(const Shape* self) {
+static double function_pointers_circle_area(const Shape* self) {
   const Circle* c = (const Circle*)self;
   return 3.14159265358979 * c->radius * c->radius;
 }
 
-static double circle_perimeter(const Shape* self) {
+static double function_pointers_circle_perimeter(const Shape* self) {
   const Circle* c = (const Circle*)self;
   return 2.0 * 3.14159265358979 * c->radius;
 }
 
-static void circle_init(Circle* c, double r) {
+static void function_pointers_circle_init(Circle* c, double r) {
   c->radius = r;
-  c->base.area = circle_area;
-  c->base.perimeter = circle_perimeter;
+  c->base.area = function_pointers_circle_area;
+  c->base.perimeter = function_pointers_circle_perimeter;
 }
 
 /* Rectangle */
@@ -173,41 +174,41 @@ typedef struct {
   double height;
 } Rectangle;
 
-static double rect_area(const Shape* self) {
+static double function_pointers_rect_area(const Shape* self) {
   const Rectangle* r = (const Rectangle*)self;
   return r->width * r->height;
 }
 
-static double rect_perimeter(const Shape* self) {
+static double function_pointers_rect_perimeter(const Shape* self) {
   const Rectangle* r = (const Rectangle*)self;
   return 2.0 * (r->width + r->height);
 }
 
-static void rect_init(Rectangle* r, double w, double h) {
+static void function_pointers_rect_init(Rectangle* r, double w, double h) {
   r->width = w;
   r->height = h;
-  r->base.area = rect_area;
-  r->base.perimeter = rect_perimeter;
+  r->base.area = function_pointers_rect_area;
+  r->base.perimeter = function_pointers_rect_perimeter;
 }
 
-static void demo_struct_function_pointers(void) {
+static void function_pointers_struct_function_pointers(void) {
   printf("=== 4. Struct + 函数指针: 模拟 OOP 方法 ===\n");
 
   /* Point2D */
   Point2D pt;
-  point2d_init(&pt, 3.0, 4.0);
+  function_pointers_point2d_init(&pt, 3.0, 4.0);
   printf("  Point2D(3.0, 4.0).length() = %.1f\n", pt.length(&pt));
 
   /* Circle */
   Circle circ;
-  circle_init(&circ, 5.0);
+  function_pointers_circle_init(&circ, 5.0);
   printf("  Circle(radius=5.0).area() = %.4f\n", circ.base.area((Shape*)&circ));
   printf("  Circle(radius=5.0).perimeter() = %.4f\n",
          circ.base.perimeter((Shape*)&circ));
 
   /* Rectangle */
   Rectangle rect;
-  rect_init(&rect, 4.0, 6.0);
+  function_pointers_rect_init(&rect, 4.0, 6.0);
   printf("  Rectangle(4.0 x 6.0).area() = %.4f\n",
          rect.base.area((Shape*)&rect));
   printf("  Rectangle(4.0 x 6.0).perimeter() = %.4f\n",
@@ -235,10 +236,10 @@ int main_function_pointers_sample(void) {
   printf("  函数指针 (Function Pointers)\n");
   printf("========================================\n\n");
 
-  demo_basic_function_pointer();
-  demo_dispatch_table();
-  demo_higher_order_function();
-  demo_struct_function_pointers();
+  function_pointers_basic_function_pointer();
+  function_pointers_dispatch_table();
+  function_pointers_higher_order_function();
+  function_pointers_struct_function_pointers();
 
   printf("函数指针演示完毕。\n");
   return 0;

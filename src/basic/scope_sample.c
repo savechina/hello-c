@@ -9,7 +9,9 @@
    ============================================================ */
 
 /* File-level extern variable: visible to other .c files via extern */
-int global_counter = 0;
+int global_counter =
+    0; /* 教学演示: 故意的未带前缀 external-linkage 全局变量 (命名规范审查 S3,
+          报告 main-eng-review-20261031-050500.md) */
 
 /* File-level static variable: hidden from other .c files */
 static int file_private_secret = 42;
@@ -18,7 +20,7 @@ static int file_private_secret = 42;
    Extern linkage demonstration
    ============================================================ */
 
-static void demo_extern_linkage(void) {
+static void scope_extern_linkage(void) {
   printf("==== [sample] Extern Linkage ====\n");
 
   /* global_counter is a file-scope variable with external linkage */
@@ -33,7 +35,7 @@ static void demo_extern_linkage(void) {
 
 /* ---- Section 1: Block scope and shadowing ---- */
 
-static void demo_block_scope(void) {
+static void scope_block_scope(void) {
   printf("\n==== [sample] Block Scope & Shadowing ====\n");
 
   int x = 1;
@@ -54,18 +56,18 @@ static void demo_block_scope(void) {
 
 /* ---- Section 2: static at function level ---- */
 
-static void tick_counter(void) {
+static void scope_tick_counter(void) {
   static int tick = 0;
   tick++;
   printf("  tick #%d (static local: lives until program exit)\n", tick);
 }
 
-static void demo_static_function_level(void) {
+static void scope_static_function_level(void) {
   printf("\n==== [sample] static at Function Level ====\n");
 
-  printf("  Calling tick_counter() 5 times:\n");
+  printf("  Calling scope_tick_counter() 5 times:\n");
   for (int i = 0; i < 5; i++) {
-    tick_counter();
+    scope_tick_counter();
   }
 
   /* Contrast with auto variable */
@@ -84,7 +86,7 @@ static void demo_static_function_level(void) {
 
 /* ---- Section 3: static at file level ---- */
 
-static void demo_const_correctness(void) {
+static void scope_const_correctness(void) {
   printf("\n==== [sample] const Correctness ====\n");
 
   const int MAX_SIZE = 256;
@@ -112,7 +114,7 @@ static void demo_const_correctness(void) {
 #else
   #pragma GCC diagnostic ignored "-Wreturn-local-addr"
 #endif
-static int* return_local_address(void) {
+static int* scope_return_local_address(void) {
   int x = 42;
   return &x; /* intentionally: dangling pointer demo */
 }
@@ -121,7 +123,7 @@ static int* return_local_address(void) {
 /*
  * Safe fix 1: use static local variable
  */
-static int* return_static_address(void) {
+static int* scope_return_static_address(void) {
   static int x = 42;
   return &x;
 }
@@ -129,7 +131,7 @@ static int* return_static_address(void) {
 /*
  * Safe fix 2: use dynamic allocation (heap)
  */
-static int* return_heap_address(void) {
+static int* scope_return_heap_address(void) {
   int* x = malloc(sizeof(int));
   if (x != NULL) {
     *x = 42;
@@ -140,24 +142,25 @@ static int* return_heap_address(void) {
 /*
  * Safe fix 3: let caller allocate
  */
-static void fill_by_caller(int* result) { *result = 42; }
+static void scope_fill_by_caller(int* result) { *result = 42; }
 
-static void demo_returning_address(void) {
+static void scope_returning_address(void) {
   printf("\n==== [sample] Returning Address of Local Variable ====\n");
 
-  volatile int* dangling = return_local_address();
-  printf("  WARNING: return_local_address() returns a dangling pointer\n");
+  volatile int* dangling = scope_return_local_address();
+  printf(
+      "  WARNING: scope_return_local_address() returns a dangling pointer\n");
   printf("           The variable 'x' was on the stack and is now gone.\n");
   printf("           Dereferencing this pointer = undefined behavior.\n");
   printf("           (We do NOT dereference it here.)\n");
   (void)dangling;
 
   printf("\n  Safe fix 1 - static local:\n");
-  int* p1 = return_static_address();
+  int* p1 = scope_return_static_address();
   printf("     *p1 = %d  (safe: static variable lives in .data)\n", *p1);
 
   printf("  Safe fix 2 - heap allocation:\n");
-  int* p2 = return_heap_address();
+  int* p2 = scope_return_heap_address();
   if (p2 != NULL) {
     printf("     *p2 = %d  (safe: heap memory persists)\n", *p2);
     free(p2);
@@ -166,13 +169,13 @@ static void demo_returning_address(void) {
 
   printf("  Safe fix 3 - caller allocates:\n");
   int caller_var = 0;
-  fill_by_caller(&caller_var);
+  scope_fill_by_caller(&caller_var);
   printf("     caller_var = %d  (safe: caller owns the storage)\n", caller_var);
 }
 
 /* ---- Section 5: Lifetime comparison ---- */
 
-static void demo_lifetime_comparison(void) {
+static void scope_lifetime_comparison(void) {
   printf("\n==== [sample] Lifetime: Stack vs Heap vs Static ====\n");
 
   printf("  Stack (auto variable):\n");
@@ -211,7 +214,7 @@ static void demo_lifetime_comparison(void) {
 #if !defined(__clang__) && defined(__GNUC__) && __GNUC__ >= 12
   #pragma GCC diagnostic ignored "-Wdangling-pointer"
 #endif
-static void demo_dangling_pointer_explained(void) {
+static void scope_dangling_pointer_explained(void) {
   printf("\n==== [sample] Dangling Pointer — Explained ====\n");
 
   int* dangling = NULL;
@@ -235,7 +238,7 @@ static void demo_dangling_pointer_explained(void) {
 #if !defined(__clang__) && defined(__GNUC__) && __GNUC__ >= 12
   #pragma GCC diagnostic ignored "-Wuse-after-free"
 #endif
-static void demo_use_after_free_explained(void) {
+static void scope_use_after_free_explained(void) {
   printf("\n==== [sample] Use-After-Free — Explained ====\n");
 
   int* data = malloc(sizeof(int) * 4);
@@ -258,18 +261,20 @@ static void demo_use_after_free_explained(void) {
 
 /* ---- Section 8: Practical scope management ---- */
 
-static int safe_get_max(int a, int b) { return (a > b) ? a : b; }
+static int scope_safe_get_max(int a, int b) { return (a > b) ? a : b; }
 
-static void safe_copy_max(int* dest, int a, int b) { *dest = (a > b) ? a : b; }
+static void scope_safe_copy_max(int* dest, int a, int b) {
+  *dest = (a > b) ? a : b;
+}
 
-static void demo_safe_patterns(void) {
+static void scope_safe_patterns(void) {
   printf("\n==== [sample] Practical Scope Management Patterns ====\n");
 
-  int result = safe_get_max(10, 20);
+  int result = scope_safe_get_max(10, 20);
   printf("  Pattern 1 (return by value): max(10, 20) = %d\n", result);
 
   int output = 0;
-  safe_copy_max(&output, 30, 15);
+  scope_safe_copy_max(&output, 30, 15);
   printf("  Pattern 2 (caller allocates): max(30, 15) = %d\n", output);
 
   char* buffer = malloc(64);
@@ -290,15 +295,15 @@ static void demo_safe_patterns(void) {
 /* ---- Public entry ---- */
 
 int main_scope_sample(void) {
-  demo_extern_linkage();
-  demo_block_scope();
-  demo_static_function_level();
-  demo_const_correctness();
-  demo_returning_address();
-  demo_lifetime_comparison();
-  demo_dangling_pointer_explained();
-  demo_use_after_free_explained();
-  demo_safe_patterns();
+  scope_extern_linkage();
+  scope_block_scope();
+  scope_static_function_level();
+  scope_const_correctness();
+  scope_returning_address();
+  scope_lifetime_comparison();
+  scope_dangling_pointer_explained();
+  scope_use_after_free_explained();
+  scope_safe_patterns();
 
   printf("\nscope sample done.\n");
   return 0;

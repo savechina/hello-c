@@ -21,7 +21,7 @@
    Section 1: printf 家族 — stdout 与 stderr
    ============================================================ */
 
-static void demo_printf_family(void) {
+static void logging_printf_family(void) {
   /* printf → stdout（标准输出，正常信息） */
   printf("[INFO] printf: 正常输出到 stdout\n");
 
@@ -72,7 +72,7 @@ static void demo_printf_family(void) {
  * 自定义 printf-like 函数：使用 va_list 处理可变参数
  * 模拟一个简单的日志函数
  */
-static void custom_log(const char* level, const char* fmt, ...) {
+static void logging_custom_log(const char* level, const char* fmt, ...) {
   va_list args;
   va_start(args, fmt);
   fprintf(stdout, "[%s] ", level);
@@ -83,25 +83,27 @@ static void custom_log(const char* level, const char* fmt, ...) {
 /**
  * 用 vsnprintf 将格式化输出写入缓冲区（安全方式）
  */
-static void format_to_buffer(char* dst, size_t dst_size, const char* fmt, ...) {
+static void logging_format_to_buffer(char* dst, size_t dst_size,
+                                     const char* fmt, ...) {
   va_list args;
   va_start(args, fmt);
   vsnprintf(dst, dst_size, fmt, args);
   va_end(args);
 }
 
-static void demo_variadic(void) {
+static void logging_variadic(void) {
   printf("\n=== Variadic Functions ===\n");
 
-  custom_log("INFO", "Server started on port %d\n", 8080);
-  custom_log("WARN", "Disk usage at %.1f%%\n", 85.5);
-  custom_log("ERROR", "Failed to open file \"%s\"\n", "/tmp/config.ini");
+  logging_custom_log("INFO", "Server started on port %d\n", 8080);
+  logging_custom_log("WARN", "Disk usage at %.1f%%\n", 85.5);
+  logging_custom_log("ERROR", "Failed to open file \"%s\"\n",
+                     "/tmp/config.ini");
 
   /* vsnprintf 版本 */
   char buffer[128];
-  format_to_buffer(buffer, sizeof(buffer), "User %s logged in from %s", "Alice",
-                   "192.168.1.100");
-  printf("[INFO] format_to_buffer: %s\n", buffer);
+  logging_format_to_buffer(buffer, sizeof(buffer), "User %s logged in from %s",
+                           "Alice", "192.168.1.100");
+  printf("[INFO] logging_format_to_buffer: %s\n", buffer);
 }
 
 /* ============================================================
@@ -137,7 +139,7 @@ static void demo_variadic(void) {
       fprintf(stdout, "[DEBUG] " fmt "\n", ##__VA_ARGS__);                     \
   } while (0)
 
-static void demo_log_macros(void) {
+static void logging_log_macros(void) {
   printf("\n=== Log Macros ===\n");
   printf("  Current LOG_LEVEL = %d (DEBUG=%d)\n\n", LOG_LEVEL, 4);
 
@@ -163,7 +165,7 @@ static void demo_log_macros(void) {
   fprintf(stdout, "[%s] %s:%d %s() " fmt "\n", level, __FILE__, __LINE__,      \
           __func__, ##__VA_ARGS__)
 
-static void demo_location_macros(void) {
+static void logging_location_macros(void) {
   printf("\n=== __FILE__, __LINE__, __func__ ===\n");
 
   DEBUG_POSITION("Entering %s, x = %d", "function_name", 99);
@@ -175,7 +177,7 @@ static void demo_location_macros(void) {
    Section 5: 带时间戳的日志函数（实战）
    ============================================================ */
 
-static void logged_printf(const char* level, const char* msg, ...) {
+static void logging_logged_printf(const char* level, const char* msg, ...) {
   /* 获取当前时间 */
   time_t now = time(NULL);
   struct tm* tm_info = localtime(&now);
@@ -191,21 +193,22 @@ static void logged_printf(const char* level, const char* msg, ...) {
   va_end(args);
 }
 
-static void demo_timestamped_log(void) {
+static void logging_timestamped_log(void) {
   printf("\n=== Timestamped Logging ===\n");
 
-  logged_printf("INFO", "Application starting up");
-  logged_printf("INFO", "Loading configuration from %s", "/etc/myapp.conf");
-  logged_printf("WARN", "Deprecated function called: init_legacy()");
-  logged_printf("ERROR", "Cannot connect to database at %s:%d", "localhost",
-                5432);
+  logging_logged_printf("INFO", "Application starting up");
+  logging_logged_printf("INFO", "Loading configuration from %s",
+                        "/etc/myapp.conf");
+  logging_logged_printf("WARN", "Deprecated function called: init_legacy()");
+  logging_logged_printf("ERROR", "Cannot connect to database at %s:%d",
+                        "localhost", 5432);
 }
 
 /* ============================================================
 Section 6: snprintf 安全示例 — 对比 sprintf 风险
  ============================================================ */
 
-static void demo_snprintf_safety(void) {
+static void logging_snprintf_safety(void) {
   printf("\n=== snprintf Safety vs sprintf Risk ===\n");
 
   /* 危险：sprintf 没有边界检查，缓冲区过小会溢出 */
@@ -229,22 +232,22 @@ int main_logging_sample(void) {
   printf("==== 日志与格式化输出 (Logging & Formatted Output) ====\n\n");
 
   printf("--- printf 家族 ---\n");
-  demo_printf_family();
+  logging_printf_family();
 
   printf("\n--- 可变参数函数 ---\n");
-  demo_variadic();
+  logging_variadic();
 
   printf("\n--- 日志级别宏 ---\n");
-  demo_log_macros();
+  logging_log_macros();
 
   printf("\n--- __FILE__ / __LINE__ / __func__ ---\n");
-  demo_location_macros();
+  logging_location_macros();
 
   printf("\n--- 带时间戳的日志 ---\n");
-  demo_timestamped_log();
+  logging_timestamped_log();
 
   printf("\n--- snprintf 安全对比 ---\n");
-  demo_snprintf_safety();
+  logging_snprintf_safety();
 
   printf("\nlogging sample done.\n");
   return 0;

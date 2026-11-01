@@ -10,7 +10,7 @@
 #define STR_BUF_LARGE 128
 
 /* ── 1. char[] vs char* initialization ── */
-static void demo_char_array_vs_pointer(void) {
+static void string_basics_char_array_vs_pointer(void) {
   printf("=== 1. char[] 还是 char*？这是个好问题 ===\n\n");
 
   /* char[]: 栈上可修改 */
@@ -37,7 +37,7 @@ static void demo_char_array_vs_pointer(void) {
 }
 
 /* ── 2. null terminator 的重要性 ── */
-static void demo_null_terminator(void) {
+static void string_basics_null_terminator(void) {
   printf("=== 2. '\\0' — 字符串的句号 ===\n\n");
 
   /* 正确的字符串 */
@@ -68,7 +68,7 @@ static void demo_null_terminator(void) {
 }
 
 /* ── 3. ASCII 内存图演示 ── */
-static void demo_memory_layout(void) {
+static void string_basics_memory_layout(void) {
   printf("=== 3. ASCII 内存图 ===\n\n");
 
   char name[8] = "C Prog";
@@ -93,7 +93,7 @@ static void demo_memory_layout(void) {
 }
 
 /* ── 4. Python str vs C string 对比 ── */
-static void demo_python_vs_c(void) {
+static void string_basics_python_vs_c(void) {
   printf("=== 4. Python str vs C string ===\n\n");
 
   printf("  ┌────────────────────────────────────────────┐\n");
@@ -124,7 +124,7 @@ static void demo_python_vs_c(void) {
 }
 
 /* ── 5. 字符串字面量的本质 ── */
-static void demo_string_literals(void) {
+static void string_basics_string_literals(void) {
   printf("=== 5. 字符串字面量 (String Literals) ===\n\n");
 
   /* 字面量是只读的 */
@@ -162,11 +162,11 @@ int main_string_basics_sample(void) {
   printf("║         字符数组、空终止符、字符串字面量                ║\n");
   printf("╚══════════════════════════════════════════════════════════╝\n\n");
 
-  demo_char_array_vs_pointer();
-  demo_null_terminator();
-  demo_memory_layout();
-  demo_python_vs_c();
-  demo_string_literals();
+  string_basics_char_array_vs_pointer();
+  string_basics_null_terminator();
+  string_basics_memory_layout();
+  string_basics_python_vs_c();
+  string_basics_string_literals();
 
   printf("string_basics_sample 演示完毕。\n");
   return 0;

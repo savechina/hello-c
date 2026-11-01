@@ -12,7 +12,7 @@ struct Student {
   float score;
 };
 
-static void demo_definition_and_init(void) {
+static void struct_basics_definition_and_init(void) {
   /* Positional initialization */
   struct Student s1 = {"Alice", 20, 95.5f};
 
@@ -41,7 +41,7 @@ struct Point {
   float y;
 };
 
-static void demo_member_access(void) {
+static void struct_basics_member_access(void) {
   struct Point origin = {0.0f, 0.0f};
 
   /* Read members */
@@ -64,7 +64,7 @@ struct ScoreEntry {
   int32_t points;
 };
 
-static void demo_struct_array_and_copy(void) {
+static void struct_basics_struct_array_and_copy(void) {
   /* Array of structs */
   struct ScoreEntry report[3] = {
       {"Math", 95},
@@ -88,7 +88,7 @@ static void demo_struct_array_and_copy(void) {
 
 /* ---- Section 4: designated initializer edge cases ---- */
 
-static void demo_designated_edges(void) {
+static void struct_basics_designated_edges(void) {
   /* Default all members to zero — common pattern */
   struct Student zeroed = {0};
   printf("  zeroed student: name=\"%s\", age=%" PRId32 ", score=%.1f\n",
@@ -107,16 +107,16 @@ static void demo_designated_edges(void) {
 
 int main_struct_basics_sample(void) {
   printf("-- struct definition and initialization --\n");
-  demo_definition_and_init();
+  struct_basics_definition_and_init();
 
   printf("-- member access (.) operator --\n");
-  demo_member_access();
+  struct_basics_member_access();
 
   printf("-- struct array and copy --\n");
-  demo_struct_array_and_copy();
+  struct_basics_struct_array_and_copy();
 
   printf("-- designated initializer edge cases --\n");
-  demo_designated_edges();
+  struct_basics_designated_edges();
 
   return 0;
 }

@@ -8,37 +8,37 @@
  * 用指针穿过函数的墙，让被调函数修改调用者的变量。
  */
 
-void swap_by_value(int32_t a, int32_t b) {
+void pf_swap_by_value(int32_t a, int32_t b) {
   int32_t tmp = a;
   a = b;
   b = tmp;
 }
 
-void swap_by_pointer(int32_t* a, int32_t* b) {
+void pf_swap_by_pointer(int32_t* a, int32_t* b) {
   int32_t tmp = *a;
   *a = *b;
   *b = tmp;
 }
 
-static void demo_pass_by_value_vs_reference(void) {
+static void pointers_and_functions_pass_by_value_vs_reference(void) {
   printf("=== 值传递 vs 传递引用 ===\n\n");
 
   int32_t x = 10, y = 20;
-  printf("  调用 swap_by_value(%" PRId32 ", %" PRId32 ")\n", x, y);
-  swap_by_value(x, y);
+  printf("  调用 pf_swap_by_value(%" PRId32 ", %" PRId32 ")\n", x, y);
+  pf_swap_by_value(x, y);
   printf("  结果: x = %" PRId32 ", y = %" PRId32 "  ← 未改变!\n\n", x, y);
 
   x = 10;
   y = 20;
-  printf("  调用 swap_by_pointer(&x, &y)\n");
-  swap_by_pointer(&x, &y);
+  printf("  调用 pf_swap_by_pointer(&x, &y)\n");
+  pf_swap_by_pointer(&x, &y);
   printf("  结果: x = %" PRId32 ", y = %" PRId32 "  ← 已交换!\n\n", x, y);
 
   printf("  值传递: 函数收到副本，修改不影响外部\n");
   printf("  指针传递: 函数收到地址，通过 * 修改真实数据\n\n");
 }
 
-static void demo_return_address_of_local(void) {
+static void pointers_and_functions_return_address_of_local(void) {
   printf("=== 经典陷阱: 返回局部变量地址 ===\n\n");
 
   printf("  ❌ 危险模式:\n");
@@ -58,7 +58,7 @@ static void demo_return_address_of_local(void) {
   printf("    }\n\n");
 }
 
-static void demo_find_max_demo(void) {
+static void pointers_and_functions_find_max_demo(void) {
   int32_t data[] = {3, 17, -5, 42, 8};
   int32_t n = 5;
 
@@ -79,7 +79,7 @@ static void demo_find_max_demo(void) {
          (void*)max, (int32_t)(max - data));
 }
 
-static void demo_modify_array_via_pointer(void) {
+static void pointers_and_functions_modify_array_via_pointer(void) {
   int32_t scores[5] = {80, 85, 90, 75, 95};
   int32_t n = 5;
 
@@ -107,10 +107,10 @@ int main_pointers_and_functions_sample(void) {
   printf("  「指针是穿过函数墙壁的手段。」\n");
   printf("========================================\n\n");
 
-  demo_pass_by_value_vs_reference();
-  demo_return_address_of_local();
-  demo_find_max_demo();
-  demo_modify_array_via_pointer();
+  pointers_and_functions_pass_by_value_vs_reference();
+  pointers_and_functions_return_address_of_local();
+  pointers_and_functions_find_max_demo();
+  pointers_and_functions_modify_array_via_pointer();
 
   printf("指针与函数演示完毕。\n");
   return 0;

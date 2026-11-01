@@ -29,13 +29,13 @@
 
 // 声明一个函数来获取系统信息，具体实现会在后面根据平台定义
 void get_system_info();
-void get_info();
+static void sysinfo_get_info(void);
 
 int main_sysinfo() {
   printf("Detected operating system: %s\n", OS_NAME);
 
 #if defined(__APPLE__)
-  get_info();
+  sysinfo_get_info();
 #endif
 
   printf("Print operating system: %s\n", OS_NAME);
@@ -103,7 +103,7 @@ void get_system_info() {
   }
 }
 
-void get_info() {
+void sysinfo_get_info() {
   // Get system architecture
   char* arch = NULL;
   size_t size = 0;

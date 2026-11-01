@@ -15,7 +15,7 @@ typedef struct Student {
   Score score;
 } Student;
 
-static void demo_basic_typedef(void) {
+static void typedef_basic_typedef(void) {
   Student s = {.name = "Alice", .age = 20, .score = 95.5f};
 
   printf("  Student: %s, age=%" PRId32 ", score=%.1f\n", s.name, s.age,
@@ -29,7 +29,7 @@ static void demo_basic_typedef(void) {
 typedef int32_t IntArray10[10];
 typedef char* StringPtr;
 
-static void demo_array_pointer_typedef(void) {
+static void typedef_array_pointer_typedef(void) {
   IntArray10 arr = {1, 2, 3, 4, 5};
   StringPtr greeting = "hello";
 
@@ -43,17 +43,21 @@ static void demo_array_pointer_typedef(void) {
 
 typedef int32_t (*BinaryOp)(int32_t, int32_t);
 
-static int32_t addition(int32_t a, int32_t b) { return a + b; }
+static int32_t typedef_addition_sample(int32_t a, int32_t b) { return a + b; }
 
-static int32_t multiplication(int32_t a, int32_t b) { return a * b; }
+static int32_t typedef_multiplication_sample(int32_t a, int32_t b) {
+  return a * b;
+}
 
-static int32_t apply(BinaryOp op, int32_t x, int32_t y) { return op(x, y); }
+static int32_t typedef_apply_sample(BinaryOp op, int32_t x, int32_t y) {
+  return op(x, y);
+}
 
-static void demo_func_ptr_typedef(void) {
-  BinaryOp ops[2] = {addition, multiplication};
+static void typedef_func_ptr_typedef(void) {
+  BinaryOp ops[2] = {typedef_addition_sample, typedef_multiplication_sample};
 
   for (int32_t i = 0; i < 2; i++) {
-    int32_t result = apply(ops[i], 6, 7);
+    int32_t result = typedef_apply_sample(ops[i], 6, 7);
     printf("  ops[%" PRId32 "](6, 7) = %" PRId32 "\n", i, result);
   }
   printf("  <-- typedef simplifies: BinaryOp op  vs  int32_t (*op)(int32_t, "
@@ -64,48 +68,49 @@ static void demo_func_ptr_typedef(void) {
 
 typedef void (*Visitor)(int32_t index, int32_t value, void* context);
 
-static void print_visitor(int32_t index, int32_t value, void* context) {
+static void typedef_print_visitor(int32_t index, int32_t value, void* context) {
   (void)context;
   printf("    [%d] = %" PRId32 "\n", index, value);
 }
 
-static void sum_visitor(int32_t index, int32_t value, void* context) {
+static void typedef_sum_visitor(int32_t index, int32_t value, void* context) {
   (void)index;
   int32_t* sum = (int32_t*)context;
   *sum += value;
 }
 
-static void traverse(int32_t data[], int32_t len, Visitor visit, void* ctx) {
+static void typedef_traverse_sample(int32_t data[], int32_t len, Visitor visit,
+                                    void* ctx) {
   for (int32_t i = 0; i < len; i++) {
     visit(i, data[i], ctx);
   }
 }
 
-static void demo_visitor_pattern(void) {
+static void typedef_visitor_pattern(void) {
   int32_t numbers[4] = {10, 20, 30, 40};
 
-  printf("  print_visitor:\n");
-  traverse(numbers, 4, print_visitor, NULL);
+  printf("  typedef_print_visitor:\n");
+  typedef_traverse_sample(numbers, 4, typedef_print_visitor, NULL);
 
   int32_t total = 0;
-  traverse(numbers, 4, sum_visitor, &total);
-  printf("  sum_visitor total: %" PRId32 "\n", total);
+  typedef_traverse_sample(numbers, 4, typedef_sum_visitor, &total);
+  printf("  typedef_sum_visitor total: %" PRId32 "\n", total);
 }
 
 /* ---- Public entry ---- */
 
 int main_typedef_sample(void) {
   printf("-- basic type aliases (struct, int, float) --\n");
-  demo_basic_typedef();
+  typedef_basic_typedef();
 
   printf("-- typedef for arrays and pointers --\n");
-  demo_array_pointer_typedef();
+  typedef_array_pointer_typedef();
 
   printf("-- function pointer typedefs --\n");
-  demo_func_ptr_typedef();
+  typedef_func_ptr_typedef();
 
   printf("-- visitor callback pattern --\n");
-  demo_visitor_pattern();
+  typedef_visitor_pattern();
 
   return 0;
 }

@@ -63,7 +63,7 @@ int sa_clamp_u8(int v) {
   return v;
 }
 
-static void demo_sizeof_guarantees(void) {
+static void static_assert_sizeof_guarantees(void) {
   printf("=== sizeof 保证 (文件作用域断言) ===\n");
   printf("  sizeof(int)      = %zu  (断言 >= 4)\n", sizeof(int));
   printf("  sizeof(int32_t)  = %zu  (断言 == 4)\n", sizeof(int32_t));
@@ -71,7 +71,7 @@ static void demo_sizeof_guarantees(void) {
   printf("  这些数字编译器已经核对过 — 断言失败根本走不到运行期\n\n");
 }
 
-static void demo_struct_layout(void) {
+static void static_assert_struct_layout(void) {
   SaPoint p = {1, 2};
 
   printf("=== 结构体布局断言 ===\n");
@@ -82,7 +82,7 @@ static void demo_struct_layout(void) {
   printf("  p = {x=%d, y=%d} — 序列化/网络协议依赖这种布局假设\n\n", p.x, p.y);
 }
 
-static void demo_array_size_guard(void) {
+static void static_assert_array_size_guard(void) {
   int copy[ARRAY_SIZE(sa_probe)];
   size_t i;
 
@@ -95,7 +95,7 @@ static void demo_array_size_guard(void) {
          copy[0], copy[4]);
 }
 
-static void demo_runtime_confirmation(void) {
+static void static_assert_runtime_confirmation(void) {
   int v;
 
   printf("=== 运行期确认 + 块作用域断言 ===\n");
@@ -118,10 +118,10 @@ int main_static_assert_sample(void) {
   printf("--- 编译期断言 (_Static_assert) ---\n");
   printf("C11 关键字: 条件为假时拒绝编译, 把假设变成契约.\n\n");
 
-  demo_sizeof_guarantees();
-  demo_struct_layout();
-  demo_array_size_guard();
-  demo_runtime_confirmation();
+  static_assert_sizeof_guarantees();
+  static_assert_struct_layout();
+  static_assert_array_size_guard();
+  static_assert_runtime_confirmation();
 
   printf("_Static_assert 演示完毕.\n");
   return 0;

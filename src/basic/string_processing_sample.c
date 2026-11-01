@@ -10,7 +10,7 @@
 #define PROC_LARGE 128
 
 /* ── 1. strtok — 分隔字符串 ── */
-static void demo_strtok(void) {
+static void string_processing_strtok(void) {
   printf("=== 1. strtok — 按分隔符拆分字符串 ===\n\n");
 
   /* 基本: 按空格分隔 */
@@ -54,7 +54,7 @@ static void demo_strtok(void) {
 }
 
 /* ── 2. strstr — 查找子串 ── */
-static void demo_strstr(void) {
+static void string_processing_strstr(void) {
   printf("=== 2. strstr — 查找子串 ===\n\n");
 
   const char* text = "The quick brown fox jumps over the lazy dog";
@@ -81,7 +81,7 @@ static void demo_strstr(void) {
 }
 
 /* ── 3. strchr + strspn + strcspn ── */
-static void demo_char_search(void) {
+static void string_processing_char_search(void) {
   printf("=== 3. 字符搜索与跳过集合 ===\n\n");
 
   const char* path = "/home/user/docs/readme.txt";
@@ -115,7 +115,7 @@ static void demo_char_search(void) {
 }
 
 /* ── 4. CSV 解析实战 ── */
-static void demo_csv_parsing(void) {
+static void string_processing_csv_parsing(void) {
   printf("=== 4. 实战: 安全 CSV 解析 ===\n\n");
 
   const char* raw_csv = "Alice,30,Engineer,New York";
@@ -152,7 +152,7 @@ static void demo_csv_parsing(void) {
 }
 
 /* ── 5. 字符串转数字 ── */
-static void demo_string_to_number(void) {
+static void string_processing_string_to_number(void) {
   printf("=== 5. 字符串 → 数字转换 ===\n\n");
 
   /* strtol: 安全地解析整数 */
@@ -184,7 +184,7 @@ static void demo_string_to_number(void) {
 }
 
 /* ── 6. 实用函数: 去除两端空白 ── */
-static void demo_trim_whitespace(void) {
+static void string_processing_trim_whitespace(void) {
   printf("=== 6. 实战: 去除两端空白 ===\n\n");
 
   char test[] = "   Hello, World!   ";
@@ -215,12 +215,12 @@ int main_string_processing_sample(void) {
   printf("║         strtok, strstr, strchr, 解析, 转换             ║\n");
   printf("╚══════════════════════════════════════════════════════════╝\n\n");
 
-  demo_strtok();
-  demo_strstr();
-  demo_char_search();
-  demo_csv_parsing();
-  demo_string_to_number();
-  demo_trim_whitespace();
+  string_processing_strtok();
+  string_processing_strstr();
+  string_processing_char_search();
+  string_processing_csv_parsing();
+  string_processing_string_to_number();
+  string_processing_trim_whitespace();
 
   printf("string_processing_sample 演示完毕。\n");
   return 0;

@@ -23,9 +23,9 @@ void test_binary_op_helpers_compute_correctly(void) {
 }
 
 void test_apply_op_dispatches_through_function_pointer(void) {
-  TEST_ASSERT_EQUAL_INT32(42, apply_op(6, 7, fp_mul));
-  TEST_ASSERT_EQUAL_INT32(7, apply_op(10, 3, fp_sub));
-  TEST_ASSERT_EQUAL_INT32(9, apply_op(4, 5, fp_add));
+  TEST_ASSERT_EQUAL_INT32(42, fp_apply_op(6, 7, fp_mul));
+  TEST_ASSERT_EQUAL_INT32(7, fp_apply_op(10, 3, fp_sub));
+  TEST_ASSERT_EQUAL_INT32(9, fp_apply_op(4, 5, fp_add));
 }
 
 void test_unary_ops_and_apply_unary_to_array(void) {
@@ -37,10 +37,10 @@ void test_unary_ops_and_apply_unary_to_array(void) {
   int32_t squared[4] = {1, 4, 9, 16};
   int32_t negated[4] = {-1, -4, -9, -16};
 
-  apply_unary_to_array(nums, 4, fp_square);
+  fp_apply_unary_to_array(nums, 4, fp_square);
   TEST_ASSERT_EQUAL_INT_ARRAY(squared, nums, 4);
 
-  apply_unary_to_array(nums, 4, fp_negate);
+  fp_apply_unary_to_array(nums, 4, fp_negate);
   TEST_ASSERT_EQUAL_INT_ARRAY(negated, nums, 4);
 }
 

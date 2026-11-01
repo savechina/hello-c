@@ -8,7 +8,7 @@
  *
  * Demonstrates:
  *   1. restrict 的契约语义 (C11 §6.7.3.1): 块内对象只经该 lvalue 访问
- *   2. 合规示例: 分离缓冲区向量加法 add_arrays (编译器可自动向量化)
+ *   2. 合规示例: 分离缓冲区向量加法 rs_add_arrays (编译器可自动向量化)
  *   3. 违规调用: dst 与源重叠 — 仅注释反例, 永不执行 (违反契约 = UB)
  *   4. 何时不用: 重叠语义 (memmove) 的缓冲区
  *   5. 与严格别名 (strict-aliasing) 章的关系 — 同族优化契约
@@ -32,6 +32,6 @@ int main_restrict_sample(void);
  * @param b   加数缓冲 (不得与 dst/a 重叠)
  * @param n   元素个数 (0 合法, 任何指针此时都不得解引用)
  */
-void add_arrays(double* dst, const double* a, const double* b, size_t n);
+void rs_add_arrays(double* dst, const double* a, const double* b, size_t n);
 
 #endif /* RESTRICT_SAMPLE_H */

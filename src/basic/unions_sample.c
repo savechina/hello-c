@@ -13,7 +13,7 @@ union Data {
   char str[8];
 };
 
-static void demo_union_basic(void) {
+static void unions_union_basic(void) {
   union Data d;
 
   d.i = 42;
@@ -44,7 +44,7 @@ union Big {
   char pad[3];
 };
 
-static void demo_union_size(void) {
+static void unions_union_size(void) {
   printf("  union Small: sizeof=%zu (max of 1 and 2, aligned to 2)\n",
          sizeof(union Small));
   printf("  union Big:   sizeof=%zu (max of 8 and 3 → 8)\n", sizeof(union Big));
@@ -65,17 +65,17 @@ struct TaggedValue {
   } data;
 };
 
-static struct TaggedValue make_int(int32_t v) {
+static struct TaggedValue unions_make_int(int32_t v) {
   struct TaggedValue t = {.tag = VAL_INT, .data.i = v};
   return t;
 }
 
-static struct TaggedValue make_float(float v) {
+static struct TaggedValue unions_make_float(float v) {
   struct TaggedValue t = {.tag = VAL_FLOAT, .data.f = v};
   return t;
 }
 
-static struct TaggedValue make_string(const char* v) {
+static struct TaggedValue unions_make_string(const char* v) {
   struct TaggedValue t;
   t.tag = VAL_STRING;
   strncpy(t.data.str, v, sizeof(t.data.str) - 1);
@@ -83,7 +83,7 @@ static struct TaggedValue make_string(const char* v) {
   return t;
 }
 
-static void print_tagged(const struct TaggedValue* tv) {
+static void unions_print_tagged(const struct TaggedValue* tv) {
   switch (tv->tag) {
   case VAL_INT:
     printf("    INT:    %" PRId32 "\n", tv->data.i);
@@ -97,17 +97,17 @@ static void print_tagged(const struct TaggedValue* tv) {
   }
 }
 
-static void demo_tagged_union(void) {
-  struct TaggedValue a = make_int(42);
-  struct TaggedValue b = make_float(3.14f);
-  struct TaggedValue c = make_string("hello");
+static void unions_tagged_union(void) {
+  struct TaggedValue a = unions_make_int(42);
+  struct TaggedValue b = unions_make_float(3.14f);
+  struct TaggedValue c = unions_make_string("hello");
 
   printf("  a: ");
-  print_tagged(&a);
+  unions_print_tagged(&a);
   printf("  b: ");
-  print_tagged(&b);
+  unions_print_tagged(&b);
   printf("  c: ");
-  print_tagged(&c);
+  unions_print_tagged(&c);
 
   printf("  sizeof(struct TaggedValue) = %zu\n", sizeof(struct TaggedValue));
   printf("  <-- tag (enum) + union = safe variant type, like Rust enum\n");
@@ -131,7 +131,7 @@ struct Packet {
   union Payload pay;
 };
 
-static void demo_protocol_union(void) {
+static void unions_protocol_union(void) {
   struct Packet pkt;
   pkt.hdr.version = 1;
   pkt.hdr.length = 8;
@@ -153,16 +153,16 @@ static void demo_protocol_union(void) {
 
 int main_unions_sample(void) {
   printf("-- union basics (shared memory) --\n");
-  demo_union_basic();
+  unions_union_basic();
 
   printf("-- union size and alignment --\n");
-  demo_union_size();
+  unions_union_size();
 
   printf("-- tagged union (safe variant) --\n");
-  demo_tagged_union();
+  unions_tagged_union();
 
   printf("-- union for protocol parsing --\n");
-  demo_protocol_union();
+  unions_protocol_union();
 
   return 0;
 }

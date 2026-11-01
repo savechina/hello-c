@@ -4,7 +4,7 @@
 
 /* ---- for 循环样本 ---- */
 
-void loops_for_sample(void) {
+static void loops_for_sample(void) {
   printf("---- loops: for 循环样本 ----\n");
 
   /* 遍历数组 */
@@ -32,7 +32,7 @@ void loops_for_sample(void) {
 
 /* ---- while 循环样本 ---- */
 
-void loops_while_sample(void) {
+static void loops_while_sample(void) {
   printf("---- loops: while 循环样本 ----\n");
 
   /* 欧几里得算法求最大公约数 */
@@ -52,7 +52,7 @@ void loops_while_sample(void) {
 
 /* ---- do-while 循环样本 ---- */
 
-void loops_do_while_sample(void) {
+static void loops_do_while_sample(void) {
   printf("---- loops: do-while 循环样本 ----\n");
 
   /* 数字反转 */
@@ -72,38 +72,6 @@ void loops_do_while_sample(void) {
 }
 
 /* ---- break/continue 样本 ---- */
-
-void loops_control_sample(void) {
-  printf("---- loops: break/continue 样本 ----\n");
-
-  /* 找素数 (2..20) */
-  printf("  2..20 之间的素数: ");
-  for (int i = 2; i <= 20; i++) {
-    int is_prime = 1;
-    for (int j = 2; j * j <= i; j++) {
-      if (i % j == 0) {
-        is_prime = 0;
-        break;
-      }
-    }
-    if (is_prime) {
-      printf("%d ", i);
-    }
-  }
-  putchar('\n');
-
-  /* 跳过某些值 */
-  printf("  1..10 中跳过 3 的倍数: ");
-  for (int i = 1; i <= 10; i++) {
-    if (i % 3 == 0) {
-      continue;
-    }
-    printf("%d ", i);
-  }
-  putchar('\n');
-
-  printf("---- loops: break/continue 样本完毕 ----\n");
-}
 
 void main_loops_sample(void) {
   loops_for_sample();

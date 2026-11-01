@@ -5,7 +5,7 @@
  *
  * 内容:
  *   1. restrict 的契约语义 (C11 §6.7.3.1): 块内对象只经该 lvalue 访问
- *   2. 合规示例: 分离缓冲区向量加法 add_arrays (编译器可自动向量化)
+ *   2. 合规示例: 分离缓冲区向量加法 rs_add_arrays (编译器可自动向量化)
  *   3. 违规调用: dst 与源重叠 — 仅注释反例, 永不执行 (违反契约 = UB)
  *   4. 何时不用: 重叠语义 (memmove) 的缓冲区
  *   5. 与严格别名 (strict-aliasing) 章的关系 — 同族优化契约
@@ -23,8 +23,8 @@
    合规示例 (non-static — 单元测试直接调用)
    --------------------------------------------------------- */
 
-void add_arrays(double* restrict dst, const double* restrict a,
-                const double* restrict b, size_t n) {
+void rs_add_arrays(double* restrict dst, const double* restrict a,
+                   const double* restrict b, size_t n) {
   /* restrict 契约 (C11 §6.7.3.1): 本函数执行期间, dst/a/b 各自指向的
    * 对象只能通过这三个 lvalue 访问 —— 即三者存储两两不重叠。
    * 编译器可据此假设写 dst 不影响后续读 a/b, 进而展开/向量化循环。 */
@@ -61,7 +61,7 @@ static void restrict_compliant_sample(void) {
   const double a[8] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
   const double b[8] = {10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0};
 
-  add_arrays(dst, a, b, 8);
+  rs_add_arrays(dst, a, b, 8);
 
   printf("  dst[] =");
   for (size_t i = 0; i < 8; i++) {
@@ -82,18 +82,19 @@ static void restrict_violation_sample(void) {
    * ❌ 反例 (Counter-example — 不要执行):
    *
    *     double buf[8] = {...};
-   *     add_arrays(buf, buf + 1, buf, 7);   // dst 与 a、b 都重叠!
+   *     rs_add_arrays(buf, buf + 1, buf, 7);   // dst 与 a、b 都重叠!
    *
    * 为什么是 UB (C11 §6.7.3.1):
-   *   add_arrays 内部, dst 与 a/b 的 restrict 承诺互相矛盾 —— 同一对象
+   *   rs_add_arrays 内部, dst 与 a/b 的 restrict 承诺互相矛盾 —— 同一对象
    *   在块内经两个不兼容的 restrict lvalue 访问, 契约被破坏, 行为未定义。
    * 症状为什么隐蔽:
    *   编译器可能把循环展开成 2/4/4 交错的批处理 (a[0],a[1] 先读,
    *   再写 dst[0],dst[1]), 重叠时「后面的写污染了还没读的源」——
    *   -O0 正常、-O2 结果错, 和严格别名章一个症状模式。
    */
-  printf("  反例见本函数注释: add_arrays(buf, buf+1, buf, 7) 重叠 → 契约违反 → "
-         "UB。\n");
+  printf(
+      "  反例见本函数注释: rs_add_arrays(buf, buf+1, buf, 7) 重叠 → 契约违反 → "
+      "UB。\n");
   printf(
       "  规避: 调用前保证三缓冲分离; 或换用支持重叠的接口 (见 Demo 4)。\n\n");
 }
@@ -114,8 +115,8 @@ static void restrict_overlap_sample(void) {
          text);
 
   printf("  判断口诀:\n");
-  printf(
-      "    - 调用方**能**保证不重叠, 且要快 → restrict 接口 (add_arrays);\n");
+  printf("    - 调用方**能**保证不重叠, 且要快 → restrict 接口 "
+         "(rs_add_arrays);\n");
   printf("    - 调用方**可能**重叠 → 不加 restrict 的接口 + 自己处理重叠;\n");
   printf("    - 给可能重叠的参数加 restrict = 给编译器喂假承诺 = UB。\n\n");
 }

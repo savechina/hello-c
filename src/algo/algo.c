@@ -10,7 +10,7 @@
  * ============================================================ */
 
 /* ---------- 冒泡排序 (Bubble Sort) ---------- */
-static void bubble_sort(int arr[], int n) {
+static void algo_bubble_sort(int arr[], int n) {
   for (int i = 0; i < n - 1; i++) {
     for (int j = 0; j < n - i - 1; j++) {
       if (arr[j] > arr[j + 1]) {
@@ -22,7 +22,7 @@ static void bubble_sort(int arr[], int n) {
   }
 }
 
-static void print_array(const int arr[], int n) {
+static void algo_print_array(const int arr[], int n) {
   for (int i = 0; i < n; i++) {
     printf("%d ", arr[i]);
   }
@@ -30,7 +30,7 @@ static void print_array(const int arr[], int n) {
 }
 
 /* ---------- 二分查找 (Binary Search) ---------- */
-static int binary_search(const int arr[], int n, int target) {
+static int algo_binary_search(const int arr[], int n, int target) {
   int lo = 0, hi = n - 1;
   while (lo <= hi) {
     int mid = lo + (hi - lo) / 2;
@@ -45,7 +45,7 @@ static int binary_search(const int arr[], int n, int target) {
 }
 
 /* ---------- 斐波那契动态规划 (unsigned long long, 上限 F(92)) ---------- */
-static unsigned long long fibonacci_ull(int n) {
+static unsigned long long algo_fibonacci_ull(int n) {
   if (n <= 0)
     return 0;
   if (n == 1)
@@ -65,7 +65,7 @@ static unsigned long long fibonacci_ull(int n) {
  * 最多支持 MAX_DIGITS 位，F(200) 约 42 位，128 位足够 */
 #define MAX_DIGITS 128
 
-static void big_add(int a[], int b[], int result[]) {
+static void algo_big_add(int a[], int b[], int result[]) {
   int carry = 0;
   for (int i = 0; i < MAX_DIGITS; i++) {
     int sum = a[i] + b[i] + carry;
@@ -74,7 +74,7 @@ static void big_add(int a[], int b[], int result[]) {
   }
 }
 
-static void big_print(const int num[]) {
+static void algo_big_print(const int num[]) {
   /* 跳过前导零 */
   int i = MAX_DIGITS - 1;
   while (i > 0 && num[i] == 0) {
@@ -85,14 +85,14 @@ static void big_print(const int num[]) {
   }
 }
 
-static void big_copy(int dest[], const int src[]) {
+static void algo_big_copy(int dest[], const int src[]) {
   for (int i = 0; i < MAX_DIGITS; i++) {
     dest[i] = src[i];
   }
 }
 
 /* ---------- 斐波那契大数版 (Fibonacci up to F(200)+) ---------- */
-static void fibonacci_big(int n, int result[]) {
+static void algo_fibonacci_big(int n, int result[]) {
   for (int i = 0; i < MAX_DIGITS; i++)
     result[i] = 0;
 
@@ -110,9 +110,9 @@ static void fibonacci_big(int n, int result[]) {
   b[0] = 1; /* F(1) = 1 */
 
   for (int i = 2; i <= n; i++) {
-    big_add(a, b, result);
-    big_copy(a, b);
-    big_copy(b, result);
+    algo_big_add(a, b, result);
+    algo_big_copy(a, b);
+    algo_big_copy(b, result);
   }
 }
 
@@ -125,17 +125,17 @@ int main_algo_sample(void) {
   int arr[] = {64, 34, 25, 12, 22, 11, 90};
   int n = sizeof(arr) / sizeof(arr[0]);
   printf("  Before: ");
-  print_array(arr, n);
-  bubble_sort(arr, n);
+  algo_print_array(arr, n);
+  algo_bubble_sort(arr, n);
   printf("  After:  ");
-  print_array(arr, n);
+  algo_print_array(arr, n);
   printf("\n");
 
   /* 2. 二分查找演示 (需要有序数组) */
   printf("[2] Binary Search Example\n");
   int sorted[] = {2, 5, 8, 12, 16, 23, 38, 56, 72, 91};
   int target = 23;
-  int result = binary_search(sorted, 10, target);
+  int result = algo_binary_search(sorted, 10, target);
   if (result != -1)
     printf("  Found %d at index %d\n", target, result);
   else
@@ -147,11 +147,11 @@ int main_algo_sample(void) {
 
   /* 3a. unsigned long long 版本 (仅到 F(90)，超限溢出) */
   printf("  --- unsigned long long 版本 (上限 F(92)) ---\n");
-  printf("  F(0) = %llu\n", fibonacci_ull(0));
-  printf("  F(1) = %llu\n", fibonacci_ull(1));
-  printf("  F(10) = %llu\n", fibonacci_ull(10));
-  printf("  F(50) = %llu\n", fibonacci_ull(50));
-  printf("  F(90) = %llu\n", fibonacci_ull(90));
+  printf("  F(0) = %llu\n", algo_fibonacci_ull(0));
+  printf("  F(1) = %llu\n", algo_fibonacci_ull(1));
+  printf("  F(10) = %llu\n", algo_fibonacci_ull(10));
+  printf("  F(50) = %llu\n", algo_fibonacci_ull(50));
+  printf("  F(90) = %llu\n", algo_fibonacci_ull(90));
   printf("  (注意: F(93) 开始 unsigned long long 溢出\n\n");
 
   /* 3b. 大数版本 (支持 F(200)+) */
@@ -161,8 +161,8 @@ int main_algo_sample(void) {
   int result_big[MAX_DIGITS];
   for (int i = 0; i < count; i++) {
     printf("  F(%d) = ", fib_values[i]);
-    fibonacci_big(fib_values[i], result_big);
-    big_print(result_big);
+    algo_fibonacci_big(fib_values[i], result_big);
+    algo_big_print(result_big);
     printf("\n");
   }
   printf("\n");

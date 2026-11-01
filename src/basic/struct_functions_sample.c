@@ -17,42 +17,45 @@ struct Rectangle {
 
 /* ---- Section 1: pass struct by value (copy) ---- */
 
-static float rect_area_by_value(struct Rectangle r) {
+static float struct_functions_rect_area_by_value(struct Rectangle r) {
   return r.width * r.height;
 }
 
-static void demo_pass_by_value(void) {
+static void struct_functions_pass_by_value(void) {
   struct Rectangle rect = {.width = 10.0f, .height = 5.0f};
 
-  float a = rect_area_by_value(rect);
+  float a = struct_functions_rect_area_by_value(rect);
   printf("  area (by value): %.1f\n", (double)a);
   printf("  <-- whole 16-byte struct was copied onto the stack\n");
 }
 
 /* ---- Section 2: pass struct by pointer (no copy) ---- */
 
-static float rect_area_ptr(const struct Rectangle* r) {
+static float struct_functions_rect_area_ptr(const struct Rectangle* r) {
   return r->width * r->height;
 }
 
-static void rect_grow(struct Rectangle* r, float delta) {
+static void struct_functions_rect_grow(struct Rectangle* r, float delta) {
   r->width += delta;
   r->height += delta;
 }
 
-static void demo_pass_by_ptr(void) {
+static void struct_functions_pass_by_ptr(void) {
   struct Rectangle rect = {.width = 10.0f, .height = 5.0f};
 
-  printf("  initial area: %.1f\n", (double)rect_area_ptr(&rect));
+  printf("  initial area: %.1f\n",
+         (double)struct_functions_rect_area_ptr(&rect));
 
-  rect_grow(&rect, 2.0f);
-  printf("  after grow(2.0): %.1f\n", (double)rect_area_ptr(&rect));
+  struct_functions_rect_grow(&rect, 2.0f);
+  printf("  after grow(2.0): %.1f\n",
+         (double)struct_functions_rect_area_ptr(&rect));
   printf("  <-- pointer: no copy, modifications visible to caller\n");
 }
 
 /* ---- Section 3: return struct from function ---- */
 
-static struct Rectangle make_rect(float x, float y, float w, float h) {
+static struct Rectangle struct_functions_make_rect(float x, float y, float w,
+                                                   float h) {
   struct Rectangle r;
   r.top_x = x;
   r.top_y = y;
@@ -61,8 +64,8 @@ static struct Rectangle make_rect(float x, float y, float w, float h) {
   return r;
 }
 
-static struct Rectangle rect_merge(const struct Rectangle* a,
-                                   const struct Rectangle* b) {
+static struct Rectangle struct_functions_rect_merge(const struct Rectangle* a,
+                                                    const struct Rectangle* b) {
   struct Rectangle merged;
   merged.top_x = a->top_x < b->top_x ? a->top_x : b->top_x;
   merged.top_y = a->top_y < b->top_y ? a->top_y : b->top_y;
@@ -75,11 +78,11 @@ static struct Rectangle rect_merge(const struct Rectangle* a,
   return merged;
 }
 
-static void demo_return_struct(void) {
-  struct Rectangle r1 = make_rect(0.0f, 0.0f, 10.0f, 10.0f);
-  struct Rectangle r2 = make_rect(5.0f, 5.0f, 10.0f, 10.0f);
+static void struct_functions_return_struct(void) {
+  struct Rectangle r1 = struct_functions_make_rect(0.0f, 0.0f, 10.0f, 10.0f);
+  struct Rectangle r2 = struct_functions_make_rect(5.0f, 5.0f, 10.0f, 10.0f);
 
-  struct Rectangle merged = rect_merge(&r1, &r2);
+  struct Rectangle merged = struct_functions_rect_merge(&r1, &r2);
   printf("  r1: (%.0f,%.0f) %.0fx%.0f\n", (double)r1.top_x, (double)r1.top_y,
          (double)r1.width, (double)r1.height);
   printf("  r2: (%.0f,%.0f) %.0fx%.0f\n", (double)r2.top_x, (double)r2.top_y,
@@ -91,7 +94,8 @@ static void demo_return_struct(void) {
 
 /* ---- Section 4: array of structs + pointer arithmetic ---- */
 
-static float total_area(const struct Rectangle rects[], int32_t count) {
+static float struct_functions_total_area(const struct Rectangle rects[],
+                                         int32_t count) {
   float sum = 0.0f;
   for (int32_t i = 0; i < count; i++) {
     sum += rects[i].width * rects[i].height;
@@ -99,14 +103,14 @@ static float total_area(const struct Rectangle rects[], int32_t count) {
   return sum;
 }
 
-static void demo_array_of_structs(void) {
+static void struct_functions_array_of_structs(void) {
   struct Rectangle pool[3] = {
       {.width = 1.0f, .height = 1.0f},
       {.width = 2.0f, .height = 3.0f},
       {.width = 4.0f, .height = 5.0f},
   };
 
-  float tot = total_area(pool, 3);
+  float tot = struct_functions_total_area(pool, 3);
   printf("  total area of %d rects: %.1f\n", 3, (double)tot);
 
   /* Pointer arithmetic equivalent */
@@ -119,16 +123,16 @@ static void demo_array_of_structs(void) {
 
 int main_struct_functions_sample(void) {
   printf("-- pass struct by value (copy) --\n");
-  demo_pass_by_value();
+  struct_functions_pass_by_value();
 
   printf("-- pass struct by pointer (no copy) --\n");
-  demo_pass_by_ptr();
+  struct_functions_pass_by_ptr();
 
   printf("-- return struct from function --\n");
-  demo_return_struct();
+  struct_functions_return_struct();
 
   printf("-- array of structs + pointer arithmetic --\n");
-  demo_array_of_structs();
+  struct_functions_array_of_structs();
 
   return 0;
 }

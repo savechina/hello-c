@@ -8,7 +8,7 @@
  * 指针像 GPS 坐标——它不是目的地，而是告诉你目的地的方向。
  */
 
-static void demo_gps_address(void) {
+static void pointer_basics_gps_address(void) {
   int32_t destination = 42;
   int32_t* gps = &destination;
 
@@ -19,7 +19,7 @@ static void demo_gps_address(void) {
          *gps);
 }
 
-static void demo_ampersand_star(void) {
+static void pointer_basics_ampersand_star(void) {
   int32_t x = 7;
   int32_t* p = &x;
 
@@ -33,7 +33,7 @@ static void demo_ampersand_star(void) {
   printf("  *p = 99 之后: x = %" PRId32 " (值已被修改)\n\n", x);
 }
 
-static void demo_null_safety(void) {
+static void pointer_basics_null_safety(void) {
   printf("=== NULL 指针与安全检查 ===\n");
 
   int32_t* ptr = NULL;
@@ -53,7 +53,7 @@ static void demo_null_safety(void) {
   printf("\n");
 }
 
-static void demo_initialization_good_bad(void) {
+static void pointer_basics_initialization_good_bad(void) {
   printf("=== 指针初始化：拒绝野指针 ===\n");
 
   printf("  ❌ 野指针 — 未初始化，指向随机地址:\n");
@@ -70,7 +70,7 @@ static void demo_initialization_good_bad(void) {
   printf("     good_b = %p (NULL)\n\n", (void*)good_b);
 }
 
-static void demo_pointer_type_matters(void) {
+static void pointer_basics_pointer_type_matters(void) {
   int32_t iv = 0x01020304;
 
   printf("=== 指针类型决定步长 ===\n");
@@ -93,11 +93,11 @@ int main_pointer_basics_sample(void) {
   printf("     而是告诉你目的地的方向。」\n");
   printf("========================================\n\n");
 
-  demo_gps_address();
-  demo_ampersand_star();
-  demo_null_safety();
-  demo_initialization_good_bad();
-  demo_pointer_type_matters();
+  pointer_basics_gps_address();
+  pointer_basics_ampersand_star();
+  pointer_basics_null_safety();
+  pointer_basics_initialization_good_bad();
+  pointer_basics_pointer_type_matters();
 
   printf("指针基础演示完毕。\n");
   return 0;

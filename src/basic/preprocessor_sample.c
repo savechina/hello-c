@@ -3,7 +3,7 @@
 
 /* ---- #define 常量替换样本 ---- */
 
-void preprocessor_define_sample(void) {
+static void preprocessor_define_sample(void) {
   printf("---- preprocessor: #define 常量 ----\n");
 
 #define BUFFER_SIZE 256
@@ -28,7 +28,7 @@ void preprocessor_define_sample(void) {
 
 /* ---- 条件编译样本 ---- */
 
-void preprocessor_ifdef_sample(void) {
+static void preprocessor_ifdef_sample(void) {
   printf("---- preprocessor: #ifdef/#ifndef 样本 ----\n");
 
 #ifdef __STDC__
@@ -49,7 +49,7 @@ void preprocessor_ifdef_sample(void) {
 
 /* ---- 宏函数样本 ---- */
 
-void preprocessor_macro_func_sample(void) {
+static void preprocessor_macro_func_sample(void) {
   printf("---- preprocessor: 宏函数 ----\n");
 
 #define SWAP(a, b)                                                             \
@@ -78,7 +78,7 @@ void preprocessor_macro_func_sample(void) {
 
 /* ---- 字符串化与 token pasting 样本 ---- */
 
-void preprocessor_advanced_sample(void) {
+static void preprocessor_advanced_sample(void) {
   printf("---- preprocessor: 高级宏 ----\n");
 
 #define TO_STR(x) #x

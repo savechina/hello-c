@@ -6,8 +6,8 @@
  * 控制流样例: if/else 判断、switch 分支与三元运算符。
  */
 
-void if_else_sample(void) {
-  printf("----basic ... if_else_sample.....start ----\n");
+static void control_flow_if_else_sample(void) {
+  printf("----basic ... control_flow_if_else_sample.....start ----\n");
 
   int32_t score = 75;
   if (score >= 90) {
@@ -25,11 +25,11 @@ void if_else_sample(void) {
     printf("  %d 是平年 (common year)\n", year);
   }
 
-  printf("----basic ... if_else_sample.....done ----\n");
+  printf("----basic ... control_flow_if_else_sample.....done ----\n");
 }
 
-void switch_sample(void) {
-  printf("----basic ... switch_sample.....start ----\n");
+static void control_flow_switch_sample(void) {
+  printf("----basic ... control_flow_switch_sample.....start ----\n");
 
   int32_t choice = 2;
   switch (choice) {
@@ -47,11 +47,11 @@ void switch_sample(void) {
     break;
   }
 
-  printf("----basic ... switch_sample.....done ----\n");
+  printf("----basic ... control_flow_switch_sample.....done ----\n");
 }
 
-void ternary_sample(void) {
-  printf("----basic ... ternary_sample.....start ----\n");
+static void control_flow_ternary_sample(void) {
+  printf("----basic ... control_flow_ternary_sample.....start ----\n");
 
   int32_t x = 10, y = 20;
   int32_t max = (x > y) ? x : y;
@@ -61,17 +61,11 @@ void ternary_sample(void) {
   const char* label = (age >= 18) ? "adult" : "minor";
   printf("  age %d -> %s\n", age, label);
 
-  printf("----basic ... ternary_sample.....done ----\n");
-}
-
-void control_flow_sample(void) {
-  if_else_sample();
-  switch_sample();
-  ternary_sample();
+  printf("----basic ... control_flow_ternary_sample.....done ----\n");
 }
 
 void main_control_flow_sample(void) {
-  if_else_sample();
-  switch_sample();
-  ternary_sample();
+  control_flow_if_else_sample();
+  control_flow_switch_sample();
+  control_flow_ternary_sample();
 }

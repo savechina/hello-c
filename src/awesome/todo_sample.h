@@ -76,7 +76,8 @@ int todo_load(TodoStore* store, const char* path);
 
 const char* todo_code_name(int rc);
 
-/* ── 教程 demo 入口 (hello 的 main.c dispatch 经 main_awesome_sample 调用) ── */
+/* ── 教程 demo 入口 (hello 的 main.c dispatch 经 main_awesome_sample 调用) ──
+ */
 
 int main_todo_sample(void);
 

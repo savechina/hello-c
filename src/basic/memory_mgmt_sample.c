@@ -14,7 +14,7 @@
    Section 1: Basic malloc + free with NULL check
    ──────────────────────────────────────────────────────────── */
 
-static void demo_basic_malloc_free(void) {
+static void memory_mgmt_basic_malloc_free(void) {
   printf("=== 1. Basic malloc + free ===\n");
 
   int32_t* p = malloc(sizeof(int32_t));
@@ -36,7 +36,7 @@ static void demo_basic_malloc_free(void) {
    Section 2: malloc array
    ──────────────────────────────────────────────────────────── */
 
-static void demo_malloc_array(void) {
+static void memory_mgmt_malloc_array(void) {
   printf("=== 2. malloc array ===\n");
 
   size_t n = 5;
@@ -65,7 +65,7 @@ static void demo_malloc_array(void) {
    Section 3: calloc vs malloc
    ──────────────────────────────────────────────────────────── */
 
-static void demo_calloc_vs_malloc(void) {
+static void memory_mgmt_calloc_vs_malloc(void) {
   printf("=== 3. calloc vs malloc ===\n");
 
   size_t count = 4;
@@ -104,7 +104,7 @@ static void demo_calloc_vs_malloc(void) {
    Section 4: realloc (grow)
    ──────────────────────────────────────────────────────────── */
 
-static void demo_realloc_grow(void) {
+static void memory_mgmt_realloc_grow(void) {
   printf("=== 4. realloc (grow) ===\n");
 
   int32_t* buf = malloc(3 * sizeof(int32_t));
@@ -149,7 +149,7 @@ typedef struct {
   int32_t age;
 } Person;
 
-static void demo_struct_allocation(void) {
+static void memory_mgmt_struct_allocation(void) {
   printf("=== 5. Struct allocation ===\n");
 
   Person* p = malloc(sizeof(Person));
@@ -174,7 +174,7 @@ static void demo_struct_allocation(void) {
    Section 6: Memory leak demo (shown, then fixed)
    ──────────────────────────────────────────────────────────── */
 
-static void demo_memory_leak_concept(void) {
+static void memory_mgmt_memory_leak_concept(void) {
   printf("=== 6. Memory leak concept (demonstrated safely) ===\n");
 
   /*
@@ -208,7 +208,7 @@ static void demo_memory_leak_concept(void) {
    Section 7: Safe allocation pattern (factory function)
    ──────────────────────────────────────────────────────────── */
 
-static Person* create_person(const char* name, int32_t age) {
+static Person* memory_mgmt_create_person(const char* name, int32_t age) {
   Person* p = malloc(sizeof(Person));
   if (p == NULL) {
     return NULL;
@@ -220,7 +220,7 @@ static Person* create_person(const char* name, int32_t age) {
   return p;
 }
 
-static void demo_safe_alloc_pattern(void) {
+static void memory_mgmt_safe_alloc_pattern(void) {
   printf("=== 7. Safe alloc pattern (factory function) ===\n");
 
   printf("  Safe pattern:\n");
@@ -228,9 +228,9 @@ static void demo_safe_alloc_pattern(void) {
   printf("    2. strncpy (not strcpy)\n");
   printf("    3. Caller controls free\n\n");
 
-  Person* p = create_person("Bob", 30);
+  Person* p = memory_mgmt_create_person("Bob", 30);
   if (p == NULL) {
-    fprintf(stderr, "  Error: create_person failed\n");
+    fprintf(stderr, "  Error: memory_mgmt_create_person failed\n");
     return;
   }
 
@@ -250,13 +250,13 @@ int main_memory_mgmt_sample(void) {
   printf("  内存管理 (Memory Management: malloc/free)\n");
   printf("========================================\n\n");
 
-  demo_basic_malloc_free();
-  demo_malloc_array();
-  demo_calloc_vs_malloc();
-  demo_realloc_grow();
-  demo_struct_allocation();
-  demo_memory_leak_concept();
-  demo_safe_alloc_pattern();
+  memory_mgmt_basic_malloc_free();
+  memory_mgmt_malloc_array();
+  memory_mgmt_calloc_vs_malloc();
+  memory_mgmt_realloc_grow();
+  memory_mgmt_struct_allocation();
+  memory_mgmt_memory_leak_concept();
+  memory_mgmt_safe_alloc_pattern();
 
   printf("内存管理演示完毕。\n");
   return 0;

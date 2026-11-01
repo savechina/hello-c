@@ -8,7 +8,7 @@
  * arr[i] ≡ *(arr + i) 是 C 语言的底层真理。
  */
 
-static void demo_array_pointer_equivalence(void) {
+static void pointers_and_arrays_array_pointer_equivalence(void) {
   int32_t a[4] = {7, 14, 21, 28};
 
   printf("=== 数组名 ≡ 首元素地址 ===\n");
@@ -21,7 +21,7 @@ static void demo_array_pointer_equivalence(void) {
          (void*)(a + 1));
 }
 
-static void demo_pointer_walk_array(void) {
+static void pointers_and_arrays_pointer_walk_array(void) {
   int32_t nums[5] = {10, 20, 30, 40, 50};
 
   printf("=== 用指针遍历数组 ===\n");
@@ -40,7 +40,7 @@ static void demo_pointer_walk_array(void) {
   printf("\n\n");
 }
 
-static void demo_2d_array_layout(void) {
+static void pointers_and_arrays_2d_array_layout(void) {
   int32_t matrix[2][3] = {{1, 2, 3}, {4, 5, 6}};
 
   printf("=== 二维数组——连续内存，行优先 ===\n");
@@ -59,7 +59,7 @@ static void demo_2d_array_layout(void) {
   printf("   ↑ 一个 2×3 的二维数组在内存中就是一行 6 个 int32_t\n\n");
 }
 
-static void demo_pointer_syntax_confusion(void) {
+static void pointers_and_arrays_pointer_syntax_confusion(void) {
   printf("=== 指针语法易混淆点 ===\n\n");
 
   int32_t vals[] = {42, 99, 88};
@@ -81,10 +81,10 @@ int main_pointers_and_arrays_sample(void) {
   printf("  「arr[i] 就是 *(arr+i) 的语法糖。」\n");
   printf("========================================\n\n");
 
-  demo_array_pointer_equivalence();
-  demo_pointer_walk_array();
-  demo_2d_array_layout();
-  demo_pointer_syntax_confusion();
+  pointers_and_arrays_array_pointer_equivalence();
+  pointers_and_arrays_pointer_walk_array();
+  pointers_and_arrays_2d_array_layout();
+  pointers_and_arrays_pointer_syntax_confusion();
 
   printf("指针与数组演示完毕。\n");
   return 0;

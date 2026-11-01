@@ -31,7 +31,7 @@
  * errno 是一个线程局部变量，存储最近一次库函数的错误码。
  * 重要：errno 只在函数报错时设置，成功时不清零。
  */
-static void demo_errno(void) {
+static void debugging_errno(void) {
   printf("  [errno] errno 初始值: %d\n", errno);
 
   /* 合法调用: sqrt(4.0) 成功，errno 不变 */
@@ -59,7 +59,7 @@ Section 2: perror 和 strerror
  * perror: 自动打印 errno 对应的错误信息
  * strerror: 返回错误码对应的字符串
  */
-static void demo_perror_strerror(void) {
+static void debugging_perror_strerror(void) {
   printf("\n  [error messages] 演示 perror:\n");
 
   /* 触发一个文件打开错误 */
@@ -86,7 +86,7 @@ Section 3: assert() 断言
  *
  * 编译时加 -DNDEBUG 可禁用所有 assert。
  */
-static void demo_assert(void) {
+static void debugging_assert(void) {
   printf("\n  [assert] 使用 assert 检查不变量:\n");
 
   int x = 10;
@@ -125,7 +125,7 @@ Section 4: 错误返回模式
  *   失败 → 返回 -1 (或 NULL, 具体看 API 约定)
  *   错误详情 → errno 或输出参数
  */
-static int safe_divide(int a, int b, int* result) {
+static int debugging_safe_divide(int a, int b, int* result) {
   if (b == 0) {
     errno = EINVAL;
     return -1; /* 失败 */
@@ -138,13 +138,13 @@ static int safe_divide(int a, int b, int* result) {
   return 0; /* 成功 */
 }
 
-static void demo_error_return(void) {
+static void debugging_error_return(void) {
   printf("\n  [error return] 函数返回状态码模式:\n");
 
   int result = 0;
 
   /* 成功情况 */
-  int status = safe_divide(10, 3, &result);
+  int status = debugging_safe_divide(10, 3, &result);
   if (status == 0) {
     printf("  [error return] 10 / 3 = %d (成功)\n", result);
   } else {
@@ -152,7 +152,7 @@ static void demo_error_return(void) {
   }
 
   /* 失败情况: 除以零 */
-  status = safe_divide(10, 0, &result);
+  status = debugging_safe_divide(10, 0, &result);
   if (status == 0) {
     printf("  [error return] 10 / 0 = %d\n", result);
   } else {
@@ -161,7 +161,7 @@ static void demo_error_return(void) {
   }
 
   /* 失败情况: NULL 指针 */
-  status = safe_divide(10, 3, NULL);
+  status = debugging_safe_divide(10, 3, NULL);
   if (status == 0) {
     printf("  [error return] 成功\n");
   } else {
@@ -180,15 +180,15 @@ Section 5: 信号处理 (Signal Handling)
  *   SIGSEGV  - 段错误 (非法内存访问)
  *   SIGTERM  - 终止请求
  */
-static void signal_handler(int sig) {
+static void debugging_signal_handler(int sig) {
   printf("\n  [signal] 收到信号 %d，正在清理...\n", sig);
   printf("  [signal] 程序已安全退出。\n");
   exit(0);
 }
 
-static void demo_signal_handling(void) {
+static void debugging_signal_handling(void) {
   printf("\n  [signal] 注册 SIGINT (Ctrl+C) 处理函数...\n");
-  signal(SIGINT, signal_handler);
+  signal(SIGINT, debugging_signal_handler);
   printf("  [signal] 提示: 在交互式运行时按下 Ctrl+C 会触发信号处理。\n");
   printf("  [signal] 当前演示中跳过等待 (非交互式环境)。\n");
   printf("  [signal] \n");
@@ -206,7 +206,7 @@ Section 6: 完整调试流程演示
  * 综合演示: errno + perror + strerror + assert
  * 模拟一个可能失败的操作
  */
-static int complex_operation(int input, int* output) {
+static int debugging_complex_operation(int input, int* output) {
   /* 1. 输入校验 */
   if (input < 0) {
     errno = EINVAL;
@@ -223,22 +223,23 @@ static int complex_operation(int input, int* output) {
   return 0; /* 成功 */
 }
 
-static void demo_debug_workflow(void) {
+static void debugging_debug_workflow(void) {
   printf("\n  [workflow] 综合调试流程 (errno + assert + perror):\n");
 
   int result = 0;
 
   /* 正常路径 */
-  int status = complex_operation(5, &result);
+  int status = debugging_complex_operation(5, &result);
   if (status == 0) {
-    printf("  [workflow] complex_operation(5) = %d (成功)\n", result);
+    printf("  [workflow] debugging_complex_operation(5) = %d (成功)\n", result);
   }
 
   /* 错误路径 */
-  status = complex_operation(-1, &result);
+  status = debugging_complex_operation(-1, &result);
   if (status != 0) {
-    printf("  [workflow] complex_operation(-1): 失败, errno = %d (%s)\n", errno,
-           strerror(errno));
+    printf(
+        "  [workflow] debugging_complex_operation(-1): 失败, errno = %d (%s)\n",
+        errno, strerror(errno));
   }
 }
 
@@ -250,22 +251,22 @@ int main_debugging_sample(void) {
   printf("==== 调试与错误处理 (Debugging & Error Handling) ====\n\n");
 
   printf("--- errno 模式 ---\n");
-  demo_errno();
+  debugging_errno();
 
   printf("\n--- perror 和 strerror ---\n");
-  demo_perror_strerror();
+  debugging_perror_strerror();
 
   printf("\n--- assert() 断言 ---\n");
-  demo_assert();
+  debugging_assert();
 
   printf("\n--- 错误返回模式 ---\n");
-  demo_error_return();
+  debugging_error_return();
 
   printf("\n--- 信号处理 ---\n");
-  demo_signal_handling();
+  debugging_signal_handling();
 
   printf("\n--- 调试流程综合 ---\n");
-  demo_debug_workflow();
+  debugging_debug_workflow();
 
   printf("\ndebugging sample done.\n");
   return 0;

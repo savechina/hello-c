@@ -7,7 +7,7 @@
  * Section 1: argc / argv — Simulated Command-Line Parsing
  * ============================================================ */
 
-static void demo_argc_argv(void) {
+static void cli_args_argc_argv(void) {
   printf("==== [1] argc / argv — 命令行参数解析 ====\n\n");
 
   /* ── 模拟 argv 数组（因为在 coordinator 中调用，无法接收真正的 cli args） ──
@@ -51,7 +51,7 @@ static void demo_argc_argv(void) {
  * Section 2: argc 检查 — 防止越界访问
  * ============================================================ */
 
-static void demo_argc_check(void) {
+static void cli_args_argc_check(void) {
   printf("==== [2] argc 检查 — 防止越界 ====\n\n");
 
   /* ── ❌ 危险：不检查 argc 直接访问 argv[1] ── */
@@ -85,7 +85,7 @@ static void demo_argc_check(void) {
  * Section 3: stdin / stdout / stderr 概念
  * ============================================================ */
 
-static void demo_stdio_streams(void) {
+static void cli_args_stdio_streams(void) {
   printf("==== [3] stdin / stdout / stderr — 标准流 ====\n\n");
 
   printf("  ┌── 三个标准流 ───────────────────────────────┐\n");
@@ -127,7 +127,7 @@ static void demo_stdio_streams(void) {
  * Section 4: stdin 读取 — fgets from stdin
  * ============================================================ */
 
-static void demo_stdin_reading(void) {
+static void cli_args_stdin_reading(void) {
   printf("==== [4] stdin 读取 — fgets 从标准输入 ====\n\n");
 
   /* ── 模拟 stdin 读取（无法在 coordinator 中真正等待用户输入） ── */
@@ -173,7 +173,7 @@ static void demo_stdin_reading(void) {
  * Section 5: Python sys.argv vs C argc/argv
  * ============================================================ */
 
-static void demo_python_vs_c_args(void) {
+static void cli_args_python_vs_c_args(void) {
   printf("==== [5] Python sys.argv vs C argc/argv ====\n\n");
 
   printf("  ┌── 对比 ──────────────────────────────────┐\n");
@@ -215,7 +215,7 @@ static void demo_python_vs_c_args(void) {
  * Section 6: I/O 重定向与管道概念
  * ============================================================ */
 
-static void demo_redirection_pipe(void) {
+static void cli_args_redirection_pipe(void) {
   printf("==== [6] I/O 重定向与管道概念 ====\n\n");
 
   printf("  ┌── Shell 重定向操作符 ──────────────────────┐\n");
@@ -251,7 +251,7 @@ static void demo_redirection_pipe(void) {
  * Section 7: 交互式输入模拟
  * ============================================================ */
 
-static void demo_interactive_simulation(void) {
+static void cli_args_interactive_simulation(void) {
   printf("==== [7] 交互式输入模式演示 ====\n\n");
 
   printf("  ── 交互式 vs 批处理 ──\n\n");
@@ -301,7 +301,7 @@ static void demo_interactive_simulation(void) {
  * Section 8: 错误模式 — argc/argv 常见陷阱
  * ============================================================ */
 
-static void demo_common_arg_errors(void) {
+static void cli_args_common_arg_errors(void) {
   printf("==== [8] 常见 CLI 错误模式 ====\n\n");
 
   printf("  ❌ 错误 1: 不检查 argc\n");
@@ -330,7 +330,7 @@ static void demo_common_arg_errors(void) {
  * Section 9: getopt 概念（选学）
  * ============================================================ */
 
-static void demo_getopt_concept(void) {
+static void cli_args_getopt_concept(void) {
   printf("==== [9] getopt — 标准参数解析（选学） ====\n\n");
 
   printf("  当命令行参数变多时，手动 strcmp 会非常繁琐。\n");
@@ -370,15 +370,15 @@ int main_cli_args_sample(void) {
   printf("║     argc/argv, stdin/stdout/stderr, 重定向 & 管道        ║\n");
   printf("╚══════════════════════════════════════════════════════════╝\n\n");
 
-  demo_argc_argv();              /* Section 1 */
-  demo_argc_check();             /* Section 2 (error-first) */
-  demo_stdio_streams();          /* Section 3 */
-  demo_stdin_reading();          /* Section 4 */
-  demo_python_vs_c_args();       /* Section 5 */
-  demo_redirection_pipe();       /* Section 6 */
-  demo_interactive_simulation(); /* Section 7 */
-  demo_common_arg_errors();      /* Section 8 */
-  demo_getopt_concept();         /* Section 9 (选学) */
+  cli_args_argc_argv();              /* Section 1 */
+  cli_args_argc_check();             /* Section 2 (error-first) */
+  cli_args_stdio_streams();          /* Section 3 */
+  cli_args_stdin_reading();          /* Section 4 */
+  cli_args_python_vs_c_args();       /* Section 5 */
+  cli_args_redirection_pipe();       /* Section 6 */
+  cli_args_interactive_simulation(); /* Section 7 */
+  cli_args_common_arg_errors();      /* Section 8 */
+  cli_args_getopt_concept();         /* Section 9 (选学) */
 
   printf("  cli_args_sample done.\n");
   return 0;

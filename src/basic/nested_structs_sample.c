@@ -23,7 +23,7 @@ struct Person {
   struct Address home;
 };
 
-static void demo_nested_init(void) {
+static void nested_structs_nested_init(void) {
   struct Person p = {
       .name = "Alice",
       .birthday = {.year = 2000, .month = 6, .day = 15},
@@ -48,7 +48,7 @@ struct Outer {
   int32_t id;
 };
 
-static void demo_partial_nested(void) {
+static void nested_structs_partial_nested(void) {
   /* Only initialize nested pos, id defaults to 0 */
   struct Outer o1 = {.pos = {.x = 10, .y = 20}};
 
@@ -73,7 +73,7 @@ struct Rectangle {
   float height;
 };
 
-static void demo_nested_operate(void) {
+static void nested_structs_nested_operate(void) {
   struct Rectangle r1 = {
       .top_left = {.x = 0.0f, .y = 10.0f},
       .width = 100.0f,
@@ -108,7 +108,7 @@ struct Level1 {
   struct Level2 l2;
 };
 
-static void demo_deeply_nested(void) {
+static void nested_structs_deeply_nested(void) {
   struct Level1 root = {
       .l2.l3.value = 42,
   };
@@ -121,16 +121,16 @@ static void demo_deeply_nested(void) {
 
 int main_nested_structs_sample(void) {
   printf("-- nested struct definition and init --\n");
-  demo_nested_init();
+  nested_structs_nested_init();
 
   printf("-- partial nested initialization --\n");
-  demo_partial_nested();
+  nested_structs_partial_nested();
 
   printf("-- nested struct operations --\n");
-  demo_nested_operate();
+  nested_structs_nested_operate();
 
   printf("-- deeply nested (3 levels) --\n");
-  demo_deeply_nested();
+  nested_structs_deeply_nested();
 
   return 0;
 }
