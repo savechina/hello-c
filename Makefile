@@ -69,6 +69,11 @@ LDFLAGS     := -lm -pthread
 ifeq ($(UNAME_S),SunOS)
     LDFLAGS  += -lkstat
     CFLAGS  += -D__sun__
+    # illumos: -std=c17 (strict ISO) sets __STRICT_SYMBOLS__, so system headers
+    # hide POSIX extensions (clock_gettime, ...) and every TU gets implicit
+    # declarations -> -Werror. Reveal them, mirroring the Linux block.
+    # __EXTENSIONS__ additionally exposes non-POSIX XSI extras (strcasecmp...).
+    CFLAGS  += -D_POSIX_C_SOURCE=200809L -D__EXTENSIONS__
 endif
 
 ifeq ($(UNAME_S),Linux)
