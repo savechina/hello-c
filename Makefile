@@ -41,7 +41,13 @@ UNAME_S := $(shell uname -s)
 
 #CROSS_COMPILE ?= arm-linux-gnueabihf-
 CROSS_COMPILE ?=
-CC          := $(CROSS_COMPILE)gcc            # C compiler on macOS (default to clang)
+# Compiler selection: gcc first, fall back to clang when gcc is absent
+# (FreeBSD base system has no gcc; on macOS "gcc" is an Apple clang alias).
+# Explicit override still wins: make CC=clang / CROSS_COMPILE=x86_64-linux-gnu-
+CC          := $(CROSS_COMPILE)gcc
+ifeq ($(shell command -v $(CROSS_COMPILE)gcc >/dev/null 2>&1 && echo yes || echo no),no)
+CC          := $(CROSS_COMPILE)clang
+endif
 # CFLAGS: Compiler flags for compilation
 # -Wall: Enable all standard warnings
 # -Wextra: Enable extra warnings
