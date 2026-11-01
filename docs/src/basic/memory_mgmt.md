@@ -448,7 +448,7 @@ void grow_array_demo(void) {
 
 ### 🔴 练习 3：安全分配模式（完整防御）
 
-写一个函数 `create_person(const char *name, int32_t age)`，返回一个堆分配的 `Person` 结构体。必须满足：
+写一个函数 `memory_mgmt_create_person(const char *name, int32_t age)`，返回一个堆分配的 `Person` 结构体。必须满足：
 1. malloc 返回值检查 NULL
 2. `strncpy` 安全复制字符串（非 `strcpy`）
 3. 调用方负责 `free`，且有 `free` 代码
@@ -467,7 +467,7 @@ typedef struct {
     int32_t age;
 } Person;
 
-Person *create_person(const char *name, int32_t age) {
+Person *memory_mgmt_create_person(const char *name, int32_t age) {
     Person *p = malloc(sizeof(Person));
     if (p == NULL) return NULL;
 
@@ -478,9 +478,9 @@ Person *create_person(const char *name, int32_t age) {
 }
 
 int main(void) {
-    Person *p = create_person("Bob", 30);
+    Person *p = memory_mgmt_create_person("Bob", 30);
     if (p == NULL) {
-        fprintf(stderr, "create_person failed\n");
+        fprintf(stderr, "memory_mgmt_create_person failed\n");
         return 1;
     }
     printf("name=%s, age=%" PRId32 "\n", p->name, p->age);

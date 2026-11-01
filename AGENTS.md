@@ -60,7 +60,7 @@ hello-c/
 | `main_advance_sample()` | function | src/advance/advance.c:4 | Advance coordinator |
 | `main_raii_sample()` | function | src/advance/raii_sample.c | Memory-safety chapter (cleanup attr, arena, Option<T>, Buf64) |
 | `get_system_info()` | function | src/sysinfo.c:55+ | Platform-specific, #ifdef-gated |
-| `create_person()` | function | src/basic/memory_mgmt_sample.c:211 | Heap allocation demo (returns raw ptr, caller frees) |
+| `memory_mgmt_create_person()` | function | src/basic/memory_mgmt_sample.c:211 | Heap allocation demo (formerly `create_person`, returns raw ptr, caller frees) |
 | `calc_add()` | function | src/advance/calc.c:13 | Non-static addition for Unity testing |
 | `calc_multiply()` | function | src/advance/calc.c:24 | Non-static multiplication |
 | `calc_is_valid()` | function | src/advance/calc.c:34 | Result range validation (0-10000) |

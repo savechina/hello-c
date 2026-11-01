@@ -14,7 +14,7 @@ void swap_by_copy(int32_t a, int32_t b) {
     int32_t tmp = a; a = b; b = tmp;  /* 只修改副本 */
 }
 
-void swap_by_pointer(int32_t *a, int32_t *b) {
+void pf_swap_by_pointer(int32_t *a, int32_t *b) {
     int32_t tmp = *a; *a = *b; *b = tmp;  /* 修改真实数据 */
 }
 ```
@@ -153,7 +153,7 @@ swap(&x, &y);
 │  返回后: x=10, y=20  ❌ 没变            │
 │                                        │
 ├────── pass-by-pointer (指针传递) ──────┤
-│  swap_by_pointer(&x, &y):             │
+│  pf_swap_by_pointer(&x, &y):          │
 │  main 栈帧       swap 栈帧 (地址)      │
 │  ┌────────┐      ┌──────────┐          │
 │  │ x = 10 │◄─────│ a = &x   │          │

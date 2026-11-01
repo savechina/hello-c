@@ -1,6 +1,6 @@
 # restrict 指针契约 (Pointer Qualifier Contract)
 
-> 💡 本章配套源码是 `src/advance/restrict_sample.c` (入口 `main_restrict_sample()`, 辅助函数 `add_arrays()`), 单元测试在 `test/advance/test_restrict_sample.c`。`restrict` 是编译器优化契约三部曲的第二部: [volatile 章](volatile.md) 管「访问必须发生」, 本章管「存储互不重叠」, [严格别名章](strict-aliasing.md) 管「类型必须兼容」。三者共同点: 违反 = UB, 且 `-O2` 才执行判决。
+> 💡 本章配套源码是 `src/advance/restrict_sample.c` (入口 `main_restrict_sample()`, 辅助函数 `rs_add_arrays()`), 单元测试在 `test/advance/test_restrict_sample.c`。`restrict` 是编译器优化契约三部曲的第二部: [volatile 章](volatile.md) 管「访问必须发生」, 本章管「存储互不重叠」, [严格别名章](strict-aliasing.md) 管「类型必须兼容」。三者共同点: 违反 = UB, 且 `-O2` 才执行判决。
 
 ## 开篇故事
 
@@ -18,7 +18,7 @@
 ## 你会学到什么
 
 1. `restrict` 的契约语义 (C11 §6.7.3.1) — 承诺什么、换来什么
-2. 合规示例: 分离缓冲区的 `add_arrays` — 编译器可向量化
+2. 合规示例: 分离缓冲区的 `rs_add_arrays` — 编译器可向量化
 3. 违规调用为什么是 UB, 为什么症状要到 `-O2` 才出现
 4. 何时**不**该用 `restrict`: 重叠语义 (memmove) 的缓冲区
 5. `restrict` 与严格别名的关系 — 同族契约的两个维度
@@ -32,11 +32,11 @@
 ```c
 /* ❌ 反例 (Counter-example — 不要执行): */
 
-void add_arrays(double *restrict dst, const double *restrict a,
+void rs_add_arrays(double *restrict dst, const double *restrict a,
                 const double *restrict b, size_t n);
 
 double buf[8] = {...};
-add_arrays(buf, buf + 1, buf, 7);   /* dst 与 a、b 都重叠! */
+rs_add_arrays(buf, buf + 1, buf, 7);   /* dst 与 a、b 都重叠! */
 ```
 
 ### 为什么是 UB — C11 §6.7.3.1
@@ -66,7 +66,7 @@ double dst[8];
 const double a[8] = {1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0};
 const double b[8] = {10.0, 20.0, 30.0, 40.0, 50.0, 60.0, 70.0, 80.0};
 
-add_arrays(dst, a, b, 8);   /* 分离 → 快, 且编译器可向量化 */
+rs_add_arrays(dst, a, b, 8);   /* 分离 → 快, 且编译器可向量化 */
 ```
 
 ## 契约语义: restrict 到底承诺了什么
@@ -74,7 +74,7 @@ add_arrays(dst, a, b, 8);   /* 分离 → 快, 且编译器可向量化 */
 配套源码里的定义 (摘自 `src/advance/restrict_sample.c`):
 
 ```c
-void add_arrays(double *restrict dst, const double *restrict a,
+void rs_add_arrays(double *restrict dst, const double *restrict a,
                 const double *restrict b, size_t n)
 {
     /* restrict 契约 (C11 §6.7.3.1): 本函数执行期间, dst/a/b 各自指向的
@@ -97,7 +97,7 @@ void add_arrays(double *restrict dst, const double *restrict a,
 
 ## 合规示例: 向量加法与向量化
 
-`add_arrays` 是 `restrict` 的教科书形态: 三个参数、三个独立对象、逐元素读写。编译器看到它之后可以安全地:
+`rs_add_arrays` 是 `restrict` 的教科书形态: 三个参数、三个独立对象、逐元素读写。编译器看到它之后可以安全地:
 
 - **循环展开 (loop unrolling)**: 一次迭代处理 2/4/8 个元素;
 - **软件流水 (software pipelining)**: 预取下一批 `a`/`b`, 不怕 `dst` 的写回干扰;
@@ -111,7 +111,7 @@ void add_arrays(double *restrict dst, const double *restrict a,
 
 | 场景 | 选择 |
 |------|------|
-| 调用方**能**保证缓冲区分离, 且要性能 | `restrict` 接口 (如 `add_arrays`) |
+| 调用方**能**保证缓冲区分离, 且要性能 | `restrict` 接口 (如 `rs_add_arrays`) |
 | 调用方**可能**传入重叠缓冲区 | 不加 `restrict`, 或内部处理重叠 |
 | 语义本身要求支持重叠搬移 | 用 `memmove` 的思路: 先存后写、或双向拷贝 |
 
@@ -159,12 +159,12 @@ memmove(text + 2, text, 6);   /* 合法且结果确定 */
 
 ### 🟢 练习 1: 判断能否加 restrict
 
-下列调用场景, `add_arrays(dst, a, b, n)` 能否安全加/用 restrict 接口?
+下列调用场景, `rs_add_arrays(dst, a, b, n)` 能否安全加/用 restrict 接口?
 
 a. `dst`、`a`、`b` 是三个独立的栈数组
-b. `add_arrays(buf, buf, buf, n)` —— 三参同一数组
-c. `add_arrays(out, in, weight, n)` —— out 与 in 分配自不同 malloc 块
-d. `add_arrays(a + 1, a, b, n - 1)` —— dst 与 a 相邻且重叠
+b. `rs_add_arrays(buf, buf, buf, n)` —— 三参同一数组
+c. `rs_add_arrays(out, in, weight, n)` —— out 与 in 分配自不同 malloc 块
+d. `rs_add_arrays(a + 1, a, b, n - 1)` —— dst 与 a 相邻且重叠
 
 <details><summary>点击查看答案</summary>
 
@@ -227,7 +227,7 @@ A: 证明只能来自设计 (不同数组/不同分配), 不来自测试。测�
 本章的核心要点:
 
 - **`restrict` 是契约不是检查** (C11 §6.7.3.1): 块执行期间, 指向对象只经该 lvalue 访问; 违反 = UB, 无诊断。
-- **换来的是优化权限**: 不重叠假设 → 循环展开、流水、SIMD 向量化——`add_arrays` 就是标准收益形态。
+- **换来的是优化权限**: 不重叠假设 → 循环展开、流水、SIMD 向量化——`rs_add_arrays` 就是标准收益形态。
 - **症状模式**: `-O0` 正常、`-O2` 随机错——因为惩罚由优化器执行。
 - **何时不用**: 重叠语义 (滑动搬移) 用 `memmove` 思路; 公共 API 不轻易加 `restrict`。
 - **三部曲定位**: `volatile` (访问必须发生) / `restrict` (存储不重叠) / 别名 (类型兼容) 同族, 全部「违反即 UB」。
