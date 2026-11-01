@@ -67,12 +67,19 @@ CFLAGS      += $(addprefix -I,$(INC_DIRS))
 LDFLAGS     := -lm -pthread
 
 ifeq ($(UNAME_S),SunOS)
+    # kstat info demo; kstat lives in its own library
     LDFLAGS  += -lkstat
-    CFLAGS  += -D__sun__
+    # -D_POSIX_C_SOURCE=200809L below => XPG7 => _XPG4_2, under which
+    # <sys/socket.h> remaps socket/bind/connect/socketpair/... to the
+    # __xnet_* XPG4.2 variants; those symbols live in libsocket (see
+    # libsocket(3LIB)). Without -lsocket, links fail on
+    # "undefined __xnet_socketpair".
+    LDFLAGS  += -lsocket
     # illumos: -std=c17 (strict ISO) sets __STRICT_SYMBOLS__, so system headers
     # hide POSIX extensions (clock_gettime, ...) and every TU gets implicit
     # declarations -> -Werror. Reveal them, mirroring the Linux block.
     # __EXTENSIONS__ additionally exposes non-POSIX XSI extras (strcasecmp...).
+    CFLAGS  += -D__sun__
     CFLAGS  += -D_POSIX_C_SOURCE=200809L -D__EXTENSIONS__
 endif
 
