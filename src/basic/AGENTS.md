@@ -13,8 +13,8 @@ topic; each exposes `main_<topic>_sample(void)` which `basic.c` calls in sequenc
 basic/
 ├── basic.c                 # main_basic_sample() — calls 45 sample functions in order
 ├── basic.h
-├── datatype_sample.c       # int/float/char + string/date samples (69 lines)
-├── memory_mgmt_sample.c    # malloc/calloc/realloc/free, create_person() factory
+├── datatype_sample.c        # 数据类型全景 — C17 十板块 (int/float/char/日期/size_t…)
+├── memory_mgmt_sample.c    # malloc/calloc/realloc/free, memory_mgmt_create_person() factory
 ├── scope_sample.c          # stack vs heap lifetime, UAF/dangling demos
 ├── safe_strings_sample.c   # bounded string ops, snprintf vs sprintf
 └── ...                     # ~40 more _sample.c chapters (structs, unions, enums, IO, …)
@@ -26,10 +26,10 @@ basic/
 |------|----------|-------|
 | Coordinator | `basic.c:4` `main_basic_sample(void)` | Calls each `main_<topic>_sample()` |
 | Heap allocation | `memory_mgmt_sample.c` | Canonical realloc-via-temp at `:122-138` |
-| Object factory | `memory_mgmt_sample.c:211` `create_person()` | Returns raw `Person *`, caller frees at `:239` |
+| Object factory | `memory_mgmt_sample.c:211` `memory_mgmt_create_person()` | Returns raw `Person *`, caller frees at `:239` |
 | Pointer lifetime | `scope_sample.c` | `return_heap_address()` at `:132` — caller-must-free contract |
 | Safe string ops | `safe_strings_sample.c` | Non-literal format at `:64-65` is a teaching demo |
-| Int/float/char basics | `datatype_sample.c:14` | Only 69 lines now — not the old 276-line monolith |
+| Int/float/char basics | `datatype_sample.c:31` | 501 lines: C17 十板块 datatype landscape |
 
 ## CONVENTIONS
 
