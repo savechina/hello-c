@@ -6,3 +6,5 @@ Standard: c++17
 Language: Cpp
 DerivePointerAlignment: false
 PointerAlignment: Left
+# 注释内的 ASCII 表格 (约束对照表等) 不许重排 — clang-format 23 会把对齐行折断 (see maintainer note)
+ReflowComments: false

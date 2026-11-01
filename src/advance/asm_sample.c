@@ -74,8 +74,10 @@ static int asm_add(int a, int b) {
 
 static void asm_basic_sample(void) {
   printf("--- 1. 基础: 汇编加法 + 约束 ---\n");
-  printf("  __asm__ 完整形态: __asm__ (volatile) (\"模板\") : 输出 : 输入 : clobber)\n");
-  printf("  模板里 %%0/%%1/%%n 按序对应输出+输入操作数, 编译器自动填寄存器名\n\n");
+  printf("  __asm__ 完整形态: __asm__ (volatile) (\"模板\") : 输出 : 输入 : "
+         "clobber)\n");
+  printf(
+      "  模板里 %%0/%%1/%%n 按序对应输出+输入操作数, 编译器自动填寄存器名\n\n");
 
   int s1 = asm_add(2, 40);
   int s2 = asm_add(-7, 7);
@@ -237,7 +239,8 @@ int main_asm_sample(void) {
   printf("========================================\n\n");
 
   printf("  GCC/Clang 扩展 __asm__ (extended asm):\n");
-  printf("    __asm__ (volatile) (\"指令模板\") : 输出操作数 : 输入操作数 : clobber)\n");
+  printf("    __asm__ (volatile) (\"指令模板\") : 输出操作数 : 输入操作数 : "
+         "clobber)\n");
   printf("    与编译器对话的三张嘴: 约束 (constraints) 管数据流,\n");
   printf("    操作数占位符 (%%0,%%1,...) 管位置, clobber 清单管副作用。\n\n");
 
