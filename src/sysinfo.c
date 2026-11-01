@@ -29,7 +29,11 @@
 
 // 声明一个函数来获取系统信息，具体实现会在后面根据平台定义
 void get_system_info();
+#if defined(__APPLE__)
+// sysinfo_get_info 仅在 Apple TU 中定义并调用；其余平台的 TU 不含此声明，
+// 避免 "-Wunused-function"（static 声明无定义无使用）触发 -Werror
 static void sysinfo_get_info(void);
+#endif
 
 int main_sysinfo() {
   printf("Detected operating system: %s\n", OS_NAME);
@@ -103,7 +107,7 @@ void get_system_info() {
   }
 }
 
-void sysinfo_get_info() {
+static void sysinfo_get_info(void) {
   // Get system architecture
   char* arch = NULL;
   size_t size = 0;
